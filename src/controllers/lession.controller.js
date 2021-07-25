@@ -1,4 +1,5 @@
 import LessionModel from "./../models/lession.model";
+import _ from 'lodash'
 
 export const fetchAll = (req, res) => {
     LessionModel.find({}, (err, docs) => {
@@ -37,8 +38,6 @@ export const lessionById = (req, res, next, id) => {
     })
 }
 
-
-
 export const remove = (req, res) => {
     const lession = req.lession;
     lession.remove((err, deleteLession) => {
@@ -52,4 +51,19 @@ export const remove = (req, res) => {
             message: "Xóa thành công bài giảng"
         })
     })
+}
+export const update = (req, res) => {
+    let lession = req.lession;
+    lession = _.assignIn(lession, req.body);
+    lession.save((err, data) => {
+        if (err) {
+            return res.status(400).json({
+                message: 'Cập nhật thất bại'
+            })
+        }
+        return res.json({ data, message: 'Cập nhật bài giảng thành công' })
+    })
+}
+export const read = (req, res) => {
+    return res.json(req.lession)
 }
