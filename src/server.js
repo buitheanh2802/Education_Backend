@@ -2,10 +2,16 @@ import express from 'express';
 import dotenv from 'dotenv';
 import { mongoConnect } from './config';
 import { routes } from './routes';
-//initial dotenv
-dotenv.config();
+
 // initial app
 const app = express();
+
+// initial parse data from client
+app.use(express.json());
+app.use(express.urlencoded({ extended : true}))
+
+//initial dotenv
+dotenv.config();
 // connect to mongoDB
 mongoConnect()
     .then(() => console.log('database is connected !'))
