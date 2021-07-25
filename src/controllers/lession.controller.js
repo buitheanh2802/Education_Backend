@@ -29,7 +29,7 @@ export const create = async (req, res) => {
                     error: 'Không thêm được bài giảng'
                 })
             }
-            res.json({ data, message: "Thêm bài giảng thành công" })
+            res.json({ data, message: "Thêm bài giảng thành công !!!" })
         })
     } else res.json({ error: 'error' })
 }
