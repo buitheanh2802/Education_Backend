@@ -10,7 +10,7 @@ router.post('/',
 );
 router.get('/:lessionId', read);
 router.get('/', fetchAll);
-router.put('/:lessionId', update);
+router.put('/:lessionId', lessionValidator, update);
 router.delete('/:lessionId', remove);
 
 router.param('lessionId', lessionById);
