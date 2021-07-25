@@ -1,6 +1,0 @@
-chứa các middlewares sử lí cho từng api 
-tiện cho việc sử lí quá nhiều logic trong controllers
-
-ví dụ auth.middleware.js chứa các middlewares phân quyền ,accessToken
-
-notification.middleware.js chứa các middleware truy vấn query hay là phân notification 
