@@ -10,7 +10,7 @@ export const lessionValidator = async(req,res,next) => {
     const check = validationResult(req);
     // điều kiện tồn tại lỗi =>
     if(!check.isEmpty()){
-        res.status(400).json({
+        return res.status(400).json({
             message : 'validate error',
             error : check.errors
         })
