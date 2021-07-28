@@ -27,6 +27,22 @@ const drive = google.drive({
     auth: Oauth2Client
 })
 
+// set permission for file and folder 
+const setPermission = async(fileOrFolderID) => {
+    try {
+        await drive.permissions.create({
+            fileId : fileOrFolderID,
+            requestBody : {
+                role : 'reader',
+                type : 'anyone'
+            }
+        });
+        console.log('permission is created for ID : ',fileOrFolderID);
+    } catch (error) {
+        console.log(error.message);
+    }
+}
+
 // create folder for drive
 export const createFolder = async (folderName,isParentFolder = '1dH8_S2Fd2k1Nct6ZTsxaiojVzNaw-b4P') => {
     try {
@@ -38,8 +54,10 @@ export const createFolder = async (folderName,isParentFolder = '1dH8_S2Fd2k1Nct6
             },
             fields: 'id'
         });
+        await setPermission(data.id);
         return data;
     } catch (error) {
         console.log(error.message);
     }
 }
+
