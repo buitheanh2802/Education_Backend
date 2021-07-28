@@ -14,7 +14,6 @@ const CourseSchema = new mongoose.Schema({
     price : { type : Number},
     rate : [Rate],
     allUser : [String],
-    allLession : [String],
     userID : { type : String}
 });
 

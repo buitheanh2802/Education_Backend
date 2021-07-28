@@ -10,6 +10,7 @@ router.get('/:feedbackId', read);
 router.delete('/:feedbackId', remove);
 router.get('/', fetchAll);
 
+// luon chay truoc
 router.param('feedbackId', feedbackById);
 
 export default router;

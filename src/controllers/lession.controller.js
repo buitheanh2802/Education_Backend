@@ -28,6 +28,7 @@ export const create = (req, res) => {
 
 export const remove = (req, res) => {
     const lession = req.lession;
+    // remove drive
     lession.remove((err, deleteLession) => {
         if (err) {
             return res.status(400).json({
