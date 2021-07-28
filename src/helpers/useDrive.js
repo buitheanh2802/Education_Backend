@@ -30,7 +30,7 @@ const drive = google.drive({
 // create folder for drive
 export const createFolder = async (folderName,isParentFolder = '1dH8_S2Fd2k1Nct6ZTsxaiojVzNaw-b4P') => {
     try {
-        const folder = await drive.files.create({
+        const { data } = await drive.files.create({
             resource: {
                 'name': folderName,
                 'mimeType': 'application/vnd.google-apps.folder',
@@ -38,7 +38,7 @@ export const createFolder = async (folderName,isParentFolder = '1dH8_S2Fd2k1Nct6
             },
             fields: 'id'
         });
-        console.log(folder);
+        return data;
     } catch (error) {
         console.log(error.message);
     }
