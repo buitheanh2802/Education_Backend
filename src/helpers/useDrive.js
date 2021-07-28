@@ -1,5 +1,6 @@
 import { google } from 'googleapis';
 import path from 'path';
+import fs from 'fs';
 
 // set CLIENT ID google developer
 const CLIENT_ID = '1086121129219-iuee1ggc3j1nukm2efcrstkk50rkgpvr.apps.googleusercontent.com';
@@ -17,7 +18,7 @@ const Oauth2Client = new google.auth.OAuth2(
     REDIRECT_URI
 )
 // set credential for refresh token
-Oauth2Client.setCredentials({ refresh_token : REFRESH_TOKEN})
+Oauth2Client.setCredentials({ refresh_token: REFRESH_TOKEN })
 
 // initial google drive
 const drive = google.drive({
@@ -28,29 +29,29 @@ const drive = google.drive({
 })
 
 // set permission for file and folder 
-const setPermission = async(fileOrFolderID) => {
+const setPermission = async (fileOrFolderID) => {
     try {
         await drive.permissions.create({
-            fileId : fileOrFolderID,
-            requestBody : {
-                role : 'reader',
-                type : 'anyone'
+            fileId: fileOrFolderID,
+            requestBody: {
+                role: 'reader',
+                type: 'anyone'
             }
         });
-        console.log('permission is created for ID : ',fileOrFolderID);
+        console.log('permission is created for ID : ', fileOrFolderID);
     } catch (error) {
         console.log(error.message);
     }
 }
 
 // create folder for drive
-export const createFolder = async (folderName,isParentFolder = '1dH8_S2Fd2k1Nct6ZTsxaiojVzNaw-b4P') => {
+export const createFolder = async (folderName, isParentFolder = '1dH8_S2Fd2k1Nct6ZTsxaiojVzNaw-b4P') => {
     try {
         const { data } = await drive.files.create({
             resource: {
                 'name': folderName,
                 'mimeType': 'application/vnd.google-apps.folder',
-                parents : [isParentFolder]
+                parents: [isParentFolder]
             },
             fields: 'id'
         });
@@ -61,3 +62,22 @@ export const createFolder = async (folderName,isParentFolder = '1dH8_S2Fd2k1Nct6
     }
 }
 
+export const createFile = async (fileName, isParentFolder = '1dH8_S2Fd2k1Nct6ZTsxaiojVzNaw-b4P') => {
+    try {
+        const { data } = await drive.files.create({
+            fields: 'id,webContentLink',
+            resource: {
+                name: fileName,
+                parents: [isParentFolder]
+            },
+            media: {
+                mimeType: 'image/jpeg',
+                body: fs.createReadStream(path.join(__dirname, '../assets/pictures', fileName))
+            }
+        });
+        await setPermission(data.id);
+        return data;
+    } catch (error) {
+        console.log(error.message);
+    }
+}
