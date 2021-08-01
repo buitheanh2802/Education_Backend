@@ -10,7 +10,6 @@ export const removeFileSystem = (filename) => {
         console.log(`file ${filename} delete failure with error : ${error.message}`);
     }
 }
-
 // create file system 
 export const createFileSystem = (filename,filePath) => {
     try{
