@@ -2,6 +2,7 @@ import express from 'express';
 import dotenv from 'dotenv';
 import { mongoConnect } from './config';
 import { routes } from './routes';
+
 //initial dotenv
 dotenv.config();
 
@@ -15,7 +16,7 @@ app.use(express.urlencoded({ extended : true}))
 // connect to mongoDB
 mongoConnect()
     .then(() => console.log('database is connected !'))
-    .catch(err => console.log(err))
+    .catch(err => console.log(`error connect to mongoDB : ${err.message}`))
 
 
 // PORT : 
