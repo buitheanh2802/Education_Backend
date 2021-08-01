@@ -3,6 +3,7 @@ import path from 'path';
 import fs from 'fs';
 
 // set CLIENT ID google developer
+// theanhbui345@gmail.com
 const CLIENT_ID = '1086121129219-iuee1ggc3j1nukm2efcrstkk50rkgpvr.apps.googleusercontent.com';
 // set SECRET google developer
 const CLIENT_SECRET = 'C7AK7fuqm3SbwD3LPhakctR8';
@@ -55,6 +56,7 @@ export const createFolder = async (folderName, isParentFolder = '1dH8_S2Fd2k1Nct
             },
             fields: 'id'
         });
+        // set public cho folder
         await setPermission(data.id);
         return data;
     } catch (error) {

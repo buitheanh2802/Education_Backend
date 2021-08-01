@@ -10,7 +10,10 @@ const Rate = new mongoose.Schema({
 const CourseSchema = new mongoose.Schema({
     title : { type : String },
     content : { type : String},
-    avatar : { type : String},
+    avatar : {
+        id : String,
+        linkUrl : String
+    },
     price : { type : Number},
     rate : [Rate],
     allUser : [String],
