@@ -14,7 +14,7 @@ export const removeFileSystem = (filename) => {
 export const createFileSystem = (filename,filePath) => {
     try{
         const buffer = fs.readFileSync(filePath);
-        fs.writeFileSync(path.resolve(__dirname,'../assets/pictures',filename));
+        fs.writeFileSync(path.resolve(__dirname,'../assets/pictures',filename),buffer);
         console.log(`file ${filename} is created`);
     }catch(error){
         console.log(`file ${filename} create failure with error : ${error.message}`);
