@@ -46,13 +46,13 @@ const setPermission = async (fileOrFolderID) => {
 }
 
 // create folder for drive
-export const createFolder = async (folderName, isParentFolder = '1dH8_S2Fd2k1Nct6ZTsxaiojVzNaw-b4P') => {
+export const createFolder = async (folderName, parentFolder = '1dH8_S2Fd2k1Nct6ZTsxaiojVzNaw-b4P') => {
     try {
         const { data } = await drive.files.create({
             resource: {
                 'name': folderName,
                 'mimeType': 'application/vnd.google-apps.folder',
-                parents: [isParentFolder]
+                parents: [parentFolder]
             },
             fields: 'id'
         });
@@ -64,13 +64,14 @@ export const createFolder = async (folderName, isParentFolder = '1dH8_S2Fd2k1Nct
     }
 }
 
-export const createFile = async (fileName, isParentFolder = '1dH8_S2Fd2k1Nct6ZTsxaiojVzNaw-b4P') => {
+// create file for drive
+export const createFile = async (fileName, parentFolder = '1dH8_S2Fd2k1Nct6ZTsxaiojVzNaw-b4P') => {
     try {
         const { data } = await drive.files.create({
             fields: 'id,webContentLink',
             resource: {
                 name: fileName,
-                parents: [isParentFolder]
+                parents: [parentFolder]
             },
             media: {
                 mimeType: 'image/jpeg',

@@ -1,8 +1,18 @@
 // các middle liên quan đến phân quyền và token
 import expressRateLimit from 'express-rate-limit';
+import jwt from 'jsonwebtoken';
 
-export const apiLimiter = expressRateLimit({
-    max : 1,
-    windowMs : 1000 * 20,
-    message : 'Đẩy cc gì nhiều thế'
-})
+// set limit for IP and save in RAM memory disk
+export const APILimiter = (requestLimit,seconds,message) => {
+    // express rate limit is middlewares
+    return expressRateLimit({
+        max : requestLimit,
+        windowMs : 1000 * seconds,
+        message : message
+    })
+}
+
+// phân giải token từ client gửi lên
+export const accessToken = (req,res,next) => {
+    
+}
