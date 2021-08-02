@@ -17,6 +17,7 @@ const transportion = nodemailer.createTransport({
 });
 
 // initial middleware of transport
+// use template handlebars for send email
 transportion.use('compile', handlebars({
     extName: '.hbs',
     viewPath: path.resolve(__dirname, '../assets/template'),
