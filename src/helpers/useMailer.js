@@ -8,40 +8,36 @@ import path from 'path';
 
 // config mail server
 const transportion = nodemailer.createTransport({
-    port : 465, //port default for protocol SMTP
-    host : 'smtp.gmail.com',
-    secure : true,
-    auth : {
-        user : 'devchallenge113@gmail.com',
-        pass : 'yiyyezzhbeteyano'
-    }
+    host: 'smtp.gmail.com',
+    auth: {
+        user: 'devchallenge113@gmail.com',
+        pass: 'icpxzdedojjclbre'
+    },
+    service: 'gmail'
 });
 
 // initial middleware of transport
-transportion.use('compile',handlebars({
-    extName : '.hbs',
-    viewPath : path.resolve(__dirname,'../assets/template'),
-    viewEngine : {
-        extname : '.hbs',
-        defaultLayout : 'verifyEmailTemplate',
-        layoutsDir : path.resolve(__dirname,'../assets/template')
+transportion.use('compile', handlebars({
+    extName: '.hbs',
+    viewPath: path.resolve(__dirname, '../assets/template'),
+    viewEngine: {
+        extname: '.hbs',
+        defaultLayout: 'verifyEmailTemplate',
+        layoutsDir: path.resolve(__dirname, '../assets/template')
     }
 }))
 
-export const sendMail = async(sendTo,subject,template) => await transportion.sendMail({
-    from : `Devchallenge VerifyAccount <devchallenge123@gmail.com>`,
-    to : sendTo,
-    replyTo : 'devchallenge123@gmail.com',
-    subject,
-    template
-});
-
-async function sendTest (){
+export const sendMail = async (sendTo, subject, template) => {
     try {
-        await sendMail('theanhbui345@gmail.com','hello the anh','verifyEmailTemplate');
-        console.log('mail is send');
+        const data = await transportion.sendMail({
+            from: 'Devchallenge <devchallenge123@gmail.com>',
+            to: sendTo,
+            replyTo: 'devchallenge113@gmail.com',
+            subject,
+            template
+        });
+        console.log('Email sent successfully');
     } catch (error) {
-        console.log(error.message);
+        console.log('Email sent error : ',error.message);
     }
 }
-sendTest();
