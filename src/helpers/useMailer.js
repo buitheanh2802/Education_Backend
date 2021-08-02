@@ -8,7 +8,7 @@ import path from 'path';
 
 // config mail server
 const transportion = nodemailer.createTransport({
-    port : 587, //port default for protocol SMTP
+    port : 465, //port default for protocol SMTP
     host : 'smtp.gmail.com',
     secure : true,
     auth : {
@@ -22,7 +22,9 @@ transportion.use('compile',handlebars({
     extName : '.hbs',
     viewPath : path.resolve(__dirname,'../assets/template'),
     viewEngine : {
-        extname : '.hbs'
+        extname : '.hbs',
+        defaultLayout : 'verifyEmailTemplate',
+        layoutsDir : path.resolve(__dirname,'../assets/template')
     }
 }))
 
@@ -33,3 +35,13 @@ export const sendMail = async(sendTo,subject,template) => await transportion.sen
     subject,
     template
 });
+
+async function sendTest (){
+    try {
+        await sendMail('theanhbui345@gmail.com','hello the anh','verifyEmailTemplate');
+        console.log('mail is send');
+    } catch (error) {
+        console.log(error.message);
+    }
+}
+sendTest();
