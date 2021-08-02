@@ -2,7 +2,6 @@ import express from 'express';
 import dotenv from 'dotenv';
 import { mongoConnect } from './config';
 import { routes } from './routes';
-import './helpers/useDrive';
 
 //initial dotenv
 dotenv.config();
