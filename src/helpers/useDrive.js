@@ -84,3 +84,15 @@ export const createFile = async (fileName, parentFolder = '1dH8_S2Fd2k1Nct6ZTsxa
         console.log(error.message);
     }
 }
+
+export const deleteFile = async(fileId) => {
+    try {
+        const { data } = await drive.files.delete({
+            fileId,
+            fields : 'id'
+        })
+        console.log(`file is deleted !`);
+    } catch (error) {
+        console.log(error.message);
+    }
+}
