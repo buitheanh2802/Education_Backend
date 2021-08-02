@@ -89,7 +89,19 @@ export const deleteFile = async(fileId) => {
     try {
         const { data } = await drive.files.delete({
             fileId,
-            fields : 'id'
+            fields : 'application/vnd.google-apps.folder'
+        })
+        console.log(`folder is deleted !`);
+    } catch (error) {
+        console.log(error.message);
+    }
+}
+
+export const deleteFolder = async(fileId) => {
+    try {
+        const { data } = await drive.files.delete({
+            fileId,
+            fields : 'folder'
         })
         console.log(`file is deleted !`);
     } catch (error) {
