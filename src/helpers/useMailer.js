@@ -28,6 +28,7 @@ transportion.use('compile', handlebars({
     }
 }))
 
+// export function
 export const sendMail = async (sendTo, subject, template) => {
     try {
         const data = await transportion.sendMail({
