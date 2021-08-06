@@ -3,10 +3,10 @@ import expressRateLimit from 'express-rate-limit';
 import jwt from 'jsonwebtoken';
 
 // set limit for IP and save in RAM memory disk
-export const APILimiter = (requestLimit,seconds,message) => {
+export const APILimiter = (maxRequestLimit,seconds,message) => {
     // express rate limit is middlewares
     return expressRateLimit({
-        max : requestLimit,
+        max : maxRequestLimit,
         windowMs : 1000 * seconds,
         message : {
             message : [
