@@ -1,6 +1,7 @@
 import _, { find } from 'lodash';
 import CommentModel from './../models/comment.model';
 
+// 
 export const fetchAll = (req, res) => {
     CommentModel.find({}, (err, docs) => {
         if (err) {

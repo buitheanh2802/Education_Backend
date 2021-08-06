@@ -9,8 +9,11 @@ export const commentValidator = async (req, res, next) => {
     const check = validationResult(req);
     if (!check.isEmpty()) {
         return res.status(400).json({
-            message: 'Validator error',
-            error: check.errors
+            // vì errors trả về một mảng nên destructuring luôn
+            message: [
+                ...check.errors
+            ],
+            status : false
         })
     }
     next();

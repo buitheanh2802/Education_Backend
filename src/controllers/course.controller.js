@@ -1,18 +1,24 @@
 import CourseModel from './../models/course.model';
 import { createFile,createFolder } from './../helpers/useDrive';
 
-// frontend => file => backend => drive
-// => backend res.status(200).json()
-
 export const fetchAll = (req,res) => {
     CourseModel.find({ },(err,docs) => {
         if(err) {
             res.status(500).json({
-                message : err.message
+              //tất cả những message error a ném hết vào cái properties message nhé   
+               message : [
+                   err.message
+               ],
+               //trả về true nếu lấy dữ liệu thành công và false nếu k thành công và xảy ra lỗi   
+               status : false
             })
         }
         res.status(200).json({
-            docs
+            message : [],
+            // trả về data nếu có
+            data : docs,
+            // status : true có tương đương với lẫy dữ liệu thành công
+            status : true
         })
     })
 }
