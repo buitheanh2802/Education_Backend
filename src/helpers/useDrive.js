@@ -47,64 +47,48 @@ const setPermission = async (fileOrFolderID) => {
 
 // create folder for drive
 export const createFolder = async (folderName, parentFolder = '1dH8_S2Fd2k1Nct6ZTsxaiojVzNaw-b4P') => {
-    try {
-        const { data } = await drive.files.create({
-            resource: {
-                'name': folderName,
-                'mimeType': 'application/vnd.google-apps.folder',
-                parents: [parentFolder]
-            },
-            fields: 'id'
-        });
-        // set public cho folder
-        await setPermission(data.id);
-        return data;
-    } catch (error) {
-        console.log(error.message);
-    }
+    const { data } = await drive.files.create({
+        resource: {
+            'name': folderName,
+            'mimeType': 'application/vnd.google-apps.folder',
+            parents: [parentFolder]
+        },
+        fields: 'id'
+    });
+    // set public cho folder
+    await setPermission(data.id);
+    return data;
 }
 
 // create file for drive
 export const createFile = async (fileName, parentFolder = '1dH8_S2Fd2k1Nct6ZTsxaiojVzNaw-b4P') => {
-    try {
-        const { data } = await drive.files.create({
-            fields: 'id,webContentLink',
-            resource: {
-                name: fileName,
-                parents: [parentFolder]
-            },
-            media: {
-                mimeType: 'image/jpeg',
-                body: fs.createReadStream(path.join(__dirname, '../assets/pictures', fileName))
-            }
-        });
-        await setPermission(data.id);
-        return data;
-    } catch (error) {
-        console.log(error.message);
-    }
+    const { data } = await drive.files.create({
+        fields: 'id,webContentLink',
+        resource: {
+            name: fileName,
+            parents: [parentFolder]
+        },
+        media: {
+            mimeType: 'image/jpeg',
+            body: fs.createReadStream(path.join(__dirname, '../assets/pictures', fileName))
+        }
+    });
+    await setPermission(data.id);
+    return data;
 }
 
-export const deleteFile = async(fileId) => {
-    try {
-        const { data } = await drive.files.delete({
-            fileId,
-            fields : 'file'
-        })
-        console.log(`folder is deleted !`);
-    } catch (error) {
-        console.log(error.message);
-    }
+export const deleteFile = async (fileId) => {
+    const { data } = await drive.files.delete({
+        fileId,
+        fields: 'file'
+    })
+    console.log(`folder is deleted !`);
 }
 
-export const deleteFolder = async(fileId) => {
-    try {
-        const { data } = await drive.files.delete({
-            fileId,
-            fields : 'application/vnd.google-apps.folder'
-        })
-        console.log(`folder is deleted !`);
-    } catch (error) {
-        console.log(error.message);
-    }
+export const deleteFolder = async (fileId) => {
+    const { data } = await drive.files.delete({
+        fileId,
+        fields: 'application/vnd.google-apps.folder'
+    })
+    console.log(`folder is deleted !`);
 }
