@@ -8,11 +8,16 @@ export const APILimiter = (requestLimit,seconds,message) => {
     return expressRateLimit({
         max : requestLimit,
         windowMs : 1000 * seconds,
-        message : message
+        message : {
+            message : [
+                ...message
+            ],
+            status : false
+        }
     })
 }
-
+    
 // phân giải token từ client gửi lên
 export const accessToken = (req,res,next) => {
-    
+    // const payload = req.authorization
 }

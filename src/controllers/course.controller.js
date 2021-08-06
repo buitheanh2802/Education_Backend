@@ -5,19 +5,15 @@ export const fetchAll = (req,res) => {
     CourseModel.find({ },(err,docs) => {
         if(err) {
             res.status(500).json({
-              //tất cả những message error a ném hết vào cái properties message nhé   
                message : [
                    err.message
                ],
-               //trả về true nếu lấy dữ liệu thành công và false nếu k thành công và xảy ra lỗi   
                status : false
             })
         }
         res.status(200).json({
             message : [],
-            // trả về data nếu có
             data : docs,
-            // status : true có tương đương với lẫy dữ liệu thành công
             status : true
         })
     })

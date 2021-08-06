@@ -29,6 +29,7 @@ export const create = (req, res) => {
             })
         }
         res.status(200).json({
+            message : [],
             data: docs,
             status: true
         })
@@ -47,6 +48,7 @@ export const update = (req, res) => {
             })
         }
         return res.status(200).json({
+            message : [],
             data: docs,
             status: true
         })
@@ -67,6 +69,7 @@ export const remove = (req, res) => {
             })
         }
         res.status(200).json({
+            message : [],
             data: docs,
             status: true
         })
