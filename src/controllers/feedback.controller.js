@@ -5,35 +5,51 @@ export const fetchAll = (req, res) => {
     FeedbackModel.find({}, (err, docs) => {
         if (err) {
             res.status(500).json({
-                message: err.message
+                message: [
+                    err.message
+                ],
+                status: false
             })
         }
         res.status(200).json({
-            docs
+            data: docs,
+            status: true
         })
     })
 }
 export const create = (req, res) => {
     const feedback = new FeedbackModel(req.body);
-    feedback.save((err, data) => {
+    feedback.save((err, docs) => {
         if (err) {
             res.status(400).json({
-                error: 'Không thêm được feedback'
+                message: [
+                    err.message
+                ],
+                status: false
             })
         }
-        res.json({ data, message: "Thêm feedback thành công !!!" })
+        res.status(200).json({
+            data: docs,
+            status: true
+        })
     })
 }
 export const update = (req, res) => {
     let feedback = req.feedback;
     feedback = _.assignIn(feedback, req.body);
-    feedback.save((err, data) => {
+    feedback.save((err, docs) => {
         if (err) {
             return res.status(400).json({
-                message: 'Cập nhật feedback'
+                message: [
+                    err.message
+                ],
+                status: false
             })
         }
-        return res.json({ data, message: 'Cập nhật feedback thành công' })
+        return res.status(200).json({
+            data: docs,
+            status: true
+        })
     })
 }
 export const read = (req, res) => {
@@ -41,15 +57,18 @@ export const read = (req, res) => {
 }
 export const remove = (req, res) => {
     const feedback = req.feedback;
-    feedback.remove((err, deleteFeedback) => {
+    feedback.remove((err, docs) => {
         if (err) {
             return res.status(400).json({
-                error: "Xóa thất bại feedback"
+                message: [
+                    err.message
+                ],
+                status: false
             })
         }
-        res.json({
-            deleteFeedback,
-            message: "Xóa thành công feedback"
+        res.status(200).json({
+            data: docs,
+            status: true
         })
     })
 }
