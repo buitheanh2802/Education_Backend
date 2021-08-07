@@ -12,8 +12,8 @@ const UserSchema = new initializeSchema({
         id : { type : String, default : ""},
         linkUrl : { type : String , default : ""}
     },
-    address : { type : String },
-    phoneNumber : { type : Number },
+    address : { type : String,default : '' },
+    phoneNumber : { type : Number ,default : ''},
     role : { type : String , enum : ['user','admin','mentor','staff'],default : 'user'},
     typeLogin : { type : String , enum : ['system','fb','gg'],default : 'system'},
     secretkey : { type : String,default : '' },
@@ -23,8 +23,12 @@ const UserSchema = new initializeSchema({
     timestamps : true
 });
 
-UserSchema.pre('save',function(next){
-    console.log(this);
+UserSchema.pre('save',async function(next){
+    if(!this.isModified('password')) return next();
+    const salt = await bcrypt.genSalt(10);
+    const passwordHashsed = await bcrypt.hash(this.password,salt);
+    this.password = passwordHashsed;
+    next();
 })
 
 UserSchema.methods = {
@@ -34,4 +38,4 @@ UserSchema.methods = {
     }
 }
 
-export default mongoose.model('users',UserSchema)
+export default mongoose.model('Users',UserSchema)
