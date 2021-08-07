@@ -41,5 +41,5 @@ export const userValidator = async (req, res, next) => {
             status : false
         })
     }
-    next()
+    next();
 }
