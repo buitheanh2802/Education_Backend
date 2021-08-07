@@ -1,4 +1,4 @@
-import expressValidator, { body, validationResult } from 'express-validator';
+import { body, validationResult } from 'express-validator';
 
 export const userValidator = async (req, res, next) => {
     await body('fullname')
@@ -29,6 +29,17 @@ export const userValidator = async (req, res, next) => {
                 .isLength({min : 10})
                 .matches(/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/)
                 .withMessage('Mật khẩu phải tối thiểu 8 kí tự, ít nhất một chữ cái và một số !')
-                .run(req)
+                .run(req);
 
+    const validatorResult = validationResult(req);
+    if(!validatorResult.isEmpty()){
+        return res.status(400).json({
+            message : [
+                'INVALID_DATA',
+                ...validationResult.errors
+            ],
+            status : false
+        })
+    }
+    next()
 }
