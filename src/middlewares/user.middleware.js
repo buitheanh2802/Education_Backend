@@ -26,17 +26,16 @@ export const userValidator = async (req, res, next) => {
                 .trim()
                 .notEmpty()
                 .withMessage('Không được bỏ trống mật khẩu !')
-                .isLength({min : 10})
                 .matches(/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/)
                 .withMessage('Mật khẩu phải tối thiểu 8 kí tự, ít nhất một chữ cái và một số !')
                 .run(req);
 
     const validatorResult = validationResult(req);
     if(!validatorResult.isEmpty()){
-        return res.status(400).json({
+        return res.status(200).json({
             message : [
                 'INVALID_DATA',
-                ...validationResult.errors
+                ...validatorResult.errors
             ],
             status : false
         })

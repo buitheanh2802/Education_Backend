@@ -14,9 +14,9 @@ const UserSchema = new initializeSchema({
     },
     address : { type : String },
     phoneNumber : { type : Number },
-    role : { type : String , enum : ['user','admin','mentor','staff'],default : 'user '},
+    role : { type : String , enum : ['user','admin','mentor','staff'],default : 'user'},
     typeLogin : { type : String , enum : ['system','fb','gg'],default : 'system'},
-    secretkey : { type : String },
+    secretkey : { type : String,default : '' },
     status : { type : String,enum : ['active','block','verify'],default : 'verify' }
 },
 {
