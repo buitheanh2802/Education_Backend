@@ -31,18 +31,32 @@ export const register = async(req,res) => {
 }
 
 export const activateOTP = (req,res) => {
-    const user = req.user;
+    let user = req.user;
     const { otp } = req.body;
-    console.log(otp);
     const verifyOTP = speakeasy.totp.verify({
         secret : user.secretKey,
         encoding : 'base32',
         token : otp,
         step : 60
     });
-    console.log(verifyOTP);
     if(verifyOTP){
-        
+        user = _.assignIn(user,{ status : 'active'});
+        user.save((err,docs)=>{
+            if(err){
+                return res.status(400).json({
+                    message : [
+                        'ERROR_SAVE',
+                        err.message
+                    ],
+                    status : false
+                })
+            }
+            return res.status(200).json({
+                message : [],
+                data : 'ACTIVATED',
+                status : true
+            })
+        })
     }
     return res.status(401).json({
         message : [
