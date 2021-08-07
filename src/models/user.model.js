@@ -5,7 +5,7 @@ const initializeSchema = mongoose.Schema;
 
 const UserSchema = new initializeSchema({
     fullname : { type : String },
-    username : { type : String },
+    username : { type : String,unique : true },
     email : { type : String },
     password : { type : String },
     avatar : {
@@ -16,7 +16,7 @@ const UserSchema = new initializeSchema({
     phoneNumber : { type : Number ,default : ''},
     role : { type : String , enum : ['user','admin','mentor','staff'],default : 'user'},
     typeLogin : { type : String , enum : ['system','fb','gg'],default : 'system'},
-    secretkey : { type : String,default : '' },
+    secretKey : { type : String,default : '' },
     status : { type : String,enum : ['active','block','verify'],default : 'verify' }
 },
 {
@@ -33,7 +33,6 @@ UserSchema.pre('save',async function(next){
 
 UserSchema.methods = {
     verifyPassword : function(password){
-        console.log(this.password);
         return bcrypt.compareSync(password,this.password)
     }
 }

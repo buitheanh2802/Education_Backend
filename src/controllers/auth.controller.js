@@ -1,13 +1,29 @@
 import UserModel from './../models/user.model';
+import { sendMail } from './../helpers/useMailer';
+import speakeasy from 'speakeasy';
 
-
-export const register = (req,res) => {
-    const document = new UserModel(req.body);
+export const register = async(req,res) => {
+    const generateSecretTOTP = speakeasy.generateSecret({ length : 20 }).base32;
+    const OTP = speakeasy.totp({
+        secret : generateSecretTOTP,
+        encoding : 'base32',
+        step : 60
+    })
+    const document = new UserModel({...req.body,secretKey : generateSecretTOTP});
+    try {
+        await sendMail('anhbtph12413@fpt.edu.vn',
+                        'Xác thực tài khoản của bạn !',
+                        'verifyEmailTemplate',
+                        { OTP }
+                    )
+    } catch (error) { 
+        console.log(error.message);
+    }
     document.save((err,docs) => {
         if(err){
-            return res.status(500).json({
+            return res.status(400).json({
                 message : [
-                    'ERROR_SERVER',
+                    'ERROR_SAVE',
                     err.message
                 ],
                 status : false
@@ -15,7 +31,7 @@ export const register = (req,res) => {
         };
         return res.status(200).json({
             message : [],
-            status : false,
+            status : true,
             data : docs
         })
     })

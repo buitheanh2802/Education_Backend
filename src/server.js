@@ -2,6 +2,7 @@ import express from 'express';
 import dotenv from 'dotenv';
 import { mongoConnect } from './config';
 import { routes } from './routes';
+import cookieParser from 'cookie-parser';
 
 //initial dotenv
 dotenv.config();
@@ -12,6 +13,8 @@ const app = express();
 // initial parse data from client
 app.use(express.json());
 app.use(express.urlencoded({ extended : true}))
+// use cookie
+app.use(cookieParser())
 
 // connect to mongoDB
 mongoConnect()

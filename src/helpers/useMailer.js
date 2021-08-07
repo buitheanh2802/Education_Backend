@@ -29,13 +29,14 @@ transportion.use('compile', handlebars({
 }))
 
 // export function
-export const sendMail = async (sendTo, subject, template) => {
+export const sendMail = async (sendTo, subject, template,variables) => {
     const data = await transportion.sendMail({
         from: 'Devchallenge <devchallenge123@gmail.com>',
         to: sendTo,
         replyTo: 'devchallenge113@gmail.com',
         subject,
-        template
+        template,
+        context : variables
     });
     console.log('Email sent successfully');
 }
