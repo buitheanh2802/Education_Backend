@@ -1,4 +1,5 @@
 import { body, validationResult } from 'express-validator';
+import UserModel from './../models/user.model';
 
 export const userValidator = async (req, res, next) => {
     await body('fullname')
@@ -41,4 +42,20 @@ export const userValidator = async (req, res, next) => {
         })
     }
     next();
+}
+
+export const findUserById = (req,res,next,id)=> {
+    UserModel.findById(id,(err,docs)=> {
+        if(err){
+            return res.status(400).json({
+                message : [
+                    'ERROR_FIND',
+                    err.message
+                ],
+                status : false
+            })
+        }
+        req.user = docs;
+        next();
+    })
 }
