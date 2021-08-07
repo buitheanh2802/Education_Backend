@@ -9,8 +9,8 @@ const UserSchema = new initializeSchema({
     email : { type : String },
     password : { type : String },
     avatar : {
-        id : String,
-        linkUrl : String
+        id : { type : String, default : ""},
+        linkUrl : { type : String , default : ""}
     },
     address : { type : String },
     phoneNumber : { type : Number },
