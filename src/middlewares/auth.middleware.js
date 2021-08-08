@@ -12,7 +12,9 @@ export const APILimiter = (maxRequestLimit,seconds,message) => {
             message : [
                 ...message
             ],
-            status : false
+            status : false,
+            maxLimit : maxRequestLimit,
+            expired : `${seconds}s`
         }
     })
 }
