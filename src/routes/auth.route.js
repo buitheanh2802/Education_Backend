@@ -11,7 +11,7 @@ router.post('/register',
     register
 );
 
-router.get('/activate/:idUser/resend',
+router.post('/activate/:idUser/resend',
     resendOTP
 );
 

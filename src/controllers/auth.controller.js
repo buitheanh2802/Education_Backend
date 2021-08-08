@@ -75,7 +75,7 @@ export const resendOTP = async (req, res) => {
         encoding: 'base32',
         step: 60
     });
-    await sendMail('anhbtph12413@fpt.edu.vn', 'Xác thực tài khoản của bạn !', 'verifyEmailTemplate', { OTP });
+    await sendMail(user.email, 'Xác thực tài khoản của bạn !', 'verifyEmailTemplate', { OTP });
     res.status(200).json({
         message: [],
         status: true
