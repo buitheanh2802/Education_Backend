@@ -6,6 +6,7 @@ export const fetchAll = (req, res) => {
         if (err) {
             res.status(500).json({
                 message: [
+                    'ERROR_SERVER',
                     err.message
                 ],
                 status: false
@@ -13,7 +14,8 @@ export const fetchAll = (req, res) => {
         }
         res.status(200).json({
             data: docs,
-            status: true
+            status: true,
+            message : []
         })
     })
 }
