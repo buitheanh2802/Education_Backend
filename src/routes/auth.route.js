@@ -6,7 +6,7 @@ const router = express.Router();
 
 // REGISTER
 router.post('/register',
-    APILimiter(5,3600,'LIMITED_REQUEST'),
+    APILimiter(5,3600),
     userValidator,
     register
 );
