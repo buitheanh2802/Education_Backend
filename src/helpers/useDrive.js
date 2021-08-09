@@ -10,7 +10,7 @@ const CLIENT_SECRET = 'C7AK7fuqm3SbwD3LPhakctR8';
 // Chuyển hướng đến google server để thực hiện các yêu cầu
 const REDIRECT_URI = 'https://developers.google.com/oauthplayground';
 // refresh token trên server mỗi khi token hết hạn
-const REFRESH_TOKEN = '1//04xUfByx5c_A2CgYIARAAGAQSNwF-L9IrCY1Jderm0AIYx5i9wlFaJ9gFzKF10T_fiUrNwqb33gIuXxUJ1YPrldPoUfZ5pm_28r4'
+const REFRESH_TOKEN = '1//04EbT0nxHBYtACgYIARAAGAQSNwF-L9IrcgBydwEE3XWBHTtVMqluTg-U75MsNHi3YsiUz8WgR35uk_0gEg-b5u6EipS3rzgHvyQ'
 
 // initial google auth
 const Oauth2Client = new google.auth.OAuth2(

@@ -1,44 +1,38 @@
 import CourseModel from './../models/course.model';
-import { createFile,createFolder } from './../helpers/useDrive';
+import { createFile, createFolder } from './../helpers/useDrive';
+import { createFileSystem, removeFileSystem } from './../helpers/useSystem';
 import Formidable from 'formidable';
 
-export const fetchAll = (req,res) => {
-    CourseModel.find({ },(err,docs) => {
-        if(err) {
+export const fetchAll = (req, res) => {
+    CourseModel.find({}, (err, docs) => {
+        if (err) {
             res.status(500).json({
-               message : [
-                   err.message
-               ],
-               status : false
+                message: [
+                    err.message
+                ],
+                status: false
             })
         }
         res.status(200).json({
-            message : [],
-            data : docs,
-            status : true
+            message: [],
+            data: docs,
+            status: true
         })
     })
 }
 
 
 
-export const create = async(req,res) => {
-    const formidable = new Formidable.IncomingForm()
-    formidable.parse(req,async(error,fields,files) => {
-        console.log(fields);
-        const { avatar } = files;
-        try {
-            const folder = await createFolder('hihi');
-        } catch (error) {
-            console.log(error.message);
-        }
-        console.log(folder);
-        // const file = await createFile(avatar.name,folder.id);
-        // const course = new CourseModel({...fields,avatar : file.webContentLink});
-        // course.save((err,docs) => {
-        //     console.log(docs);
-        // })
-    })
+export const create = async (req, res) => {
+    console.log(req.body);
+    console.log(req.file);
+    // const folder = await createFolder('hihi','1IPE9cxptb8cvj6ABeQJxl7GzsTjIBwnd');
+    // const file = await createFile(avatar.name,folder.id);
+    // const course = new CourseModel({...fields,avatar : file.webContentLink});
+    // course.save((err,docs) => {
+    //     console.log(docs);
+    // })
+
     //user request files
     //req.files
     //req.file

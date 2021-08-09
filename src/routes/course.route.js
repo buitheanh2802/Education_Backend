@@ -1,11 +1,15 @@
 import express from 'express';
 import { fetchAll,create } from './../controllers/course.controller';
+import { upload } from './../middlewares/upload.middleware';
 const router = express.Router();
 
 // GET PUT PATCH DELETE
 //       /course/
 router.get('/',fetchAll);
-router.post('/',create);
+router.post('/',
+    upload.single('avatar'),
+    create
+);
 router.put('/');
 
 
