@@ -27,27 +27,28 @@ export const upload = {
         }
     },
     //upload mutiple file
-    multiple: function(req, res, next){
+    multiple: function(fieldName){
         const initialize = new formidable.IncomingForm({
             keepExtensions : true,
             multiples : true
         });
         return (req, res, next) => {
-            initialize.parse(req, (err, fields, file) => {
+            initialize.parse(req, (err, fields, files) => {
                 if (err) {
                     return res.status(500).json({
                         message: ['ERROR_SERVER', err.message],
                         status: false
                     })
                 }
-                const fileData = file[fieldName];
-                console.log(fileData);
-                // if(fileData){
-                //     createFileSystem(fileData.name,fileData.path);
-                //     req.file = fileData;
-                // }
-                // req.body = fields;
-                // next();
+                const fileData = files[fieldName];
+                if(fileData && _.isArray(fileData)){
+                    fileData.forEach(file => {
+                        createFileSystem(file.name,file.path);
+                    })
+                    req.files = fileData;
+                }
+                req.body = fields;
+                next();
             })
         }
     }

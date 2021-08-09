@@ -25,7 +25,7 @@ export const fetchAll = (req, res) => {
 
 export const create = async (req, res) => {
     console.log(req.body);
-    console.log(req.file);
+    console.log(req.files);
     // const folder = await createFolder('hihi','1IPE9cxptb8cvj6ABeQJxl7GzsTjIBwnd');
     // const file = await createFile(avatar.name,folder.id);
     // const course = new CourseModel({...fields,avatar : file.webContentLink});

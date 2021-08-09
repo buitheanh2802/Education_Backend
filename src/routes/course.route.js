@@ -7,7 +7,7 @@ const router = express.Router();
 //       /course/
 router.get('/',fetchAll);
 router.post('/',
-    upload.single('avatar'),
+    upload.multiple('avatar'),
     create
 );
 router.put('/');
