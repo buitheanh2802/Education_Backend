@@ -33,3 +33,24 @@ export const notificationById = (req, res, next, id) => {
         next();
     })
 }
+
+export const pagination = (req,res,next) => {
+    // ?_limit=10&_page=0
+    //[{},{},{},{},{}]
+    const { _page,_limit } = req.query;
+    const currentSkip = _page * _limit // => 1 * 8
+    if(_page && _limit){
+        NotificationModel
+            .find({})
+            .limit(_limit)
+            .skip(currentSkip)
+            .exec((err,docs) => {
+                return res.status(200).json({
+                    data : docs
+                })
+            })
+    }
+    else{
+        return next()
+    }
+}
