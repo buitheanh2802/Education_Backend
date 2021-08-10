@@ -13,7 +13,7 @@ export const commentValidator = async (req, res, next) => {
             message: [
                 ...check.errors
             ],
-            status : false
+            status: false
         })
     }
     next();
@@ -23,7 +23,10 @@ export const commentById = (req, res, next, id) => {
     CommentModel.findById(id).exec((err, comment) => {
         if (err || !comment) {
             res.status(400).json({
-                error: "Không tìm thấy cmt"
+                message: [
+                    err.message
+                ],
+                status: false
             })
         }
         req.comment = comment;
