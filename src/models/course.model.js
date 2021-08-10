@@ -13,12 +13,11 @@ const CourseSchema = new Schema({
     title : { type : String },
     content : { type : String},
     avatar : {
-        id : String,
+        _id : String,
         linkUrl : String
     },
     price : { type : Number},
     rate : [Rate],
-    allUser : [String],
     userId : { type : Schema.Types.ObjectId,ref : 'users' } 
 },
 {

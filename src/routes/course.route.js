@@ -3,14 +3,12 @@ import { fetchAll,create } from './../controllers/course.controller';
 import { upload } from './../middlewares/upload.middleware';
 const router = express.Router();
 
-// GET PUT PATCH DELETE
-//       /course/
+// GET POST PUT DELETE
 router.get('/',fetchAll);
 router.post('/',
-    upload.multiple('avatar'),
+    upload.single('avatar'),
     create
 );
-router.put('/');
 
 
 export default router;

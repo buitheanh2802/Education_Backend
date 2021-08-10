@@ -19,7 +19,7 @@ export const upload = {
                 const fileData = file[fieldName];
                 if(fileData){
                     createFileSystem(fileData.name,fileData.path);
-                    req.file = fileData;
+                    req.file = file;
                 }
                 req.body = fields;
                 next();
@@ -45,7 +45,7 @@ export const upload = {
                     fileData.forEach(file => {
                         createFileSystem(file.name,file.path);
                     })
-                    req.files = fileData;
+                    req.files = files;
                 }
                 req.body = fields;
                 next();

@@ -1,7 +1,7 @@
 import CourseModel from './../models/course.model';
 import { createFile, createFolder } from './../helpers/useDrive';
-import { createFileSystem, removeFileSystem } from './../helpers/useSystem';
-import Formidable from 'formidable';
+import { removeFileSystem } from './../helpers/useSystem';
+import {v4 as uuid } from 'uuid';
 
 export const fetchAll = (req, res) => {
     CourseModel.find({}, (err, docs) => {
@@ -24,30 +24,24 @@ export const fetchAll = (req, res) => {
 
 
 export const create = async (req, res) => {
-    console.log(req.body);
-    console.log(req.files);
-    // const folder = await createFolder('hihi','1IPE9cxptb8cvj6ABeQJxl7GzsTjIBwnd');
-    // const file = await createFile(avatar.name,folder.id);
-    // const course = new CourseModel({...fields,avatar : file.webContentLink});
-    // course.save((err,docs) => {
-    //     console.log(docs);
-    // })
-
-    //user request files
-    //req.files
-    //req.file
-    // const folder = await createFolder('anh hải','1IPE9cxptb8cvj6ABeQJxl7GzsTjIBwnd');
-    // const files = await createFile('tải xuống.jfif','1oRx-oR9CCj2fvzHfgSMho3P46Y2sJ9vv');
-    // const course = new CourseModel({...req.body,avatar : files.webContentLink});
-    // course.save((err,docs) => {
-    //     if(err){
-    //         return res.status(400).json({
-    //             error : err.message
-    //         })
-    //     }
-    //     res.status(200).json({
-    //         message : 'Tạo khóa học thành công',
-    //         data : docs
-    //     })
-    // })
+    const { avatar } = req.file;
+    const folder = await createFolder(uuid(),'1IPE9cxptb8cvj6ABeQJxl7GzsTjIBwnd');
+    const file = await createFile(avatar.name,folder.id);
+    const course = new CourseModel({...req.body,avatar : { _id : file.id, linkUrl : file.webContentLink}});
+    course.save((err,docs) => {
+        if(err){
+            return res.status(500).json({
+                message : [
+                    'ERROR_SERVER',
+                    err.message
+                ],
+                status : false
+            })
+        }
+        return res.status(200).json({
+            message : [],
+            status : true,
+            data : docs
+        })
+    })
 }

@@ -27,7 +27,8 @@
     "nodemailer": "^6.6.3",
     "nodemailer-express-handlebars": "^4.0.0",
     "nodemon": "^2.0.12",
-    "speakeasy": "^2.0.0"
+    "speakeasy": "^2.0.0",
+    "uuid": "^8.3.2"
   },
   "devDependencies": {
     "@babel/core": "^7.14.6",
