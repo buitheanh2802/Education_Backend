@@ -9,6 +9,8 @@ export const notificationValidator = async (req, res, next) => {
     await body('content').trim().notEmpty().withMessage('Nhập nội dung ').run(req);
     await body('type').trim().notEmpty().withMessage('Nhập loại ').run(req);
     await body('userID').trim().notEmpty().withMessage('Nhập ID user').run(req);
+    await body('path').trim().notEmpty().withMessage('Nhập link').run(req);
+    await body('status').trim().notEmpty().withMessage('Chọn tình trạng').run(req);
 
     const check = validationResult(req);
     // điều kiện tồn tại lỗi =>
@@ -26,7 +28,10 @@ export const notificationById = (req, res, next, id) => {
     NotificationModel.findById(id).exec((err, notification) => {
         if (err || !notification) {
             res.status(400).json({
-                error: "Không tìm thông báo"
+                message: [
+                    err.message
+                ],
+                status: false
             })
         }
         req.notification = notification;
@@ -34,23 +39,23 @@ export const notificationById = (req, res, next, id) => {
     })
 }
 
-export const pagination = (req,res,next) => {
+export const pagination = (req, res, next) => {
     // ?_limit=10&_page=0
     //[{},{},{},{},{}]
-    const { _page,_limit } = req.query;
+    const { _page, _limit } = req.query;
     const currentSkip = _page * _limit // => 1 * 8
-    if(_page && _limit){
+    if (_page && _limit) {
         NotificationModel
             .find({})
             .limit(_limit)
             .skip(currentSkip)
-            .exec((err,docs) => {
+            .exec((err, docs) => {
                 return res.status(200).json({
-                    data : docs
+                    data: docs
                 })
             })
     }
-    else{
+    else {
         return next()
     }
 }

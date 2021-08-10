@@ -24,7 +24,10 @@ export const feedbackById = (req, res, next, id) => {
     FeedbackModel.findById(id).exec((err, feedback) => {
         if (err || !feedback) {
             res.status(400).json({
-                error: "Không tìm thấy feedback"
+                message: [
+                    err.message
+                ],
+                status: false
             })
         }
         req.feedback = feedback;

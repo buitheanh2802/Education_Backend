@@ -25,7 +25,10 @@ export const lessionById = (req, res, next, id) => {
     LessionModel.findById(id).exec((err, lession) => {
         if (err || !lession) {
             res.status(400).json({
-                error: "Không tìm thấy bài giảng"
+                message: [
+                    err.message
+                ],
+                status: false
             })
         }
         req.lession = lession;
