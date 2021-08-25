@@ -1,0 +1,135 @@
+{
+    "users" : [
+        {
+            "_id" : "ID",
+            "fullName" : "String",
+            "email" : "String",
+            "password" : "String",
+            "avatar" : {
+                "_id" : "ID",
+                "avatarUrl" : "String"
+            },
+            "address" : "String",
+            "phoneNumber" : "String",
+            "birth" : "Date",
+            "star" : "Number",
+            "username" : "bui-the-anh",
+            "role" : "user|admin|collaborators",
+            "status" : "active|block|verify",
+            "userType" : "basic|premium"
+        }
+    ],
+    "notifications" : [
+        {
+            "_id" : "ID",
+            "title" : "String",
+            "isRead" : "Boolean",
+            "url" : "String",
+            "sender" : {
+                "fullname" : "String",
+                "avatarUrl" : "String"
+            },
+            "userId" : "ID",
+            "createAt" : "",
+            "type" : "system|user"
+        }
+    ],
+    "course" : [
+        {
+            "title" : "String",
+            "description" : "String",
+            "avatar" : {
+                "_id" : "ID",
+                "avatarUrl" : "String"
+            },
+            "videoUrl" : "String",
+            "rate" : [
+                {
+                    "userId" : "ID",
+                    "star" : "Number"
+                }
+            ],
+            "slug" : "html-css",
+            "willLeans" : [
+                {
+                    "_id" : "ID",
+                    "content" : "String"
+                }
+            ],
+            "categoryId" : "Number",
+            "registerBy" : ["userId"],
+            "userId" : "ID"
+        }
+    ],
+    "lessions" : [
+        {
+
+        }
+    ],
+    "posts" : [
+        {
+            "_id" : "ID",
+            "title" : "String",
+            "content" : "StringHTML",
+            "views" : "Number",
+            "isPublished" : "Boolean",
+            "slug" : "bui-the-anh",
+            "isApprove" : "Boolean",
+            "userId" : "ID",
+            "votes" : ["ListID"]
+        }
+    ],
+    "questions" : [
+        {
+
+        }
+    ],
+    "comments" : [
+        {
+            "_id" : "ID",
+            "content" : "String",
+            "isExact" : "Boolean",
+            "votes" : [],
+            "reply" : [
+                {
+                    "_id" : "ID",
+                    "content" : "String",
+                    "avatarUrl" : "String",
+                    "votes" : [],
+                    "username" : "bui-the-anh"
+                }
+            ],
+            "avatarUrl" : "String",
+            "userId" : "fysaofyoisdyf",
+            "username" : "bui-the-anh",
+            "postId" : "ID"
+        }
+    ],
+    "follows" :[
+        {
+            "_id" : "ID",
+            "followingUserId" : "anh hai",
+            "userId" : "theanh"
+        },
+        {
+            "_id" : "ID",
+            "followingUserId" : "anh hai",
+            "userId" : "vinh"
+        },
+        {
+            "_id" : "ID",
+            "followingUserId" : "theanh",
+            "userId" : "dat"
+        },
+        {
+            "_id" : "ID",
+            "followingUserId" : "the anh",
+            "userId" : "anh hai"
+        }
+    ],
+    "pictures" : {
+        "_id" : "ID",
+        "path" : "String",
+        "userId" : "String"
+    }
+}
