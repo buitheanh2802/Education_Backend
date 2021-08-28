@@ -110,21 +110,6 @@
             "_id" : "ID",
             "followingUserId" : "anh hai",
             "userId" : "theanh"
-        },
-        {
-            "_id" : "ID",
-            "followingUserId" : "anh hai",
-            "userId" : "vinh"
-        },
-        {
-            "_id" : "ID",
-            "followingUserId" : "theanh",
-            "userId" : "dat"
-        },
-        {
-            "_id" : "ID",
-            "followingUserId" : "the anh",
-            "userId" : "anh hai"
         }
     ],
     "pictures" : {
