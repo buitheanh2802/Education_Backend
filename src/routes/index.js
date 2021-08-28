@@ -15,3 +15,5 @@ export const routes = (app) => {
     app.use('/api/notification', notification)
     app.use('/api/categoryexercise', categoryExercise)
 }
+
+//123
