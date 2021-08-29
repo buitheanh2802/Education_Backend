@@ -107,14 +107,20 @@
     ],
     "follows" :[
         {
-            "_id" : "ID",
             "followingUserId" : "anh hai",
             "userId" : "theanh"
         }
     ],
     "pictures" : {
-        "_id" : "ID",
         "path" : "String",
         "userId" : "String"
+    },
+    "tags" : {
+        "_id" : "ID",
+        "name" : "String",
+        "avatar" : {
+            "_id" : "ID",
+            "avatarUrl" : "String"
+        }
     }
 }
