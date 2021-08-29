@@ -1,6 +1,6 @@
 import CourseModel from './../models/course.model';
-import { createFile, createFolder } from './../helpers/useDrive';
-import { removeFileSystem } from './../helpers/useSystem';
+import { createFile, createFolder } from '../services/drive';
+import { removeFileSystem } from '../services/system';
 import {v4 as uuid } from 'uuid';
 
 export const fetchAll = (req, res) => {

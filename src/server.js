@@ -15,6 +15,7 @@ const serverConfig = async () => {
     app.use(express.json());
     app.use(express.urlencoded({ extended: true }))
     app.use(cookie());
+    // passport config
     // connect to mongoDB
     await initializeDB();
     // routes

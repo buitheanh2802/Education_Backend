@@ -1,7 +1,7 @@
 import CategoryExerciseModel from './../models/categoryExercise.model';
 import _ from 'lodash';
 import { v4 as uuid } from 'uuid';
-import { createFile, createFolder } from '../helpers/useDrive';
+import { createFile, createFolder } from '../services/drive';
 
 
 export const fetchAll = (req, res) => {
