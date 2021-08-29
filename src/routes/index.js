@@ -17,4 +17,3 @@ export const routes = (app) => {
     app.use('/api/categoryexercise', categoryExercise)
     app.use('/api/post', postRoute)
 }
-///123

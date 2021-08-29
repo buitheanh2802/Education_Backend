@@ -1,33 +1,26 @@
 import express from 'express';
 import dotenv from 'dotenv';
-import { mongoConnect } from './config';
+import { initializeDB } from '@/config';
 import { routes } from './routes';
-import cookieParser from 'cookie-parser';
+import cookie from 'cookie-parser';
 
-//initial dotenv
-dotenv.config();
-
-// initial app
-const app = express();
-
-// initial parse data from client
-app.use(express.json());
-app.use(express.urlencoded({ extended : true}))
-// use cookie
-app.use(cookieParser())
-
-// connect to mongoDB
-mongoConnect()
-    .then(() => console.log('database is connected !'))
-    .catch(err => console.log(`error connect to mongoDB : ${err.message}`))
-
-
-// PORT : 
-const PORT = process.env.PORT || 4000;
-
-// init route
-routes(app);
-
-app.listen(PORT,() => {
-    console.log(`server is running in port : ${PORT}`);
-})
+const serverConfig = async () => {
+    // environment
+    dotenv.config();
+    // PORT
+    const PORT = process.env.PORT || 4000;
+    // initial app
+    const app = express();
+    // initial parse data from client
+    app.use(express.json());
+    app.use(express.urlencoded({ extended: true }))
+    app.use(cookie());
+    // connect to mongoDB
+    await initializeDB();
+    // routes
+    routes(app);
+    // listenning
+    app.listen(PORT, () => console.log(`server is running at port : ${PORT}`))
+}
+// run
+serverConfig();

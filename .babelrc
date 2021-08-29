@@ -1,5 +1,23 @@
 {
-    "presets": [
-        "@babel/preset-env"
-    ]
+  "presets": ["@babel/preset-env"],
+  "plugins": [
+    [
+      "import",
+      {
+        "libraryName": "lodash",
+        "libraryDirectory": "",
+        "camel2DashComponentName": false
+      }
+    ],
+    [
+      "module-resolver",
+      {
+        "root": ["."],
+        "alias": {
+          "@": "./src"
+        }
+      }
+    ],
+    ["@babel/plugin-transform-runtime"]
+  ]
 }
