@@ -6,17 +6,18 @@ const initializeSchema = mongoose.Schema;
 const UserSchema = new initializeSchema({
     fullname : { type : String },
     username : { type : String,unique : true },
-    email : { type : String },
+    email : { type : String,unique : true },
     password : { type : String },
     avatar : {
         id : { type : String, default : ""},
-        linkUrl : { type : String , default : ""}
+        avatarUrl : { type : String , default : ""}
     },
+    birthday : { type : Date},
+    star : { type : Number},
+    userType : { type : String,enum : ['basic','premium'] , default : 'basic'},
     address : { type : String,default : '' },
-    phoneNumber : { type : Number ,default : ''},
-    role : { type : String , enum : ['user','admin','mentor','staff'],default : 'user'},
-    typeLogin : { type : String , enum : ['system','fb','gg'],default : 'system'},
-    secretKey : { type : String,default : '' },
+    phoneNumber : { type : Number ,default : 0},
+    role : { type : String , enum : ['user','admin','collaborators'],default : 'user'},
     status : { type : String,enum : ['active','block','verify'],default : 'verify' }
 },
 {

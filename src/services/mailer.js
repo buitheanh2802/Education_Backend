@@ -10,8 +10,8 @@ import path from 'path';
 const transportion = nodemailer.createTransport({
     host: 'smtp.gmail.com',
     auth: {
-        user: 'devchallenge113@gmail.com',
-        pass: 'icpxzdedojjclbre'
+        user: 'devstargroup@gmail.com',
+        pass: 'mnxasvoqkgfouahj'
     },
     service: 'gmail'
 });
@@ -31,9 +31,9 @@ transportion.use('compile', handlebars({
 // export function
 export const sendMail = async (sendTo, subject, template,variables) => {
     const data = await transportion.sendMail({
-        from: 'Devchallenge <devchallenge123@gmail.com>',
+        from: 'DevStar <devstargroup@gmail.com>',
         to: sendTo,
-        replyTo: 'devchallenge113@gmail.com',
+        replyTo: 'devstargroup@gmail.com',
         subject,
         template,
         context : variables

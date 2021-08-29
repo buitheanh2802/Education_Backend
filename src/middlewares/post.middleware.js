@@ -7,6 +7,8 @@ export const postValidator = async (req, res, next) => {
     await body('content').trim().notEmpty().withMessage('Nhập content').run(req);
     await body('views').trim().notEmpty().withMessage('Nhập view').run(req);
     await body('isPublished').trim().notEmpty().withMessage('Chọn chế độ ẩn/hiện ').run(req);
+    // bai viet moi nhat
+    // bai-viet-moi-nhat-8569384
     await body('slug').trim().notEmpty().withMessage('Nhập slug ').run(req);
     await body('isApprove').trim().notEmpty().withMessage('Chọn chế độ duyệt').run(req);
     await body('userID').trim().notEmpty().withMessage('Nhập user Id').run(req);

@@ -14,7 +14,13 @@
       {
         "root": ["."],
         "alias": {
-          "@": "./src"
+          "assets": "./src/assets",
+          "middlewares": "./src/middlewares",
+          "routes": "./src/routes",
+          "models": "./src/models",
+          "config": "./src/config",
+          "controllers": "./src/controllers",
+          "services" : "./src/services"
         }
       }
     ],

@@ -1,22 +1,20 @@
 import express from 'express';
+import { APILimiter } from 'middlewares/auth.middleware';
+import { userValidator } from 'middlewares/user.middleware';
+import { signup,active } from 'controllers/auth.controller';
 const router = express.Router();
 
-// // REGISTER
-// router.post('/register',
-//     APILimiter(5,3600),
-//     userValidator,
-//     register
-// );
-
-// router.post('/activate/:idUser/resend',
-//     resendOTP
-// );
-
-// router.post('/activate/:idUser',
-//     activateOTP
-// );
-
-// router.param('idUser', findUserById)
+// signup
+router.post('/signup',
+    APILimiter(5,3600),
+    userValidator,
+    signup
+);
+//active account
+router.get('/active/:token',
+    APILimiter(5,3600 * 24),
+    active
+);
 
 
 export default router;

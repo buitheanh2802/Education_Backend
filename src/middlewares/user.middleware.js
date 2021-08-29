@@ -30,7 +30,6 @@ export const userValidator = async (req, res, next) => {
                 .matches(/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/)
                 .withMessage('Mật khẩu phải tối thiểu 8 kí tự, ít nhất một chữ cái và một số !')
                 .run(req);
-
     const validatorResult = validationResult(req);
     if(!validatorResult.isEmpty()){
         return res.status(200).json({
