@@ -9,11 +9,9 @@ import postRoute from './post.route';
 
 export const routes = (app) => {
     app.use('/api/auth', authRoute)
-    // app.use('/api/course', courseRoute)
-    // app.use('/api/lession', lessionRoute)
-    // app.use('/api/feedback', feedbackRoute)
-    // app.use('/api/comment', commentRoute)
-    // app.use('/api/notification', notification)
-    // app.use('/api/categoryexercise', categoryExercise)
-    // app.use('/api/post', postRoute)
+    app.use('/api/feedback', feedbackRoute)
+    app.use('/api/comment', commentRoute)
+    app.use('/api/notification', notification)
+    app.use('/api/categoryexercise', categoryExercise)
+    app.use('/api/post', postRoute)
 }
