@@ -4,18 +4,17 @@ import { Strategy as facebookStrategy } from 'passport-facebook';
 
 export const passportConfig = (app) => {
     app.use(passport.initialize());
-    passport.serializeUser((err,done) => {
-
+    passport.serializeUser((profile, done) => {
+        done(null, profile)
     })
-    passport.deserializeUser((err,done) => {
-
+    passport.deserializeUser((profile, done) => {
+        done(null, profile)
     });
     passport.use(new localStrategy({
-        passwordField : 'email',
-        usernameField : 'password',
-        session : false
-    },(email,password,done) => {
-            console.log(email);
-            console.log(password);
+        passwordField: 'password',
+        usernameField: 'email',
+        session: false
+    }, (email, password, done) => {
+        done(null, { email, password })
     }))
 }
