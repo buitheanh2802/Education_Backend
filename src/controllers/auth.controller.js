@@ -58,3 +58,7 @@ export const signin = (req, res) => {
         })
     })(req, res);
 }
+
+export const profile = (req,res) => {
+    
+}
