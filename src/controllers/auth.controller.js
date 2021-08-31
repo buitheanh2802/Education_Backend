@@ -49,16 +49,27 @@ export const signin = (req, res) => {
             if (err) return response(res, 500, ['ERROR_SERVER', err.message]);
             if (!docs) return response(res, 400, ['EMAIL_NOTEXIST']);
             if (!docs.verifyPassword(passwordRequest)) return response(res, 400, ['INVALID_PASSWORD']);
-            const token = jwt.sign({ _id: docs._id }, process.env.SECRET_KEY, { expiresIn: 60 * 60 * 48 });
+            const token = jwt.sign({ _id: docs._id }, process.env.SECRET_KEY, { expiresIn: 60 * 60 });
             if (docs.status == 'verify') {
                 return response(res, 400, ['NOT_VERIFY'])
             }
-            res.cookie('AUTH_TOKEN', token, { httpOnly: true, maxAge: 1000 * 60 * 60 * 48 })
+            res.cookie('AUTH_TOKEN', token, { httpOnly: true, maxAge: 1000 * 60 * 60 })
             return response(res, 200, [], { username: docs.username, email: docs.email, fullname: docs.fullname, avatar: docs.avatar })
         })
     })(req, res);
 }
 
 export const profile = (req,res) => {
-    
+    UserModel.findOne({ _id : req.userId},(err,docs) => {
+        if (err) return response(res, 500, ['ERROR_SERVER', err.message]);
+        if (!docs) return response(res, 400, ['USER_NOTEXIST']);
+        // const token = jwt.sign({ _id: docs._id }, process.env.SECRET_KEY, { expiresIn: 60 * 60 });
+        // res.cookie('AUTH_TOKEN', token, { httpOnly: true, maxAge: 1000 * 60 * 60 })
+        return response(res, 200, [], { username: docs.username, email: docs.email, fullname: docs.fullname, avatar: docs.avatar })
+    })
+}
+
+export const signout = (req,res) => {
+    res.clearCookie('AUTH_TOKEN');
+    return response(res,200,[]);
 }
