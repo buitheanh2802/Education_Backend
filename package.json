@@ -7,7 +7,8 @@
     "start": "node ./src_bundle/server.js",
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "nodemon",
-    "build": "babel ./src -d ./src_bundle"
+    "build": "babel ./src -d ./src_bundle",
+    "heroku-postbuild" : "npm run build"
   },
   "keywords": [],
   "author": "",
