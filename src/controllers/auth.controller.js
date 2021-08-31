@@ -54,22 +54,38 @@ export const signin = (req, res) => {
                 return response(res, 400, ['NOT_VERIFY'])
             }
             res.cookie('AUTH_TOKEN', token, { httpOnly: true, maxAge: 1000 * 60 * 60 })
-            return response(res, 200, [], { username: docs.username, email: docs.email, fullname: docs.fullname, avatar: docs.avatar })
+            return response(res, 200, [], {
+                                            username: docs.username,
+                                            email: docs.email,
+                                            fullname: docs.fullname,
+                                            avatar: docs.avatar,
+                                            birthday: docs.birthday,
+                                            address: docs.address,
+                                            phoneNumber: docs.phoneNumber
+                                        })
         })
     })(req, res);
 }
 
-export const profile = (req,res) => {
-    UserModel.findOne({ _id : req.userId},(err,docs) => {
+export const profile = (req, res) => {
+    UserModel.findOne({ _id: req.userId }, (err, docs) => {
         if (err) return response(res, 500, ['ERROR_SERVER', err.message]);
         if (!docs) return response(res, 400, ['USER_NOTEXIST']);
         // const token = jwt.sign({ _id: docs._id }, process.env.SECRET_KEY, { expiresIn: 60 * 60 });
         // res.cookie('AUTH_TOKEN', token, { httpOnly: true, maxAge: 1000 * 60 * 60 })
-        return response(res, 200, [], { username: docs.username, email: docs.email, fullname: docs.fullname, avatar: docs.avatar })
+        return response(res, 200, [], {
+            username: docs.username,
+            email: docs.email,
+            fullname: docs.fullname,
+            avatar: docs.avatar,
+            birthday: docs.birthday,
+            address: docs.address,
+            phoneNumber: docs.phoneNumber
+        })
     })
 }
 
-export const signout = (req,res) => {
+export const signout = (req, res) => {
     res.clearCookie('AUTH_TOKEN');
-    return response(res,200,[]);
+    return response(res, 200, []);
 }

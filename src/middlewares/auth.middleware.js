@@ -39,5 +39,5 @@ export const accessRole = (...acceptRoles) => {
             if(isAccept) return next();
             else return response(res,401,['ACCESS_DENIED'])
         })
-    }
+    }   
 }
