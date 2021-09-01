@@ -14,6 +14,5 @@ router.get('/',
     fetchAll
 );
 
-router.param('notificationId', notificationById);
 
 export default router;

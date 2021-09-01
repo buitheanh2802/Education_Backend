@@ -26,6 +26,7 @@ export const accessToken = (req, res, next) => {
         req.userId = _id;
         return next();
     } catch (error) {
+        res.clearCookie('AUTH_TOKEN');
         return response(res, 400, ['EXPIRED_TOKEN']);
     }
 }

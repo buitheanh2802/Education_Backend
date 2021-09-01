@@ -5,8 +5,20 @@ import _ from 'lodash'
 
 // thêm các middleware sử lí nhằm giảm tải cho controller dữ liệu sau này lớn lên sẽ khó kiểm soát
 export const notificationValidator = async (req, res, next) => {
-    await body('title').trim().notEmpty().withMessage('Nhập tiêu đề').run(req);
-    await body('content').trim().notEmpty().withMessage('Nhập nội dung ').run(req);
+    await body('title')
+                .trim()
+                .notEmpty()
+                .withMessage('Không được bỏ trống tiêu đề...')
+                .isLength({ max : 50 })
+                .withMessage('Tiêu đề không được dài hơn 50 kí tự')
+                .run(req);
+    await body('url')
+                .trim()
+                .notEmpty()
+                .withMessage('Không được bỏ trống URL...')
+                .isLength({ max : 50 })
+                .withMessage('URL không được dài hơn 50 kí tự')
+                .run(req);
     await body('type').trim().notEmpty().withMessage('Nhập loại ').run(req);
     await body('userID').trim().notEmpty().withMessage('Nhập ID user').run(req);
     await body('path').trim().notEmpty().withMessage('Nhập link').run(req);
