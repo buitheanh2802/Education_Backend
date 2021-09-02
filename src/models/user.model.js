@@ -18,7 +18,8 @@ const UserSchema = new initializeSchema({
     address : { type : String,default : '' },
     phoneNumber : { type : Number ,default : 0},
     role : { type : String , enum : ['user','admin','collaborators'],default : 'user'},
-    status : { type : String,enum : ['active','block','verify'],default : 'verify' }
+    status : { type : String,enum : ['active','block','verify'],default : 'verify' },
+    driveId : { type : String,default : '' }
 },
 {
     timestamps : true
@@ -29,7 +30,6 @@ UserSchema.pre('save',async function(next){
     const salt = await bcrypt.genSalt(10);
     const passwordHashsed = await bcrypt.hash(this.password,salt);
     this.password = passwordHashsed;
-    next();
 })
 
 UserSchema.methods = {

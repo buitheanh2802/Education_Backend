@@ -1,6 +1,7 @@
 import UserModel from 'models/user.model';
 import { sendMail } from 'services/mailer';
 import { response } from 'services/responseHandler';
+import { createFolder } from 'services/drive';
 import jwt from 'jsonwebtoken';
 import passport from 'passport';
 import _ from 'lodash';
@@ -18,7 +19,10 @@ export const signup = async (req, res) => {
         const token = jwt.sign({ _id: docs._id }, process.env.SECRET_KEY, { expiresIn: 60 * 60 })
         await sendMail(email, 'Xác thực tài khoản của bạn !', 'verifyEmailTemplate', {
             activeUrl: `${process.env.DOMAIN}/api/auth/active/${token}`
-        })
+        });
+        const driveFolder = await createFolder(docs.username,'1PWS1iJLKp02kOGGQ-o2WwFYFQE8E6Scs');
+        docs.driveId = driveFolder.id;
+        await docs.save();
         return response(res, 200, [], { fullname, email, username })
     })
 }
