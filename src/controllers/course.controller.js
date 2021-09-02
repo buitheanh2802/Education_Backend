@@ -25,7 +25,7 @@ export const fetchAll = (req, res) => {
 
 export const create = async (req, res) => {
     const { avatar } = req.file;
-    const folder = await createFolder(uuid(),'1IPE9cxptb8cvj6ABeQJxl7GzsTjIBwnd');
+    const folder = await createFolder(uuid(),'1CanwfJrYr9_3pfEhAbDlCP6LitwwHEKU');
     const file = await createFile(avatar.name,folder.id);
     const course = new CourseModel({...req.body,avatar : { _id : file.id, linkUrl : file.webContentLink}});
     course.save((err,docs) => {

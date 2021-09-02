@@ -8,6 +8,7 @@ import authRoute from './auth.route';
 import postRoute from './post.route';
 
 export const routes = (app) => {
+    app.use('/api/course', courseRoute)
     app.use('/api/auth', authRoute)
     app.use('/api/feedback', feedbackRoute)
     app.use('/api/comment', commentRoute)

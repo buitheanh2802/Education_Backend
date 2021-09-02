@@ -87,7 +87,7 @@
     "comments" : [
         {
             "_id" : "ID",
-            "content" : "String",
+            "content" : "zz",
             "isExact" : "Boolean",
             "votes" : [],
             "reply" : [

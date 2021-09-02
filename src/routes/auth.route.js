@@ -1,7 +1,7 @@
 import express from 'express';
 import { APILimiter, accessToken } from 'middlewares/auth.middleware';
 import { userValidator } from 'middlewares/user.middleware';
-import { signup, active, signin, profile, signout } from 'controllers/auth.controller';
+import { signup, activeAccount, signin, profile, signout } from 'controllers/auth.controller';
 const router = express.Router();
 
 // signup
@@ -13,7 +13,7 @@ router.post('/signup',
 //active account
 router.get('/active/:token',
     APILimiter(5, 3600 * 24),
-    active
+    activeAccount
 );
 // signin
 router.post('/signin', signin);

@@ -23,7 +23,7 @@ export const signup = async (req, res) => {
     })
 }
 
-export const active = (req, res) => {
+export const activeAccount = (req, res) => {
     const { token } = req.params;
     if (!token) return res.redirect(`${process.env.ACCESS_DOMAIN}/not-found`);
     try {
