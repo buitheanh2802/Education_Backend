@@ -4,7 +4,8 @@ import { body, validationResult } from 'express-validator';
 export const commentValidator = async (req, res, next) => {
     await body('content').trim().notEmpty().withMessage('Nhập content').run(req);
     await body('userID').trim().notEmpty().withMessage('Nhập user Id').run(req);
-    await body('lessionID').trim().notEmpty().withMessage('Nhập lession id').run(req);
+    await body('postID').trim().notEmpty().withMessage('Nhập post id').run(req);
+    await body('isExact').trim().notEmpty().withMessage('Nhập exact boolen').run(req);
 
     const check = validationResult(req);
     if (!check.isEmpty()) {
