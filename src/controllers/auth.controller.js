@@ -20,7 +20,7 @@ export const signup = async (req, res) => {
         await sendMail(email, 'Xác thực tài khoản của bạn !', 'verifyEmailTemplate', {
             activeUrl: `${process.env.DOMAIN}/api/auth/active/${token}`
         });
-        const driveFolder = await createFolder(docs.username,'1PWS1iJLKp02kOGGQ-o2WwFYFQE8E6Scs');
+        const driveFolder = await createFolder(docs.username, '1PWS1iJLKp02kOGGQ-o2WwFYFQE8E6Scs');
         docs.driveId = driveFolder.id;
         await docs.save();
         return response(res, 200, [], { fullname, email, username })
@@ -53,20 +53,20 @@ export const signin = (req, res) => {
             if (err) return response(res, 500, ['ERROR_SERVER', err.message]);
             if (!docs) return response(res, 400, ['EMAIL_NOTEXIST']);
             if (!docs.verifyPassword(passwordRequest)) return response(res, 400, ['INVALID_PASSWORD']);
-            const token = jwt.sign({ _id: docs._id }, process.env.SECRET_KEY, { expiresIn: 60 * 60 });
+            const token = jwt.sign({ _id: docs._id, driveId: docs.driveId }, process.env.SECRET_KEY, { expiresIn: 60 * 60 });
             if (docs.status == 'verify') {
                 return response(res, 400, ['NOT_VERIFY'])
             }
             res.cookie('AUTH_TOKEN', token, { httpOnly: true, maxAge: 1000 * 60 * 60 })
             return response(res, 200, [], {
-                                            username: docs.username,
-                                            email: docs.email,
-                                            fullname: docs.fullname,
-                                            avatar: docs.avatar,
-                                            birthday: docs.birthday,
-                                            address: docs.address,
-                                            phoneNumber: docs.phoneNumber
-                                        })
+                username: docs.username,
+                email: docs.email,
+                fullname: docs.fullname,
+                avatar: docs.avatar,
+                birthday: docs.birthday,
+                address: docs.address,
+                phoneNumber: docs.phoneNumber
+            })
         })
     })(req, res);
 }

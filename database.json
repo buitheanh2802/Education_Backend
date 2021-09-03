@@ -112,8 +112,10 @@
         }
     ],
     "pictures" : {
+        "_id" : "ID",
         "path" : "String",
-        "userId" : "String"
+        "userId" : "String",
+        "socialType" : "String"
     },
     "tags" : {
         "_id" : "ID",
