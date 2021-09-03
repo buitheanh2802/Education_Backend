@@ -61,7 +61,7 @@ export const createFolder = async (folderName, parentFolder = '1dH8_S2Fd2k1Nct6Z
         fields: 'id'
     });
     // set public cho folder
-    await setPermission(data.id);
+    // await setPermission(data.id);
     return data;
 }
 

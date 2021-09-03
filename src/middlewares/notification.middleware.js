@@ -19,11 +19,13 @@ export const notificationValidator = async (req, res, next) => {
                 .isLength({ max : 50 })
                 .withMessage('URL không được dài hơn 50 kí tự')
                 .run(req);
-    await body('type').trim().notEmpty().withMessage('Nhập loại ').run(req);
-    await body('userID').trim().notEmpty().withMessage('Nhập ID user').run(req);
-    await body('path').trim().notEmpty().withMessage('Nhập link').run(req);
-    await body('status').trim().notEmpty().withMessage('Chọn tình trạng').run(req);
-
+    await body('sendTo')
+                .trim()
+                .notEmpty()
+                .withMessage('Không được bỏ trống người nhận.... ')
+                .isLength({ max : 20 })
+                .withMessage('Người nhận là ID và không được dài hơn 20 kí tự')
+                .run(req);
     const check = validationResult(req);
     // điều kiện tồn tại lỗi =>
     if (!check.isEmpty()) {
@@ -33,7 +35,7 @@ export const notificationValidator = async (req, res, next) => {
         })
     }
     // nếu k có lỗi tiến hành next() và cho create 
-    next()
+    next();
 }
 
 export const notificationById = (req, res, next, id) => {
