@@ -22,8 +22,9 @@ export const accessToken = (req, res, next) => {
     const token = req.cookies['AUTH_TOKEN'];
     if (!token) return response(res, 400, ['EMPTY_TOKEN']);
     try {
-        const { _id } = jwt.verify(token, process.env.SECRET_KEY);
+        const { _id, driveId } = jwt.verify(token, process.env.SECRET_KEY);
         req.userId = _id;
+        req.driveId = driveId;
         return next();
     } catch (error) {
         res.clearCookie('AUTH_TOKEN');
@@ -32,13 +33,13 @@ export const accessToken = (req, res, next) => {
 }
 
 export const accessRole = (...acceptRoles) => {
-    const roleDefine = ['user','admin','collaborators'];
-    return (req,res,next) => {
-        userModel.findById(req.userId,(err,docs) => {
-            if(err) return response(res,500,['ERROR_SERVER']);
+    const roleDefine = ['user', 'admin', 'collaborators'];
+    return (req, res, next) => {
+        userModel.findById(req.userId, (err, docs) => {
+            if (err) return response(res, 500, ['ERROR_SERVER']);
             const isAccept = acceptRoles.includes(docs.role);
-            if(isAccept) return next();
-            else return response(res,401,['ACCESS_DENIED'])
+            if (isAccept) return next();
+            else return response(res, 401, ['ACCESS_DENIED'])
         })
-    }   
+    }
 }

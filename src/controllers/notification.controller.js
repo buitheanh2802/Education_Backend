@@ -1,7 +1,7 @@
 import NotificationModel from "../models/notification.model";
 import _ from 'lodash'
 
-export const fetchAll = (req, res) => {
+export const gets = (req, res) => {
     NotificationModel.find({}, (err, docs) => {
         if (err) {
             res.status(500).json({

@@ -1,17 +1,14 @@
 import express from 'express';
-import { create, fetchAll, read, remove, update } from '../controllers/notification.controller';
+import { accessToken } from 'middlewares/auth.middleware';
+import { create, gets, read, remove, update } from '../controllers/notification.controller';
 import { notificationById, notificationValidator, pagination } from '../middlewares/notification.middleware';
 // init router
 const router = express.Router();
 
-router.post('/', notificationValidator, create);
-router.get('/:notificationId', read);
-router.put('/:notificationId', notificationValidator, update);
-router.delete('/:notificationId', remove);
-
 router.get('/',
-    pagination, 
-    fetchAll
+    // accessToken,
+    pagination,
+    gets
 );
 
 

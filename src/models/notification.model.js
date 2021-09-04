@@ -8,8 +8,8 @@ const NotificationSchema = new mongoose.Schema({
     sendTo: { type: mongoose.Schema.Types.ObjectId, ref: 'users' },
     type: { type: String, enum: ['user,system'], default: 'user' }
 },
-    { timestamps: true, _id: false }
+    { timestamps: true }
 );
 
 
-module.exports = mongoose.model('Notifications', NotificationSchema);
+export default mongoose.model('Notifications', NotificationSchema);
