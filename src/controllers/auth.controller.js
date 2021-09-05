@@ -59,7 +59,7 @@ export const signin = (req, res) => {
             if (docs.status == 'verify') {
                 return response(res, 400, ['NOT_VERIFY'])
             }
-            res.cookie('auth_tk', token, { httpOnly: true, maxAge: 1000 * 60 * 60, sameSite: 'none',secure : true });
+            res.cookie('auth_tk', token, { httpOnly: true, maxAge: 1000 * 60 * 60, domain: process.env.ACCESS_DOMAIN, sameSite: 'none', secure: true });
             return response(res, 200, [], {
                 username: docs.username,
                 email: docs.email,
