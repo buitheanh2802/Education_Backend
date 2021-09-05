@@ -19,7 +19,7 @@ const serverConfig = async () => {
     app.use(cors({
         methods : 'GET,POST,PUT,DELETE',
         credentials : true,
-        origin : process.env.ACCESS_DOMAIN
+        origin : "*"
     }))
     app.use(express.json());
     app.use(express.urlencoded({ extended: true }));
