@@ -5,6 +5,7 @@ import { routes } from 'routes';
 import { passportConfig } from 'services/passport';
 import cookie from 'cookie-parser';
 import cors from 'cors';
+import { toArray  } from 'lodash';
 
 const serverConfig = async () => {
     // environment
@@ -19,7 +20,7 @@ const serverConfig = async () => {
     app.use(cors({
         methods : 'GET,POST,PUT,DELETE',
         credentials : true,
-        origin : "*"
+        origin : ['http://localhost:3000','http://172.20.10.2:3000']
     }))
     app.use(express.json());
     app.use(express.urlencoded({ extended: true }));
