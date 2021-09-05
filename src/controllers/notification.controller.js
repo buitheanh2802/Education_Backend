@@ -23,7 +23,7 @@ export const create = (req, res) => {
     const notification = new NotificationModel(req.body);
     notification.save((err, docs) => {
         if (err) {
-            res.status(400).json({
+            return res.status(400).json({
                 message: [
                     err.message
                 ],

@@ -10,6 +10,8 @@ router.get('/',
     pagination,
     gets
 );
+router.post('/', create)
+
 
 
 export default router;
