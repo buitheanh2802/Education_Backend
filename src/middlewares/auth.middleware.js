@@ -19,7 +19,7 @@ export const APILimiter = (maxRequestLimit, seconds) => {
     })
 }
 export const accessToken = (req, res, next) => {
-    const token = req.cookies['AUTH_TOKEN'];
+    const token = req.cookies['auth_tk'];
     if (!token) return response(res, 400, ['EMPTY_TOKEN']);
     try {
         const { _id, driveId } = jwt.verify(token, process.env.SECRET_KEY);
@@ -27,7 +27,7 @@ export const accessToken = (req, res, next) => {
         req.driveId = driveId;
         return next();
     } catch (error) {
-        res.clearCookie('AUTH_TOKEN');
+        res.clearCookie('auth_tk');
         return response(res, 400, ['EXPIRED_TOKEN']);
     }
 }
