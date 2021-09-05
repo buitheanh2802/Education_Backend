@@ -60,9 +60,9 @@ export const pagination = async (req, res, next) => {
     if (!page) return next();
     if (!pattern.test(page)) page = 1;
     const skip = (page - 1) * limit;
-    const totalNotification = await notificationModel.countDocuments({ sendTo: req.userId });
+    const totalNotification = await notificationModel.countDocuments({ });
     const totalPage = Math.ceil(totalNotification / limit);
-    notificationModel.find({ sendTo: req.userId })
+    notificationModel.find({ })
         .skip(skip)
         .limit(limit)
         .exec((err, docs) => {
