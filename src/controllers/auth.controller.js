@@ -35,7 +35,7 @@ export const activeAccount = (req, res) => {
         const { _id } = jwt.verify(token, process.env.SECRET_KEY);
         UserModel.findOne({ _id }, (err, docs) => {
             if (err) return response(res, 500, ['ERROR_SERVER', err.message]);
-            if (docs.status == 'active') return res.redirect(`${process.env.ACCESS_DOMAIN}/?activated=true&reactive=true`)
+            if (docs.status == 'active') return res.redirect(`${process.env.ACCESS_DOMAIN}/?activated=true&reactive=true`);
             const activeUser = _.assignIn(docs, { status: 'active' });
             activeUser.save((err, docs) => {
                 if (err) return response(res, 500, ['ERROR_SERVER', err.message]);
@@ -58,7 +58,7 @@ export const signin = (req, res) => {
             if (docs.status == 'verify') {
                 return response(res, 400, ['NOT_VERIFY'])
             }
-            res.cookie('auth_tk', token, { maxAge: 1000 * 60 * 60,sameSite : 'None',secure : true})
+            // res.cookie('auth_tk', token, { maxAge: 1000 * 60 * 60,sameSite : 'None',secure : true})
             return response(res, 200, [], {
                 username: docs.username,
                 email: docs.email,
@@ -66,7 +66,8 @@ export const signin = (req, res) => {
                 avatar: docs.avatar,
                 birthday: docs.birthday,
                 address: docs.address,
-                phoneNumber: docs.phoneNumber
+                phoneNumber: docs.phoneNumber,
+                token : token
             })
         })
     })(req, res);
@@ -95,9 +96,10 @@ export const getRole = (req, res) => {
         .findOne({ _id: req.userId })
         .select('role -_id')
         .exec((err, docs) => {
+            const data = docs.toObject();
             if (err) return response(res, 500, ['ERROR_SERVER', err.message]);
             if (!docs) return response(res, 400, ['USER_NOTEXIST']);
-            return response(res, 200, [], { ...docs })
+            return response(res, 200, [], { ...data })
         })
 }
 
