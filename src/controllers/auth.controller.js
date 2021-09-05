@@ -2,6 +2,7 @@ import UserModel from 'models/user.model';
 import { sendMail } from 'services/mailer';
 import { response } from 'services/responseHandler';
 import { createFolder } from 'services/drive';
+import { v4 as uuid } from 'uuid';
 import jwt from 'jsonwebtoken';
 import passport from 'passport';
 import _ from 'lodash';
@@ -47,6 +48,7 @@ export const activeAccount = (req, res) => {
 }
 
 export const signin = (req, res) => {
+    console.log(req.cookies);
     passport.authenticate('local', (err, profile) => {
         const { email, password: passwordRequest } = profile;
         UserModel.findOne({ email }, (err, docs) => {
@@ -57,7 +59,9 @@ export const signin = (req, res) => {
             if (docs.status == 'verify') {
                 return response(res, 400, ['NOT_VERIFY'])
             }
-            res.cookie('AUTH_TOKEN', token, { httpOnly: true, maxAge: 1000 * 60 * 60, sameSite: 'None',secure : true })
+            res.cookie('auth_tk', token, { httpOnly: true, maxAge: 1000 * 60 * 60, sameSite: 'none', secure: true });
+            res.cookie('domain', process.env.ACCESS_DOMAIN, { maxAge: 1000 * 60 * 60, sameSite: 'none', secure: true });
+            res.cookie('isSignin', uuid(), { maxAge: 1000 * 60 * 60, sameSite: 'none', secure: true })
             return response(res, 200, [], {
                 username: docs.username,
                 email: docs.email,
@@ -89,7 +93,19 @@ export const profile = (req, res) => {
     })
 }
 
+export const getRole = (req, res) => {
+    UserModel
+        .findOne({ _id: req.userId })
+        .select('role -_id')
+        .exec((err, docs) => {
+            if (err) return response(res, 500, ['ERROR_SERVER', err.message]);
+            if (!docs) return response(res, 400, ['USER_NOTEXIST']);
+            return response(res, 200, [], { ...docs })
+        })
+}
+
 export const signout = (req, res) => {
-    res.clearCookie('AUTH_TOKEN');
+    res.clearCookie('auth_tk');
+    res.clearCookie('isSignin');
     return response(res, 200, []);
 }

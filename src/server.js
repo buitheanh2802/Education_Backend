@@ -13,6 +13,8 @@ const serverConfig = async () => {
     const PORT = process.env.PORT || 4000;
     // initial app
     const app = express();
+    // config header 
+    app.disable('x-powered-by');
     // initial parse data from client;
     app.use(cors({
         methods : 'GET,POST,PUT,DELETE',
