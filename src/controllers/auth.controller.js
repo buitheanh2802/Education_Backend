@@ -57,7 +57,7 @@ export const signin = (req, res) => {
             if (docs.status == 'verify') {
                 return response(res, 400, ['NOT_VERIFY'])
             }
-            res.cookie('AUTH_TOKEN', token, { httpOnly: true, maxAge: 1000 * 60 * 60, sameSite: 'None' })
+            res.cookie('AUTH_TOKEN', token, { httpOnly: true, maxAge: 1000 * 60 * 60, sameSite: 'None',secure : true })
             return response(res, 200, [], {
                 username: docs.username,
                 email: docs.email,
