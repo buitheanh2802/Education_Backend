@@ -10,6 +10,6 @@ export const initializeDB = async () => {
         });
         console.log('database is connected !')
     } catch (error) {
-        console.log(`error connect to mongoDB : ${err.message}`)
+        console.log(`error connect to mongoDB : ${error.message}`)
     }
 }
