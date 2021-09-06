@@ -17,14 +17,18 @@ export const signup = async (req, res) => {
             if (err.message.indexOf('email_1') !== -1) return response(res, 400, ['EMAIL_EXIST', err.message]);
             return response(res, 500, ['ERROR_SERVER', err.message])
         }
-        const token = jwt.sign({ _id: docs._id }, process.env.SECRET_KEY, { expiresIn: 60 * 60 })
-        await sendMail(email, 'Xác thực tài khoản của bạn !', 'verifyEmailTemplate', {
-            activeUrl: `${process.env.DOMAIN}/api/auth/active/${token}`
-        });
-        const driveFolder = await createFolder(docs.username, '1PWS1iJLKp02kOGGQ-o2WwFYFQE8E6Scs');
-        docs.driveId = driveFolder.id;
-        await docs.save();
-        return response(res, 200, [], { fullname, email, username })
+        try {
+            const token = jwt.sign({ _id: docs._id }, process.env.SECRET_KEY, { expiresIn: 60 * 60 })
+            await sendMail(email, 'Xác thực tài khoản của bạn !', 'verifyEmailTemplate', {
+                activeUrl: `${process.env.DOMAIN}/api/auth/active/${token}`
+            });
+            const driveFolder = await createFolder(docs.username, '1PWS1iJLKp02kOGGQ-o2WwFYFQE8E6Scs');
+            docs.driveId = driveFolder.id;
+            await docs.save();
+            return response(res, 200, [], { fullname, email, username })
+        } catch (error) {
+            return response(res, 500, ['ERROR_SERVER',error.message])
+        }
     })
 }
 
