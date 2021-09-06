@@ -76,7 +76,7 @@ export const createFile = async (fileName, parentFolder = '1dH8_S2Fd2k1Nct6ZTsxa
         },
         media: {
             mimeType: 'image/jpeg',
-            body: fs.createReadStream(path.join(__dirname, '../assets/pictures', fileName))
+            body: fs.createReadStream(path.join(__dirname, '../../public/media/pictures', fileName))
         }
     });
     await setPermission(data.id);
