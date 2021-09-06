@@ -60,14 +60,16 @@ export const signin = (req, res) => {
             }
             // res.cookie('auth_tk', token, { maxAge: 1000 * 60 * 60,sameSite : 'None',secure : true})
             return response(res, 200, [], {
-                username: docs.username,
-                email: docs.email,
-                fullname: docs.fullname,
-                avatar: docs.avatar,
-                birthday: docs.birthday,
-                address: docs.address,
-                phoneNumber: docs.phoneNumber,
-                token : token
+                profile: {
+                    username: docs.username,
+                    email: docs.email,
+                    fullname: docs.fullname,
+                    avatar: docs.avatar,
+                    birthday: docs.birthday,
+                    address: docs.address,
+                    phoneNumber: docs.phoneNumber
+                },
+                token: token
             })
         })
     })(req, res);
