@@ -1,11 +1,10 @@
 import express from 'express';
 import dotenv from 'dotenv';
-import { initializeDB } from 'config';
+import { initializeDB } from 'constants/dbConnect';
 import { routes } from 'routes';
 import { passportConfig } from 'services/passport';
 import cookie from 'cookie-parser';
 import cors from 'cors';
-import { toArray  } from 'lodash';
 
 const serverConfig = async () => {
     // environment

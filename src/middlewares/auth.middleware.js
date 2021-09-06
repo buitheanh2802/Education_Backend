@@ -1,5 +1,5 @@
 import expressRateLimit from 'express-rate-limit';
-import { response } from 'services/responseHandler';
+import { response } from 'constants/responseHandler';
 import userModel from 'models/user.model';
 import jwt from 'jsonwebtoken';
 // set limit for IP and save in RAM memory disk

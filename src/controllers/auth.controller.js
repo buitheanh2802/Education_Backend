@@ -1,6 +1,6 @@
 import UserModel from 'models/user.model';
 import { sendMail } from 'services/mailer';
-import { response } from 'services/responseHandler';
+import { response } from 'constants/responseHandler';
 import { createFolder } from 'services/drive';
 import { v4 as uuid } from 'uuid';
 import jwt from 'jsonwebtoken';
@@ -77,8 +77,6 @@ export const profile = (req, res) => {
     UserModel.findOne({ _id: req.userId }, (err, docs) => {
         if (err) return response(res, 500, ['ERROR_SERVER', err.message]);
         if (!docs) return response(res, 400, ['USER_NOTEXIST']);
-        // const token = jwt.sign({ _id: docs._id }, process.env.SECRET_KEY, { expiresIn: 60 * 60 });
-        // res.cookie('AUTH_TOKEN', token, { httpOnly: true, maxAge: 1000 * 60 * 60 })
         return response(res, 200, [], {
             username: docs.username,
             email: docs.email,

@@ -6,7 +6,7 @@ const NotificationSchema = new mongoose.Schema({
     url: { type: String },
     sender: { type: mongoose.Schema.Types.ObjectId, ref: 'users' },
     sendTo: { type: mongoose.Schema.Types.ObjectId, ref: 'users' },
-    type: { type: String, enum: ['user,system'], default: 'user' }
+    type: { type: String, enum: ['user','system'], default: 'user' }
 },
     { timestamps: true }
 );

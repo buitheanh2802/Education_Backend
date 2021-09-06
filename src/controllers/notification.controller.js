@@ -1,80 +1,56 @@
 import NotificationModel from "../models/notification.model";
-import _ from 'lodash'
+import { response } from 'constants/responseHandler';
+import { assignIn } from 'lodash'
 
 export const gets = (req, res) => {
     NotificationModel.find({}, (err, docs) => {
-        if (err) {
-            res.status(500).json({
-                message: [
-                    err.message
-                ],
-                status: false
-            })
-        }
-        res.status(200).json({
-            message: [],
-            data: docs,
-            status: true
-        })
+        if (err) return response(res, 500, ['ERROR_SERVER', err.message]);
+        return response(res, 200, ['ERROR_SERVER'], docs);
     })
 }
 
 export const create = (req, res) => {
-    const notification = new NotificationModel(req.body);
+    const notificationDefination = {
+        title: req.body.title,
+        url: req.body.url,
+        sender: req.userId,
+        sendTo: req.params.sendTo
+    }
+    const notification = new NotificationModel(notificationDefination);
     notification.save((err, docs) => {
-        if (err) {
-            res.status(400).json({
-                message: [
-                    err.message
-                ],
-                status: false
-            })
-        }
-        res.status(200).json({
-            data: docs,
-            message: [],
-            status: true
-        })
+        if (err) return response(res, 500, ['ERROR_SERVER', err.message]);
+        const { type, ...data } = docs.toObject();
+        return response(res, 200, [], data);
     })
+}
+
+export const update = (req, res) => {
+    const conditions = {
+        _id: req.params.noficationId,
+        sendTo: req.userId
+    }
+    NotificationModel.findOne(conditions, (err, docs) => {
+        if (err) return response(res, 500, ['ERROR_SERVER', err.message]);
+        if (!docs) return response(res, 400, ['EMPTY_DATA', err.message]);
+        const newData = assignIn(docs,{ isRead : true});
+        newData.save((err,docs)=> {
+            if (err) return response(res, 500, ['ERROR_SERVER', err.message]);
+            return response(res, 200, [],{ });
+        })
+    });
 }
 
 export const remove = (req, res) => {
-    const notification = req.notification;
-    // remove drive
-    notification.remove((err, docs) => {
-        if (err) {
-            return res.status(400).json({
-                message: [
-                    err.message
-                ],
-                status: false
-            })
-        }
-        res.status(200).json({
-            data: docs,
-            status: true
+    const conditions = {
+        _id: req.params.noficationId,
+        sendTo: req.userId
+    }
+    NotificationModel.findOne(conditions, (err, docs) => {
+        if (err) return response(res, 500, ['ERROR_SERVER', err.message]);
+        if (!docs) return response(res, 400, ['EMPTY_DATA', err.message]);
+        docs.remove((err,docs)=> {
+            if (err) return response(res, 500, ['ERROR_SERVER', err.message]);
+            return response(res, 200, [],{ });
         })
-    })
-}
-export const update = (req, res) => {
-    let notification = req.notification;
-
-    notification = _.assignIn(notification, req.body);
-    notification.save((err, docs) => {
-        if (err) {
-            return res.status(400).json({
-                message: [
-                    err.message
-                ],
-                status: false
-            })
-        }
-        return res.status(200).json({
-            data: docs,
-            status: true
-        })
-    })
-}
-export const read = (req, res) => {
-    return res.json(req.notification)
+    });
 }
