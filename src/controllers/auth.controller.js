@@ -45,7 +45,7 @@ export const activeAccount = (req, res) => {
                 if (err) return response(res, 500, ['ERROR_SERVER', err.message]);
                 return res.redirect(`${process.env.ACCESS_DOMAIN}/?activated=true`)
             })
-        })
+        });
     } catch (err) {
         return res.redirect(`${process.env.ACCESS_DOMAIN}/?activated=false`)
     }
