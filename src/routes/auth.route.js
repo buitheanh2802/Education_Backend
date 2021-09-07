@@ -7,7 +7,7 @@ const router = express.Router();
 
 // signup
 router.post(path.auth.signup,
-    APILimiter(5, 3600),
+    APILimiter(1, 60),
     userValidator,
     signup
 );
