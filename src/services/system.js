@@ -1,6 +1,5 @@
 import fs from 'fs';
 import path from 'path';
-import { path as systemPath } from 'constants/routeDefination';
 
 // remove file system
 export const removeFileSystem = (filename) => {
