@@ -9,7 +9,7 @@ import { pagination } from 'middlewares/query.middleware';
 const router = express.Router();
 router.get(path.notification.gets,
     accessToken,
-    pagination(NotificationModel, 5, '-type', { sendTo: 'req.userId' }),
+    pagination(NotificationModel,5,'',{}),
     gets
 );
 router.post(path.notification.post,

@@ -1,5 +1,5 @@
 import express from 'express';
-import { APILimiter, accessToken } from 'middlewares/auth.middleware';
+import { APILimiter, accessToken,accessRole } from 'middlewares/auth.middleware';
 import { userValidator } from 'middlewares/validate.middleware';
 import { signup, activeAccount, signin, profile, signout, getRole } from 'controllers/auth.controller';
 import { path } from 'constants/routeDefination';
