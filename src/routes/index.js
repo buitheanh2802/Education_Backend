@@ -13,6 +13,6 @@ export const routes = (app) => {
     app.use('/api/feedback', feedbackRoute)
     app.use('/api/comment', commentRoute)
     app.use(path.notification.rootRoute, notification)
-    app.use('/api/post', postRoute),
-    app.use('/api/follow', followRoute)
+    app.use(path.post.rootRoute, postRoute),
+        app.use('/api/follow', followRoute)
 }
