@@ -1,6 +1,6 @@
 import * as pattern from 'constants/regexDefination';
 import { response } from 'constants/responseHandler';
-import { body,validationResult } from 'express-validator';
+import { body, validationResult } from 'express-validator';
 // /userValidator
 export const userValidator = async (req, res, next) => {
     await body('fullname')
@@ -68,23 +68,13 @@ export const postValidator = async (req, res, next) => {
     await body('content').trim().notEmpty().withMessage('Nhập content').run(req);
     await body('views').trim().notEmpty().withMessage('Nhập view').run(req);
     await body('isPublished').trim().notEmpty().withMessage('Chọn chế độ ẩn/hiện ').run(req);
-    // bai viet moi nhat
-    // bai-viet-moi-nhat-8569384
     await body('slug').trim().notEmpty().withMessage('Nhập slug ').run(req);
     await body('isApprove').trim().notEmpty().withMessage('Chọn chế độ duyệt').run(req);
     await body('userID').trim().notEmpty().withMessage('Nhập user Id').run(req);
     await body('votes').trim().notEmpty().withMessage('Nhập votes').run(req);
 
-    const check = validationResult(req);
-    if (!check.isEmpty()) {
-        return res.status(400).json({
-            // vì errors trả về một mảng nên destructuring luôn
-            message: [
-                ...check.errors
-            ],
-            status: false
-        })
-    }
+    const validatorResult = validationResult(req);
+    if (!validatorResult.isEmpty()) return response(res, 400, ['INVALID_DATA', ...validatorResult.errors])
     next();
 }
 
