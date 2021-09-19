@@ -16,7 +16,8 @@
             "username" : "bui-the-anh",
             "role" : "user|admin|collaborators",
             "status" : "active|block|verify",
-            "userType" : "basic|premium"
+            "userType" : "basic|premium",
+            "socialType" : "system|facebook|github|google"
         }
     ],
     "notifications" : [
@@ -25,10 +26,7 @@
             "title" : "String",
             "isRead" : "Boolean",
             "url" : "String",
-            "sender" : {
-                "fullname" : "String",
-                "avatarUrl" : "String"
-            },
+            "sender" : "userId",
             "userId" : "ID",
             "createAt" : "",
             "type" : "system|user"
@@ -61,11 +59,6 @@
             "userId" : "ID"
         }
     ],
-    "lessions" : [
-        {
-
-        }
-    ],
     "posts" : [
         {
             "_id" : "ID",
@@ -73,41 +66,47 @@
             "content" : "StringHTML",
             "views" : "Number",
             "isPublished" : "Boolean",
+            "isDraft" : "Boolean",
             "slug" : "bui-the-anh",
             "isApprove" : "Boolean",
             "userId" : "ID",
-            "votes" : ["ListID"]
+            "votes" : ["ListID"],
+            "tagsId" : ["listTagId"]
         }
     ],
     "questions" : [
         {
-
+            "_id" : "ID",
+            "title" : "String",
+            "content" : "String",
+            "views" : "Number",
+            "slug" : "bui-the-anh",
+            "userId" : "ID",
+            "votes" : ["ListUserID"],
+            "tagsId" : ["listTagId"],
+            "confirmAnswer" : ["listUserId"]
         }
     ],
     "comments" : [
         {
             "_id" : "ID",
             "content" : "zz",
-            "isExact" : "Boolean",
             "votes" : [],
             "reply" : [
                 {
                     "_id" : "ID",
                     "content" : "String",
-                    "avatarUrl" : "String",
-                    "votes" : [],
-                    "username" : "bui-the-anh"
+                    "userId" : "String",
+                    "votes" : []
                 }
             ],
-            "avatarUrl" : "String",
             "userId" : "fysaofyoisdyf",
-            "username" : "bui-the-anh",
             "postId" : "ID"
         }
     ],
     "follows" :[
         {
-            "followingUserId" : "anh hai",
+            "followingId" : "anh hai",
             "userId" : "theanh"
         }
     ],

@@ -7,7 +7,7 @@ const UserSchema = new initializeSchema({
     fullname : { type : String },
     username : { type : String,unique : true },
     email : { type : String,unique : true },
-    password : { type : String },
+    password : { type : String,default : '' },
     avatar : {
         id : { type : String, default : ""},
         avatarUrl : { type : String , default : ""}
