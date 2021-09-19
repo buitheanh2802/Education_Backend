@@ -20,7 +20,11 @@ export const fetchAll = (req, res) => {
 }
 
 export const create = (req, res) => {
-    const follow = new FollowModel(req.body);
+    const request = {
+        followingId : req.params.followId,
+        userId : req.userId
+    }
+    const follow = new FollowModel(request);
     follow.save((err, docs) => {
         if (err) {
             res.status(400).json({
