@@ -1,3 +1,4 @@
+import { response } from 'constants/responseHandler';
 import _, { find } from 'lodash';
 import FollowModel from '../models/follow.model';
 
@@ -20,21 +21,16 @@ export const fetchAll = (req, res) => {
 }
 
 export const create = (req, res) => {
-    const follow = new FollowModel(req.body);
+
+    const followDefination = {
+        followingUserId: req.body.followingUserId,
+        userId: req.body.userId
+    }
+    const follow = new FollowModel(followDefination);
     follow.save((err, docs) => {
-        if (err) {
-            res.status(400).json({
-                message: [
-                    err.message
-                ],
-                status: false
-            })
-        }
-        res.status(200).json({
-            data: docs,
-            message: [],
-            status: true
-        })
+        if (err) return response(res, 500, ['ERROR_SERVER', err.message]);
+        const { type, ...data } = docs.toObject();
+        return response(res, 200, [], data);
     })
 }
 
@@ -61,19 +57,32 @@ export const read = (req, res) => {
     return res.json(req.follow)
 }
 export const remove = (req, res) => {
-    const follow = req.follow;
-    follow.remove((err, docs) => {
-        if (err) {
-            return res.status(400).json({
-                message: [
-                    err.message
-                ],
-                status: false
-            })
-        }
-        res.status(200).json({
-            data: docs,
-            status: true
+    const conditions = {
+        _id: req.params.followId,
+        userId: req.userId
+    }
+    FollowModel.findOne(conditions, (err, docs) => {
+        if (err) return response(res, 500, ['ERROR_SERVER', err.message]);
+        if (!docs) return response(res, 400, ['EMPTY_DATA', err.message]);
+        docs.remove((err, docs) => {
+            if (err) return response(res, 500, ['ERROR_SERVER', err.message]);
+            return response(res, 200, [], {});
         })
     })
+
+    // const follow = req.follow;
+    // follow.remove((err, docs) => {
+    //     if (err) {
+    //         return res.status(400).json({
+    //             message: [
+    //                 err.message
+    //             ],
+    //             status: false
+    //         })
+    //     }
+    //     res.status(200).json({
+    //         data: docs,
+    //         status: true
+    //     })
+    // })
 }
