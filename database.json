@@ -12,7 +12,7 @@
             "address" : "String",
             "phoneNumber" : "String",
             "birth" : "Date",
-            "star" : "Number",
+            "points" : "Number",
             "username" : "bui-the-anh",
             "role" : "user|admin|collaborators",
             "status" : "active|block|verify",
@@ -63,7 +63,7 @@
         {
             "_id" : "ID",
             "title" : "String",
-            "content" : "StringHTML",
+            "content" : "",
             "views" : "Number",
             "isPublished" : "Boolean",
             "isDraft" : "Boolean",
