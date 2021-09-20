@@ -23,4 +23,9 @@ export const path = {
         put: '/:postId',
         delete: '/:postId'
     },
+    follow: {
+        rootRoute: '/api/follow',
+        post: '/',
+        delete: '/:followId'
+    }
 }
