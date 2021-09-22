@@ -6,7 +6,9 @@ export const path = {
         active: '/active/:token',
         profile: '/profile/me',
         signout: '/signout',
-        role: '/profile/me/role'
+        role: '/profile/me/role',
+        facebook: '/facebook',
+        facebookCallback : '/facebook/callback'
     },
     notification: {
         rootRoute: '/api/notification',

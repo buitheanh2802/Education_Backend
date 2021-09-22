@@ -2,6 +2,7 @@ import UserModel from 'models/user.model';
 import { sendMail } from 'services/mailer';
 import { response } from 'constants/responseHandler';
 import { createFolder } from 'services/drive';
+import { randomNumber, toSlug } from 'constants/shared';
 import { v4 as uuid } from 'uuid';
 import jwt from 'jsonwebtoken';
 import passport from 'passport';
@@ -11,11 +12,11 @@ import _ from 'lodash';
 export const signup = async (req, res) => {
     const { fullname, email, username } = req.body;
     const data = new UserModel(req.body);
+    const checkEmail = await UserModel.findOne({ email: email, socialType: 'system' });
+    if(checkEmail) return response(res, 400, ['EMAIL_EXIST', err.message]);
     data.save(async (err, docs) => {
         if (err) {
-            if (err.message.indexOf('username_1') !== -1) return response(res, 400, ['USERNAME_EXIST', err.message])
-            if (err.message.indexOf('email_1') !== -1) return response(res, 400, ['EMAIL_EXIST', err.message]);
-            return response(res, 500, ['ERROR_SERVER', err.message])
+            if (err.message.indexOf('username_1') !== -1) return response(res, 400, ['USERNAME_EXIST', err.message]);
         }
         try {
             const token = jwt.sign({ _id: docs._id }, process.env.SECRET_KEY, { expiresIn: 60 * 60 })
@@ -27,7 +28,7 @@ export const signup = async (req, res) => {
             await docs.save();
             return response(res, 200, [], { fullname, email, username })
         } catch (error) {
-            return response(res, 500, ['ERROR_SERVER',error.message])
+            return response(res, 500, ['ERROR_SERVER', error.message])
         }
     })
 }
@@ -54,7 +55,7 @@ export const activeAccount = (req, res) => {
 export const signin = (req, res) => {
     passport.authenticate('local', (err, profile) => {
         const { email, password: passwordRequest } = profile;
-        UserModel.findOne({ email }, (err, docs) => {
+        UserModel.findOne({ email, socialType: 'system' }, (err, docs) => {
             if (err) return response(res, 500, ['ERROR_SERVER', err.message]);
             if (!docs) return response(res, 400, ['EMAIL_NOTEXIST']);
             if (!docs.verifyPassword(passwordRequest)) return response(res, 400, ['INVALID_PASSWORD']);
@@ -72,7 +73,7 @@ export const signin = (req, res) => {
                     birthday: docs.birthday,
                     address: docs.address,
                     phoneNumber: docs.phoneNumber,
-                    role : docs.role !== 'user' ? docs.role : undefined
+                    role: docs.role !== 'user' ? docs.role : undefined
                 },
                 token: token
             })
@@ -88,11 +89,12 @@ export const profile = (req, res) => {
             username: docs.username,
             email: docs.email,
             fullname: docs.fullname,
-            avatar: docs.avatar,
+            avatar: req.oauthPicture ? { _id: '', avatarUrl: req.oauthPicture } : docs.avatar,
             birthday: docs.birthday,
             address: docs.address,
             phoneNumber: docs.phoneNumber,
-            role : docs.role !== 'user' ? docs.role : undefined
+            role: docs.role !== 'user' ? docs.role : undefined,
+            socialType: docs.socialType
         })
     })
 }
@@ -112,4 +114,37 @@ export const getRole = (req, res) => {
 export const signout = (req, res) => {
     res.clearCookie('auth_tk');
     return response(res, 200, []);
+}
+
+export const oauthLoginCallback = (strategy) => {
+    return (req, res) => {
+        passport.authenticate(strategy, (err, profile) => {
+            console.log(toSlug(profile.displayName).concat(randomNumber()));
+            if (err) return res.redirect(`${process.env.ACCESS_DOMAIN}/authenticate=false`);
+            UserModel.findOne({ email: profile.emails[0].value, socialType: strategy })
+                .lean()
+                .exec(async (err, docs) => {
+                    let currentUser = docs;
+                    if (err) return response(res, 500, ['ERROR_SERVER', err.message]);
+                    if (!docs) {
+                        const driveFolder = await createFolder(toSlug(profile.displayName).concat(randomNumber()), '1PWS1iJLKp02kOGGQ-o2WwFYFQE8E6Scs');
+                        const createUser = new UserModel({
+                            email: profile.emails[0].value,
+                            socialType: strategy,
+                            fullname: profile.displayName,
+                            username: toSlug(profile.displayName).concat(randomNumber()),
+                            driveId: driveFolder.id,
+                            status: 'active'
+                        });
+                        currentUser = await createUser.save();
+                    }
+                    const token = jwt.sign({
+                        _id: currentUser._id,
+                        driveId: currentUser.driveId,
+                        oauthPicture: profile.photos[0].value
+                    }, process.env.SECRET_KEY, { expiresIn: 60 * 60 });
+                    return res.redirect(`${process.env.ACCESS_DOMAIN}/authenticate=true&token=${token}`);
+                })
+        })(req, res)
+    }
 }
