@@ -24,9 +24,10 @@ export const accessToken = (req, res, next) => {
     if(!payload || payload[0] !== 'Bearer' || !payload[1]) return response(res, 400, ['EMPTY_TOKEN'])
     const token = payload[1];
     try {
-        const { _id, driveId } = jwt.verify(token, process.env.SECRET_KEY);
+        const { _id, driveId,oauthPicture } = jwt.verify(token, process.env.SECRET_KEY);
         req.userId = _id;
         req.driveId = driveId;
+        req.oauthPicture = oauthPicture;
         return next();
     } catch (error) {
         return response(res, 400, ['EXPIRED_TOKEN']);
