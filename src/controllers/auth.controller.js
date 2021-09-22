@@ -71,7 +71,8 @@ export const signin = (req, res) => {
                     avatar: docs.avatar,
                     birthday: docs.birthday,
                     address: docs.address,
-                    phoneNumber: docs.phoneNumber
+                    phoneNumber: docs.phoneNumber,
+                    role : docs.role !== 'user' ? docs.role : undefined
                 },
                 token: token
             })
@@ -90,7 +91,8 @@ export const profile = (req, res) => {
             avatar: docs.avatar,
             birthday: docs.birthday,
             address: docs.address,
-            phoneNumber: docs.phoneNumber
+            phoneNumber: docs.phoneNumber,
+            role : docs.role !== 'user' ? docs.role : undefined
         })
     })
 }

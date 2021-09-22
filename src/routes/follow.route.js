@@ -2,7 +2,6 @@ import { path } from 'constants/routeDefination';
 import { create, fetchAll, read, remove } from 'controllers/follow.controller';
 import { accessToken } from 'middlewares/auth.middleware';
 import express from 'express';
-import { accessToken } from 'middlewares/auth.middleware';
 import { followValidator } from 'middlewares/validate.middleware';
 
 
