@@ -119,9 +119,7 @@ export const signout = (req, res) => {
 export const oauthLoginCallback = (strategy) => {
     return (req, res) => {
         passport.authenticate(strategy, (err, profile) => {
-            console.log(profile);
-            console.log(err);
-            if (err) return res.redirect(`${process.env.ACCESS_DOMAIN}/authenticate=false`);
+            if (err) return res.redirect(`${process.env.ACCESS_DOMAIN}/auth/login?authenticate=false`);
             UserModel.findOne({ email: profile.emails[0].value, socialType: strategy })
                 .lean()
                 .exec(async (err, docs) => {
@@ -144,7 +142,7 @@ export const oauthLoginCallback = (strategy) => {
                         driveId: currentUser.driveId,
                         oauthPicture: profile.photos[0].value
                     }, process.env.SECRET_KEY, { expiresIn: 60 * 60 });
-                    return res.redirect(`${process.env.ACCESS_DOMAIN}/authenticate=true&token=${token}`);
+                    return res.redirect(`${process.env.ACCESS_DOMAIN}/auth/login?authenticate=true&token=${token}`);
                 })
         })(req, res)
     }
