@@ -84,7 +84,7 @@
             "userId" : "ID",
             "votes" : ["ListUserID"],
             "tagsId" : ["listTagId"],
-            "confirmAnswer" : ["listUserId"]
+            "confirmAnswers" : ["listUserId"]
         }
     ],
     "comments" : [
@@ -92,14 +92,7 @@
             "_id" : "ID",
             "content" : "zz",
             "votes" : [],
-            "reply" : [
-                {
-                    "_id" : "ID",
-                    "content" : "String",
-                    "userId" : "String",
-                    "votes" : []
-                }
-            ],
+            "reply" : [{"_id" : "ID","content" : "String","createBy" : "String","likes" : [],"dislike" : []}],
             "userId" : "fysaofyoisdyf",
             "postId" : "ID"
         }

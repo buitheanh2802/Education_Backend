@@ -8,7 +8,11 @@ export const path = {
         signout: '/signout',
         role: '/profile/me/role',
         facebook: '/facebook',
-        facebookCallback : '/facebook/callback'
+        facebookCallback : '/facebook/callback',
+        google: '/google',
+        googleCallback : '/google/callback',
+        github: '/github',
+        githubCallback : '/github/callback'
     },
     notification: {
         rootRoute: '/api/notification',

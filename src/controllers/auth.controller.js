@@ -13,7 +13,7 @@ export const signup = async (req, res) => {
     const { fullname, email, username } = req.body;
     const data = new UserModel(req.body);
     const checkEmail = await UserModel.findOne({ email: email, socialType: 'system' });
-    if(checkEmail) return response(res, 400, ['EMAIL_EXIST', err.message]);
+    if (checkEmail) return response(res, 400, ['EMAIL_EXIST', err.message]);
     data.save(async (err, docs) => {
         if (err) {
             if (err.message.indexOf('username_1') !== -1) return response(res, 400, ['USERNAME_EXIST', err.message]);
@@ -119,6 +119,7 @@ export const signout = (req, res) => {
 export const oauthLoginCallback = (strategy) => {
     return (req, res) => {
         passport.authenticate(strategy, (err, profile) => {
+            // console.log(profile);
             if (err) return res.redirect(`${process.env.ACCESS_DOMAIN}/auth/login?authenticate=false`);
             UserModel.findOne({ email: profile.emails[0].value, socialType: strategy })
                 .lean()
