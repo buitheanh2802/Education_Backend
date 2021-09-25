@@ -13,7 +13,7 @@ const UserSchema = new initializeSchema({
         avatarUrl: { type: String, default: "" }
     },
     birthday: { type: Date },
-    star: { type: Number },
+    points: { type: Number },
     userType: { type: String, enum: ['basic', 'premium'], default: 'basic' },
     address: { type: String, default: '' },
     phoneNumber: { type: Number, default: 0 },
