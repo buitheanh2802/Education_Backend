@@ -58,6 +58,17 @@ export const update = (req, res) => {
     })
 }
 
+export const readAll = (req,res) => {
+    const conditions = {
+        sendTo : req.userId
+    }
+    NotificationModel.updateMany(conditions,{ isRead : true },(err,docs) => {
+        if (err) return response(res, 500, ['ERROR_SERVER', err.message]);
+        if (!docs) return response(res, 400, ['EMPTY_DATA', err.message]);
+        return response(res, 200, [], {});
+    })
+}
+
 export const remove = (req, res) => {
     const conditions = {
         _id: req.params.noficationId,
