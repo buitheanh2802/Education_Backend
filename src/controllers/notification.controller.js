@@ -1,12 +1,35 @@
 import NotificationModel from "../models/notification.model";
 import { response } from 'constants/responseHandler';
-import { assignIn } from 'lodash'
+import { PAGINATION_REGEX } from 'constants/regexDefination';
 
-export const gets = (req, res) => {
-    NotificationModel.find({}, (err, docs) => {
-        if (err) return response(res, 500, ['ERROR_SERVER', err.message]);
-        return response(res, 200, ['ERROR_SERVER'], docs);
-    })
+export const gets = async (req, res) => {
+    const { page } = req.query;
+    let currentPage = 1;
+    if (PAGINATION_REGEX.test(page)) currentPage = Number(page);
+    const limit = 5;
+    const skip = (currentPage - 1) * limit;
+    const countDocuments = await NotificationModel.countDocuments();
+    const totalPage = Math.ceil(countDocuments / limit);
+    NotificationModel
+        .find({ sendTo: req.userId }, '-__v -updatedAt')
+        .skip(skip)
+        .limit(limit)
+        .lean()
+        .exec((err, docs) => {
+            if (err) return response(res, 500, ['ERROR_SERVER', err.message]);
+            return response(res, 200, [],
+                {
+                    models: docs,
+                    metaData: {
+                        pagination: {
+                            perPage: limit,
+                            totalPage: totalPage,
+                            currentPage: currentPage,
+                            countDocuments: docs.length
+                        }
+                    }
+                });
+        })
 }
 
 export const create = (req, res) => {
@@ -19,8 +42,7 @@ export const create = (req, res) => {
     const notification = new NotificationModel(notificationDefination);
     notification.save((err, docs) => {
         if (err) return response(res, 500, ['ERROR_SERVER', err.message]);
-        const { type, ...data } = docs.toObject();
-        return response(res, 200, [], data);
+        return response(res, 200, [], docs);
     })
 }
 
@@ -29,15 +51,22 @@ export const update = (req, res) => {
         _id: req.params.noficationId,
         sendTo: req.userId
     }
-    NotificationModel.findOne(conditions, (err, docs) => {
+    NotificationModel.updateOne(conditions, { isRead: true }, (err, docs) => {
         if (err) return response(res, 500, ['ERROR_SERVER', err.message]);
         if (!docs) return response(res, 400, ['EMPTY_DATA', err.message]);
-        const newData = assignIn(docs, { isRead: true });
-        newData.save((err, docs) => {
-            if (err) return response(res, 500, ['ERROR_SERVER', err.message]);
-            return response(res, 200, [], {});
-        })
-    });
+        return response(res, 200, []);
+    })
+}
+
+export const readAll = (req, res) => {
+    const conditions = {
+        sendTo: req.userId
+    }
+    NotificationModel.updateMany(conditions, { isRead: true }, (err, docs) => {
+        if (err) return response(res, 500, ['ERROR_SERVER', err.message]);
+        if (!docs) return response(res, 400, ['EMPTY_DATA', err.message]);
+        return response(res, 200, []);
+    })
 }
 
 export const remove = (req, res) => {
@@ -45,13 +74,9 @@ export const remove = (req, res) => {
         _id: req.params.noficationId,
         sendTo: req.userId
     }
-    NotificationModel.findOne(conditions, (err, docs) => {
-        console.log(err)
+    NotificationModel.deleteOne(conditions, (err, docs) => {
         if (err) return response(res, 500, ['ERROR_SERVER', err.message]);
         if (!docs) return response(res, 400, ['EMPTY_DATA', err.message]);
-        docs.remove((err, docs) => {
-            if (err) return response(res, 500, ['ERROR_SERVER', err.message]);
-            return response(res, 200, [], {});
-        })
-    });
+        return response(res, 200, []);
+    })
 }
