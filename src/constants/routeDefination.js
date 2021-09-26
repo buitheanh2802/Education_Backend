@@ -19,7 +19,8 @@ export const path = {
         gets: '/',
         post: '/:sendTo',
         put: '/:noficationId',
-        delete: '/:noficationId'
+        delete: '/:noficationId',
+        readall : '/readall'
     },
     post: {
         rootRoute: '/api/post',

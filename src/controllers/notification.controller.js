@@ -1,7 +1,6 @@
 import NotificationModel from "../models/notification.model";
 import { response } from 'constants/responseHandler';
 import { PAGINATION_REGEX } from 'constants/regexDefination';
-import { assignIn } from 'lodash';
 
 export const gets = async(req, res) => {
     const { page } = req.query;
@@ -43,8 +42,7 @@ export const create = (req, res) => {
     const notification = new NotificationModel(notificationDefination);
     notification.save((err, docs) => {
         if (err) return response(res, 500, ['ERROR_SERVER', err.message]);
-        const { type, ...data } = docs.toObject();
-        return response(res, 200, [], data);
+        return response(res, 200, [], docs);
     })
 }
 
