@@ -32,10 +32,10 @@ export const update = (req, res) => {
     NotificationModel.findOne(conditions, (err, docs) => {
         if (err) return response(res, 500, ['ERROR_SERVER', err.message]);
         if (!docs) return response(res, 400, ['EMPTY_DATA', err.message]);
-        const newData = assignIn(docs,{ isRead : true});
-        newData.save((err,docs)=> {
+        const newData = assignIn(docs, { isRead: true });
+        newData.save((err, docs) => {
             if (err) return response(res, 500, ['ERROR_SERVER', err.message]);
-            return response(res, 200, [],{ });
+            return response(res, 200, [], {});
         })
     });
 }
@@ -46,11 +46,12 @@ export const remove = (req, res) => {
         sendTo: req.userId
     }
     NotificationModel.findOne(conditions, (err, docs) => {
+        console.log(err)
         if (err) return response(res, 500, ['ERROR_SERVER', err.message]);
         if (!docs) return response(res, 400, ['EMPTY_DATA', err.message]);
-        docs.remove((err,docs)=> {
+        docs.remove((err, docs) => {
             if (err) return response(res, 500, ['ERROR_SERVER', err.message]);
-            return response(res, 200, [],{ });
+            return response(res, 200, [], {});
         })
     });
 }
