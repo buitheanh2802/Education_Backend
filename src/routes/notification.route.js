@@ -3,13 +3,10 @@ import { accessToken } from 'middlewares/auth.middleware';
 import { create, gets, update, remove } from 'controllers/notification.controller';
 import { path } from 'constants/routeDefination';
 import { notificationValidator } from 'middlewares/validate.middleware';
-import NotificationModel from "models/notification.model";
-import { pagination } from 'middlewares/query.middleware';
 // init router
 const router = express.Router();
 router.get(path.notification.gets,
     accessToken,
-    pagination(NotificationModel,5,'',{}),
     gets
 );
 router.post(path.notification.post,
