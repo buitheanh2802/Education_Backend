@@ -82,21 +82,19 @@ export const signin = (req, res) => {
 }
 
 export const profile = (req, res) => {
-    UserModel.findOne({ _id: req.userId }, (err, docs) => {
-        if (err) return response(res, 500, ['ERROR_SERVER', err.message]);
-        if (!docs) return response(res, 400, ['USER_NOTEXIST']);
-        return response(res, 200, [], {
-            username: docs.username,
-            email: docs.email,
-            fullname: docs.fullname,
-            avatar: req.oauthPicture ? { _id: '', avatarUrl: req.oauthPicture } : docs.avatar,
-            birthday: docs.birthday,
-            address: docs.address,
-            phoneNumber: docs.phoneNumber,
-            role: docs.role !== 'user' ? docs.role : undefined,
-            socialType: docs.socialType
+    UserModel
+        .findOne({ _id: req.userId }, '-_id -createdAt -updatedAt -driveId -password -status -__v -socialType ')
+        .lean()
+        .exec((err, docs) => {
+            if (err) return response(res, 500, ['ERROR_SERVER', err.message]);
+            if (!docs) return response(res, 400, ['USER_NOTEXIST']);
+            return response(res, 200, [],
+                {
+                    ...docs,
+                    role: docs.role !== 'user' ? docs.role : undefined,
+                    userType : docs.userType !== 'basic' ? docs.userType : undefined
+                })
         })
-    })
 }
 
 export const getRole = (req, res) => {
