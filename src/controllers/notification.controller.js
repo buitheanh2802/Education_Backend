@@ -53,15 +53,11 @@ export const update = (req, res) => {
         _id: req.params.noficationId,
         sendTo: req.userId
     }
-    NotificationModel.findOne(conditions, (err, docs) => {
+    NotificationModel.updateOne(conditions,{ isRead : true },(err,docs) => {
         if (err) return response(res, 500, ['ERROR_SERVER', err.message]);
         if (!docs) return response(res, 400, ['EMPTY_DATA', err.message]);
-        const newData = assignIn(docs, { isRead: true });
-        newData.save((err, docs) => {
-            if (err) return response(res, 500, ['ERROR_SERVER', err.message]);
-            return response(res, 200, [], {});
-        })
-    });
+        return response(res, 200, [], {});
+    })
 }
 
 export const remove = (req, res) => {
@@ -69,12 +65,9 @@ export const remove = (req, res) => {
         _id: req.params.noficationId,
         sendTo: req.userId
     }
-    NotificationModel.findOne(conditions, (err, docs) => {
+    NotificationModel.deleteOne(conditions,(err,docs) => {
         if (err) return response(res, 500, ['ERROR_SERVER', err.message]);
         if (!docs) return response(res, 400, ['EMPTY_DATA', err.message]);
-        docs.remove((err, docs) => {
-            if (err) return response(res, 500, ['ERROR_SERVER', err.message]);
-            return response(res, 200, [], {});
-        })
-    });
+        return response(res, 200, [], {});
+    })
 }
