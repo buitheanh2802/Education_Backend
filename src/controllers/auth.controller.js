@@ -55,7 +55,7 @@ export const activeAccount = (req, res) => {
 export const signin = (req, res) => {
     passport.authenticate('local', (err, profile) => {
         const { email, password: passwordRequest } = profile;
-        UserModel.findOne({ email, socialType: 'system' }, (err, docs) => {
+        UserModel.findOne({ email, socialType: 'system' },'-_id -createdAt -updatedAt -driveId -status -__v -socialType ', (err, docs) => {
             if (err) return response(res, 500, ['ERROR_SERVER', err.message]);
             if (!docs) return response(res, 400, ['EMAIL_NOTEXIST']);
             if (!docs.verifyPassword(passwordRequest)) return response(res, 400, ['INVALID_PASSWORD']);
@@ -63,17 +63,16 @@ export const signin = (req, res) => {
             if (docs.status == 'verify') {
                 return response(res, 400, ['NOT_VERIFY'])
             }
+            const documentReponse = docs.toObject({ transform : (_,pureObject) => {
+                delete pureObject.password
+                return pureObject;
+            }});
             // res.cookie('auth_tk', token, { maxAge: 1000 * 60 * 60,sameSite : 'None',secure : true})
             return response(res, 200, [], {
                 profile: {
-                    username: docs.username,
-                    email: docs.email,
-                    fullname: docs.fullname,
-                    avatar: docs.avatar,
-                    birthday: docs.birthday,
-                    address: docs.address,
-                    phoneNumber: docs.phoneNumber,
-                    role: docs.role !== 'user' ? docs.role : undefined
+                    ...documentReponse,
+                    role: docs.role !== 'user' ? docs.role : undefined,
+                    userType : docs.userType !== 'basic' ? docs.userType : undefined
                 },
                 token: token
             })
