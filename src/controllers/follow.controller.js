@@ -24,7 +24,7 @@ export const create = (req, res) => {
 
     const followDefination = {
         followingUserId: req.body.followingUserId,
-        userId: req.body.userId
+        userId: req.userId
     }
     const follow = new FollowModel(followDefination);
     follow.save((err, docs) => {
@@ -57,13 +57,14 @@ export const read = (req, res) => {
     return res.json(req.follow)
 }
 export const remove = (req, res) => {
+    console.log(req.userId)
     const conditions = {
         _id: req.params.followId,
         userId: req.userId
     }
     FollowModel.findOne(conditions, (err, docs) => {
         if (err) return response(res, 500, ['ERROR_SERVER', err.message]);
-        if (!docs) return response(res, 400, ['EMPTY_DATA', err.message]);
+        if (!docs) return response(res, 400, ['EMPTY_DATA',]);
         docs.remove((err, docs) => {
             if (err) return response(res, 500, ['ERROR_SERVER', err.message]);
             return response(res, 200, [], {});

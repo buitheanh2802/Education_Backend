@@ -53,7 +53,7 @@ export const update = (req, res) => {
     }
     NotificationModel.updateOne(conditions, { isRead: true }, (err, docs) => {
         if (err) return response(res, 500, ['ERROR_SERVER', err.message]);
-        if (!docs) return response(res, 400, ['EMPTY_DATA', err.message]);
+        if (!docs) return response(res, 400, ['EMPTY_DATA']);
         return response(res, 200, []);
     })
 }
@@ -64,7 +64,7 @@ export const readAll = (req, res) => {
     }
     NotificationModel.updateMany(conditions, { isRead: true }, (err, docs) => {
         if (err) return response(res, 500, ['ERROR_SERVER', err.message]);
-        if (!docs) return response(res, 400, ['EMPTY_DATA', err.message]);
+        if (!docs) return response(res, 400, ['EMPTY_DATA']);
         return response(res, 200, []);
     })
 }
@@ -76,7 +76,7 @@ export const remove = (req, res) => {
     }
     NotificationModel.deleteOne(conditions, (err, docs) => {
         if (err) return response(res, 500, ['ERROR_SERVER', err.message]);
-        if (!docs) return response(res, 400, ['EMPTY_DATA', err.message]);
+        if (!docs) return response(res, 400, ['EMPTY_DATA']);
         return response(res, 200, []);
     })
 }
