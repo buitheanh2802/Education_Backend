@@ -1,7 +1,7 @@
 import * as pattern from 'constants/regexDefination';
 import { response } from 'constants/responseHandler';
 import { body, validationResult } from 'express-validator';
-import { async } from 'regenerator-runtime';
+
 // /userValidator
 export const userValidator = async (req, res, next) => {
     await body('fullname')
@@ -142,5 +142,19 @@ export const questionValidator = async (req, res, next) => {
             error: check.error
         })
     }
+}
+
+// tag
+export const tagValidator = async(req,res,next) => {
+    await body('name')
+            .trim()
+            .notEmpty()
+            .withMessage('Không được để trống tên thẻ !')
+            .matches(pattern.USERNAME)
+            .withMessage('Tên thẻ không hợp lệ !')
+            .run(req);
+    const check = validationResult(req);
+    if(!check.isEmpty()) return response(res,400,['INVALID_DATA',...check.errors]);
+    return next();
 }
 

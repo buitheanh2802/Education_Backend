@@ -18,4 +18,5 @@ export const routes = (app) => {
     app.use(path.post.rootRoute, postRoute)
     app.use('/api/follow', followRoute)
     app.use(path.question.rootRoute, questionRoute)
+    app.use(path.tag.rootRoute,tagRoute)
 }
