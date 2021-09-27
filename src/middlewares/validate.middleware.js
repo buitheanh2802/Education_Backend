@@ -130,4 +130,17 @@ export const followValidator = async (req, res, next) => {
     }
     next();
 }
+//question
+export const questionValidator = async (req, res, next) => {
+    await body('title').trim().notEmpty().withMessage("Nhập title").run(req);
+    await body('content').trim().notEmpty().withMessage("Nhập content").run(req);
+    await body('slug').trim().notEmpty().withMessage("Nhập slug").run(req);
+    const check = validationResult(req);
+    if (!check.isEmpty()) {
+        return res.status(400).json({
+            message: 'validate error',
+            error: check.error
+        })
+    }
+}
 
