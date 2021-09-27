@@ -120,7 +120,7 @@ export const feedbackValidator = async (req, res, next) => {
 // followValidator
 export const followValidator = async (req, res, next) => {
     await body('followingUserId').trim().notEmpty().withMessage("Nhập followingUserId").run(req);
-    await body('userId').trim().notEmpty().withMessage("Nhập userId").run(req);
+    // await body('userId').trim().notEmpty().withMessage("Nhập userId").run(req);
     const check = validationResult(req);
     if (!check.isEmpty()) {
         return res.status(400).json({
