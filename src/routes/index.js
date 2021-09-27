@@ -7,6 +7,7 @@ import authRoute from './auth.route';
 import postRoute from './post.route';
 import followRoute from './follow.route';
 import tagRoute from './tag.route';
+import questionRoute from './question.route';
 
 export const routes = (app) => {
     app.use('/api/course', courseRoute)
@@ -14,7 +15,7 @@ export const routes = (app) => {
     app.use('/api/feedback', feedbackRoute)
     app.use('/api/comment', commentRoute)
     app.use(path.notification.rootRoute, notification)
-    app.use(path.post.rootRoute, postRoute),
-    app.use('/api/follow', followRoute);
-    app.use(path.tag.rootRoute,tagRoute)
+    app.use(path.post.rootRoute, postRoute)
+    app.use('/api/follow', followRoute)
+    app.use(path.question.rootRoute, questionRoute)
 }

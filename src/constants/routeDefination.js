@@ -8,11 +8,11 @@ export const path = {
         signout: '/signout',
         role: '/profile/me/role',
         facebook: '/facebook',
-        facebookCallback : '/facebook/callback',
+        facebookCallback: '/facebook/callback',
         google: '/google',
-        googleCallback : '/google/callback',
+        googleCallback: '/google/callback',
         github: '/github',
-        githubCallback : '/github/callback'
+        githubCallback: '/github/callback'
     },
     notification: {
         rootRoute: '/api/notification',
@@ -20,7 +20,7 @@ export const path = {
         post: '/:sendTo',
         put: '/:noficationId',
         delete: '/:noficationId',
-        readall : '/readall'
+        readall: '/readall'
     },
     post: {
         rootRoute: '/api/post',
@@ -35,8 +35,15 @@ export const path = {
         post: '/',
         delete: '/:followId'
     },
-    tag : {
-        rootRoute : '/api/tag',
-        
+    question: {
+        rootRoute: '/api/question',
+        gets: '/',
+        post: '/',
+        get: '/:questionId',
+        put: '/:questionId',
+        delete: '/:questionId',
+    },
+    tag :{
+        rootRoute: '/api/question'
     }
 }
