@@ -34,5 +34,9 @@ export const path = {
         rootRoute: '/api/follow',
         post: '/',
         delete: '/:followId'
+    },
+    tag : {
+        rootRoute : '/api/tag',
+        
     }
 }
