@@ -8,6 +8,10 @@ const router = express.Router();
 router.get(
     path.post.newest,
     newest
+);
+// following
+router.get(
+
 )
 // router.get(path.post.get, read);
 // router.get(path.post.gets, fetchAll)
