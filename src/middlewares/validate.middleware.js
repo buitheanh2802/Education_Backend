@@ -64,14 +64,20 @@ export const notificationValidator = async (req, res, next) => {
 
 // postValidator
 export const postValidator = async (req, res, next) => {
-    await body('title').trim().notEmpty().withMessage('Nhập title').run(req);
-    await body('content').trim().notEmpty().withMessage('Nhập content').run(req);
-    await body('views').trim().notEmpty().withMessage('Nhập view').run(req);
-    await body('isPublished').trim().notEmpty().withMessage('Chọn chế độ ẩn/hiện ').run(req);
-    await body('slug').trim().notEmpty().withMessage('Nhập slug ').run(req);
-    await body('isApprove').trim().notEmpty().withMessage('Chọn chế độ duyệt').run(req);
-    await body('userID').trim().notEmpty().withMessage('Nhập user Id').run(req);
-    await body('votes').trim().notEmpty().withMessage('Nhập votes').run(req);
+    await body('title')
+            .trim()
+            .notEmpty()
+            .withMessage('Không được để trống tiêu đề')
+            .run(req);
+    await body('content')
+            .trim()
+            .notEmpty()
+            .withMessage('Không được để trống nội dung')
+            .run(req);
+    await body('tags')
+            .isArray({ min : 5})
+            .withMessage('Chọn tối thiểu 5 thẻ')
+            .run(req);
     const validatorResult = validationResult(req);
     if (!validatorResult.isEmpty()) return response(res, 400, ['INVALID_DATA', ...validatorResult.errors])
     next();
