@@ -25,7 +25,9 @@ export const path = {
     post: {
         rootRoute: '/api/post',
         get: '/:postId',
-        newest: '/',
+        newest: '/newest',
+        following : '/following',
+        trending : '/trending',
         post: '/',
         put: '/:postId',
         delete: '/:postId'
