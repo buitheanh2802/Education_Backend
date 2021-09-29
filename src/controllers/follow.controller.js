@@ -27,12 +27,12 @@ export const create = (req, res) => {
         userId: req.userId
     }
     console.log(followDefination);
-    // const follow = new FollowModel(followDefination);
-    // follow.save((err, docs) => {
-    //     if (err) return response(res, 500, ['ERROR_SERVER', err.message]);
-    //     const { type, ...data } = docs.toObject();
-    //     return response(res, 200, [], data);
-    // })
+    const follow = new FollowModel(followDefination);
+    follow.save((err, docs) => {
+        if (err) return response(res, 500, ['ERROR_SERVER', err.message]);
+        const { type, ...data } = docs.toObject();
+        return response(res, 200, [], data);
+    })
 }
 
 // export const update = (req, res) => {
