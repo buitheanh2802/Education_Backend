@@ -54,7 +54,7 @@ export const activeAccount = (req, res) => {
 export const signin = (req, res) => {
     passport.authenticate('local', (err, profile) => {
         const { email, password: passwordRequest } = profile;
-        UserModel.findOne({ email, socialType: 'system' },'-_id -createdAt -updatedAt -driveId -status -__v -socialType ', (err, docs) => {
+        UserModel.findOne({ email, socialType: 'system' },'-createdAt -updatedAt -status -__v -socialType ', (err, docs) => {
             if (err) return response(res, 500, ['ERROR_SERVER', err.message]);
             if (!docs) return response(res, 400, ['EMAIL_NOTEXIST']);
             if (!docs.verifyPassword(passwordRequest)) return response(res, 400, ['INVALID_PASSWORD']);
@@ -63,7 +63,9 @@ export const signin = (req, res) => {
                 return response(res, 400, ['NOT_VERIFY'])
             }
             const documentReponse = docs.toObject({ transform : (_,pureObject) => {
-                delete pureObject.password
+                delete pureObject.password;
+                delete pureObject.driveId;
+                delete pureObject._id;
                 return pureObject;
             }});
             // res.cookie('auth_tk', token, { maxAge: 1000 * 60 * 60,sameSite : 'None',secure : true})

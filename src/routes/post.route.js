@@ -10,9 +10,9 @@ router.get(
     newest
 );
 // following
-router.get(
+// router.get(
 
-)
+// )
 // router.get(path.post.get, read);
 // router.get(path.post.gets, fetchAll)
 // router.post(path.post.post, postValidator, create)
