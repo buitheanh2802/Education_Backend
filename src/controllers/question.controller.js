@@ -51,7 +51,6 @@ export const get = (req, res) => {
         return response(res, 200, [], data);
     })
 }
-
 export const update = (req, res) => {
     const questionDefination = {
         ...req.body,
@@ -71,5 +70,73 @@ export const remove = (req, res) => {
         if (err) return response(res, 500, ['ERROR_SERVER', err.message]);
         if (!docs) return response(res, 400, ['EMPTY_DATA']);
         return response(res, 200, []);
+    })
+}
+
+export const addLike = (req, res) => {
+    QuestionModel.findById(req.params.questionId, (err, doc) => {
+        if (err) {
+            console.log(err);
+            return false;
+        }
+        var check = false;
+        for (let i = 0; i < doc.likes.length; i++) {
+            if (doc.likes[i] == req.userId) {
+                check = true;
+            }
+        }
+        if (check == false) {
+            doc.likes.push(req.userId)
+        }
+
+        const postObj = {
+            likes: doc.likes,
+            dislike: doc.dislike,
+            comfirmAnswers: doc.comfirmAnswers,
+            tags: doc.tags,
+            _id: doc._id,
+            title: doc.title,
+            content: doc.content,
+            views: doc.views,
+            slug: doc.slug,
+            createBy: doc.createBy,
+        }
+        QuestionModel.updateOne({ _id: req.params.questionId }, postObj, (err, docs) => {
+            if (err) return response(res, 500, ['ERROR_SERVER', err.message]);
+            if (!docs) return response(res, 400, ['EMPTY_DATA']);
+            return response(res, 200, []);
+        })
+    })
+}
+
+export const removeLike = (req, res) => {
+    QuestionModel.findById(req.params.questionId, (err, doc) => {
+        if (err) {
+            console.log(err);
+            return false;
+        }
+        var result = [];
+        doc.likes.filter(x => {
+            if (x != req.userId) {
+                result.push(x);
+            }
+        })
+        const postObj = {
+            likes: result,
+            dislike: doc.dislike,
+            comfirmAnswers: doc.comfirmAnswers,
+            tags: doc.tags,
+            _id: doc._id,
+            title: doc.title,
+            content: doc.content,
+            views: doc.views,
+            slug: doc.slug,
+            createBy: doc.createBy,
+        }
+        QuestionModel.updateOne({ _id: req.params.questionId }, postObj, (err, docs) => {
+            if (err) return response(res, 500, ['ERROR_SERVER', err.message]);
+            if (!docs) return response(res, 400, ['EMPTY_DATA']);
+            return response(res, 200, [], docs);
+        })
     })
 }
