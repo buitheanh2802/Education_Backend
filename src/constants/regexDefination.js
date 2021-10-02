@@ -4,6 +4,8 @@ export const EMAIL = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+")
 export const PASSWORD = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/;
 // Username pattern
 export const USERNAME = /^(?=[a-zA-Z0-9]{8,20}$)(?!.*[.]{2})[^.].*[^.]$/;
+// tagname pattern
+export const TAGNAME = /^(?=[a-zA-Z0-9]{2,20}$)(?!.*[.]{2})[^.].*[^.]$/;
 // PhoneNumber
 export const PHONE_NUMBER = /(84|0[3|5|7|8|9])+([0-9]{8})\b/;
 // pattern query ?page 

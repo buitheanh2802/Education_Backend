@@ -13,7 +13,6 @@ router.get(
 );
 router.post(
     path.tag.post,
-    tagValidator,
     accessToken,
     accessRole(['admin', 'collaborators']),
     create

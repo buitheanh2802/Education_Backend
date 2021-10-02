@@ -105,6 +105,7 @@
     ],
     "pictures" : {
         "_id" : "ID",
+        "pictureId" : "String",
         "path" : "String",
         "userId" : "String",
         "socialType" : "String"
