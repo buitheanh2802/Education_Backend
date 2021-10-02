@@ -51,6 +51,7 @@ export const path = {
         get: '/:tagname',
         post: '/',
         delete: '/:tagname',
-        search : '/search'
+        search : '/search',
+        put : '/:tagname'
     }
 }

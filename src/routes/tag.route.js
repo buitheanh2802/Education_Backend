@@ -1,9 +1,7 @@
 import express from 'express';
 import { path } from 'constants/routeDefination';
-import { gets, create } from 'controllers/tag.controller';
-import { tagValidator } from 'middlewares/validate.middleware';
+import { gets, create,update } from 'controllers/tag.controller';
 import { accessRole, accessToken } from 'middlewares/auth.middleware';
-import { upload } from 'middlewares/upload.middleware';
 
 const router = express.Router();
 
@@ -16,6 +14,13 @@ router.post(
     accessToken,
     accessRole(['admin', 'collaborators']),
     create
+);
+
+router.put(
+    path.tag.put,
+    accessToken,
+    accessRole(['admin', 'collaborators']),
+    update
 )
 
 export default router;

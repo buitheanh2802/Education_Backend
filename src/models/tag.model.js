@@ -6,7 +6,8 @@ const TagModel = new mongoose.Schema({
     avatar: {
         _id: { type: String, default: '' },
         avatarUrl: { type: String, default: '' }
-    }
+    },
+    driveId: { type: String }
 },
     {
         timestamps: true
