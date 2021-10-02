@@ -1,5 +1,5 @@
 import express from 'express';
-import { newest } from '../controllers/post.controller';
+import { newest,following } from '../controllers/post.controller';
 import { path } from "constants/routeDefination";
 import { postValidator } from 'middlewares/validate.middleware';
 const router = express.Router();
@@ -10,9 +10,10 @@ router.get(
     newest
 );
 // following
-// router.get(
-
-// )
+router.get(
+    path.post.following,
+    following
+)
 // router.get(path.post.get, read);
 // router.get(path.post.gets, fetchAll)
 // router.post(path.post.post, postValidator, create)
