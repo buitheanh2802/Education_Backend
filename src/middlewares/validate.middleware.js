@@ -155,7 +155,7 @@ export const tagValidator = async (req, res, next) => {
         .withMessage('Tên thẻ không hợp lệ !')
         .run(req);
     const check = validationResult(req);
-    if (!check.isEmpty()) return response(res, 400, ['INVALID_DATA', ...check.errors]);
+    if (!check.isEmpty()) return response(res, 400, ['INVALID_DATA', ...check.array()]);
     return next();
 }
 

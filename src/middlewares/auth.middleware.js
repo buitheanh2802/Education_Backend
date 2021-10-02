@@ -30,11 +30,11 @@ export const accessToken = (req, res, next) => {
         req.oauthPicture = oauthPicture;
         return next();
     } catch (error) {
-        return response(res, 400, ['EXPIRED_TOKEN']);
+        return response(res, 401, ['EXPIRED_TOKEN']);
     }
 }
 
-export const accessRole = (...acceptRoles) => {
+export const accessRole = (acceptRoles) => {
     const roleDefine = ['user', 'admin', 'collaborators'];
     return (req, res, next) => {
         userModel.findById(req.userId, (err, docs) => {

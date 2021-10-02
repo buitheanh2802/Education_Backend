@@ -46,10 +46,11 @@ export const path = {
         delete: '/:questionId',
     },
     tag: {
-        rootRoute: '/api/question',
+        rootRoute: '/api/tag',
         gets: '/',
         get: '/:tagname',
         post: '/',
-        delete: '/:tagname'
+        delete: '/:tagname',
+        search : '/search'
     }
 }
