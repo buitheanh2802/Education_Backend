@@ -65,19 +65,19 @@ export const notificationValidator = async (req, res, next) => {
 // postValidator
 export const postValidator = async (req, res, next) => {
     await body('title')
-            .trim()
-            .notEmpty()
-            .withMessage('Không được để trống tiêu đề')
-            .run(req);
+        .trim()
+        .notEmpty()
+        .withMessage('Không được để trống tiêu đề')
+        .run(req);
     await body('content')
-            .trim()
-            .notEmpty()
-            .withMessage('Không được để trống nội dung')
-            .run(req);
+        .trim()
+        .notEmpty()
+        .withMessage('Không được để trống nội dung')
+        .run(req);
     await body('tags')
-            .isArray({ min : 5})
-            .withMessage('Chọn tối thiểu 5 thẻ')
-            .run(req);
+        .isArray({ min: 5 })
+        .withMessage('Chọn tối thiểu 5 thẻ')
+        .run(req);
     const validatorResult = validationResult(req);
     if (!validatorResult.isEmpty()) return response(res, 400, ['INVALID_DATA', ...validatorResult.errors])
     next();
@@ -129,38 +129,33 @@ export const followValidator = async (req, res, next) => {
     // await body('userId').trim().notEmpty().withMessage("Nhập userId").run(req);
     const check = validationResult(req);
     if (!check.isEmpty()) {
-        return res.status(400).json({
-            message: 'validate error',
-            error: check.errors
-        })
+        return response(res, 400, ['INVALID_DATA', ...check.errors])
     }
-    next();
+    return next();
 }
 //question
 export const questionValidator = async (req, res, next) => {
     await body('title').trim().notEmpty().withMessage("Nhập title").run(req);
     await body('content').trim().notEmpty().withMessage("Nhập content").run(req);
-    await body('slug').trim().notEmpty().withMessage("Nhập slug").run(req);
+    // await body('slug').trim().notEmpty().withMessage("Nhập slug").run(req);
     const check = validationResult(req);
     if (!check.isEmpty()) {
-        return res.status(400).json({
-            message: 'validate error',
-            error: check.error
-        })
+        return response(res, 400, ['INVALID_DATA', ...check.errors])
     }
+    return next();
 }
 
 // tag
-export const tagValidator = async(req,res,next) => {
+export const tagValidator = async (req, res, next) => {
     await body('name')
-            .trim()
-            .notEmpty()
-            .withMessage('Không được để trống tên thẻ !')
-            .matches(pattern.USERNAME)
-            .withMessage('Tên thẻ không hợp lệ !')
-            .run(req);
+        .trim()
+        .notEmpty()
+        .withMessage('Không được để trống tên thẻ !')
+        .matches(pattern.USERNAME)
+        .withMessage('Tên thẻ không hợp lệ !')
+        .run(req);
     const check = validationResult(req);
-    if(!check.isEmpty()) return response(res,400,['INVALID_DATA',...check.errors]);
+    if (!check.isEmpty()) return response(res, 400, ['INVALID_DATA', ...check.errors]);
     return next();
 }
 
