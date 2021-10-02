@@ -1,121 +1,143 @@
 {
-    "users" : [
+    "users": [
         {
-            "_id" : "ID",
-            "fullName" : "String",
-            "email" : "String",
-            "password" : "String",
-            "avatar" : {
-                "_id" : "ID",
-                "avatarUrl" : "String"
+            "_id": "ID",
+            "fullName": "String",
+            "email": "String",
+            "password": "String",
+            "avatar": {
+                "_id": "ID",
+                "avatarUrl": "String"
             },
-            "address" : "String",
-            "phoneNumber" : "String",
-            "birth" : "Date",
-            "points" : "Number",
-            "username" : "bui-the-anh",
-            "role" : "user|admin|collaborators",
-            "status" : "active|block|verify",
-            "userType" : "basic|premium",
-            "socialType" : "system|facebook|github|google"
+            "address": "String",
+            "phoneNumber": "String",
+            "birth": "Date",
+            "points": "Number",
+            "username": "bui-the-anh",
+            "role": "user|admin|collaborators",
+            "status": "active|block|verify",
+            "userType": "basic|premium",
+            "socialType": "system|facebook|github|google"
         }
     ],
-    "notifications" : [
+    "notifications": [
         {
-            "_id" : "ID",
-            "title" : "String",
-            "isRead" : "Boolean",
-            "url" : "String",
-            "sender" : "userId",
-            "userId" : "ID",
-            "createAt" : "",
-            "type" : "system|user"
+            "_id": "ID",
+            "title": "String",
+            "isRead": "Boolean",
+            "url": "String",
+            "sender": "userId",
+            "sendTo": "ID",
+            "createAt": "",
+            "type": "system|user"
         }
     ],
-    "course" : [
+    "course": [
         {
-            "title" : "String",
-            "description" : "String",
-            "avatar" : {
-                "_id" : "ID",
-                "avatarUrl" : "String"
+            "title": "String",
+            "description": "String",
+            "avatar": {
+                "_id": "ID",
+                "avatarUrl": "String"
             },
-            "videoUrl" : "String",
-            "rate" : [
+            "videoUrl": "String",
+            "rate": [
                 {
-                    "userId" : "ID",
-                    "star" : "Number"
+                    "userId": "ID",
+                    "star": "Number"
                 }
             ],
-            "slug" : "html-css",
-            "willLeans" : [
+            "slug": "html-css",
+            "willLeans": [
                 {
-                    "_id" : "ID",
-                    "content" : "String"
+                    "_id": "ID",
+                    "content": "String"
                 }
             ],
-            "categoryId" : "Number",
-            "registerBy" : ["userId"],
-            "userId" : "ID"
+            "categoryId": "Number",
+            "registerBy": [
+                "userId"
+            ],
+            "userId": "ID"
         }
     ],
-    "posts" : [
+    "posts": [
         {
-            "_id" : "ID",
-            "title" : "String",
-            "content" : "",
-            "views" : "Number",
-            "isPublished" : "Boolean",
-            "isDraft" : "Boolean",
-            "slug" : "bui-the-anh",
-            "isApprove" : "Boolean",
-            "userId" : "ID",
-            "votes" : ["ListID"],
-            "tagsId" : ["listTagId"]
+            "_id": "ID",
+            "title": "String",
+            "content": "",
+            "views": "Number",
+            "isPublished": "Boolean",
+            "isDraft": "Boolean",
+            "slug": "bui-the-anh",
+            "isApprove": "Boolean",
+            "createBy": "ID",
+            "likes": [],
+            "dislike": [],
+            "tags": [
+                "listTagId"
+            ]
         }
     ],
-    "questions" : [
+    "questions": [
         {
-            "_id" : "ID",
-            "title" : "String",
-            "content" : "String",
-            "views" : "Number",
-            "slug" : "bui-the-anh",
-            "userId" : "ID",
-            "votes" : ["ListUserID"],
-            "tagsId" : ["listTagId"],
-            "confirmAnswers" : ["listUserId"]
+            "_id": "ID",
+            "title": "String",
+            "content": "String",
+            "views": "Number",
+            "slug": "bui-the-anh",
+            "createBy": "ID",
+            "likes": [],
+            "dislike": [],
+            "tags": [
+                "listTagId"
+            ],
+            "confirmAnswers": [
+                "listUserId"
+            ]
         }
     ],
-    "comments" : [
+    "comments": [
         {
-            "_id" : "ID",
-            "content" : "zz",
-            "votes" : [],
-            "reply" : [{"_id" : "ID","content" : "String","createBy" : "String","likes" : [],"dislike" : []}],
-            "userId" : "fysaofyoisdyf",
-            "postId" : "ID"
+            "_id": "ID",
+            "content": "zz",
+            "likes": [],
+            "dislike": [],
+            "reply": [
+                {
+                    "_id": "ID",
+                    "content": "String",
+                    "createBy": "String",
+                    "likes": [],
+                    "dislike": []
+                }
+            ],
+            "userId": "fysaofyoisdyf",
+            "postId": "ID"
         }
     ],
-    "follows" :[
+    "follows": [
         {
-            "followingId" : "anh hai",
-            "userId" : "theanh"
+            "followingId": "anh hai",
+            "userId": "theanh"
         }
     ],
-    "pictures" : {
-        "_id" : "ID",
-        "pictureId" : "String",
-        "path" : "String",
-        "userId" : "String",
-        "socialType" : "String"
+    "pictures": {
+        "_id": "ID",
+        "photo": {
+            "_id": "string",
+            "photoUrl": "string"
+        },
+        "createBy": "String",
+        "socialType": "String"
     },
-    "tags" : {
-        "_id" : "ID",
-        "name" : "String",
-        "avatar" : {
-            "_id" : "ID",
-            "avatarUrl" : "String"
-        }
+    "tags": {
+        "_id": "ID",
+        "name": "String",
+        "avatar": {
+            "_id": "ID",
+            "avatarUrl": "String"
+        },
+        "driveId": "String"
     }
 }
