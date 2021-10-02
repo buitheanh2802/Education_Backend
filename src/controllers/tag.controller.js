@@ -37,7 +37,7 @@ export const gets = async(req, res) => {
 }
 
 export const create = (req,res) => {
-    // request cần có : name , token ,role : admin hoặc collaborators,photos
+    // request cần có : name , token ,role : admin hoặc collaborators,photo
     const initialize = new formidable.IncomingForm({
         maxFileSize : 1024 * 1024,
         keepExtensions : true
@@ -74,7 +74,7 @@ export const create = (req,res) => {
 }
 
 export const update = (req,res) => {
-    // request cần có : name , token ,role : admin hoặc collaborators,photos
+    // request cần có : name , token ,role : admin hoặc collaborators,photo
     const initialize = new formidable.IncomingForm({
         maxFileSize : 1024 * 1024,
         keepExtensions : true
