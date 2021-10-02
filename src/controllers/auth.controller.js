@@ -117,8 +117,8 @@ export const signout = (req, res) => {
 export const oauthLoginCallback = (strategy) => {
     return (req, res) => {
         passport.authenticate(strategy, (err, profile) => {
-            console.log(profile);
-            console.log(err);
+            // console.log(profile);
+            // console.log(err);
             if (err) return res.redirect(`${process.env.ACCESS_DOMAIN}/auth/login?authenticate=false`);
             UserModel.findOne({ email: profile.emails[0].value, socialType: strategy })
                 .lean()
