@@ -59,7 +59,7 @@ export const create = (req,res) => {
         }
         const createNewTag = new TagModel({
             name : name,
-            pathName : name.toLowerCase(),
+            slug : name.toLowerCase(),
             avatar : {
                 _id : driveFileResponse?.id,
                 avatarUrl : driveFileResponse?.webContentLink
@@ -81,10 +81,10 @@ export const update = (req,res) => {
     });
     initialize.parse(req,async(err,fields,file) => {
         const { photo } = file;
-        fields.pathName = fields.name.toLowerCase();
+        fields.slug = fields.name.toLowerCase();
         if(err) return response(res,400,['INVALID_SIZE',err.message]);
         if(!fields.name || !TAGNAME.test(fields.name)) return response(res,400,['INVALID_DATA']);
-        TagModel.findOne({ pathName : req.params.tagname.toLowerCase( )},async(err,docs) => {
+        TagModel.findOne({ slug : req.params.tagname.toLowerCase( )},async(err,docs) => {
             if(err) return response(res,500,['ERROR_SERVER']);
             if(!docs) return response(res,400,['TAG_NOTEXIST']);
             if(photo){
