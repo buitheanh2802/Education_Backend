@@ -17,7 +17,9 @@
             "role": "user|admin|collaborators",
             "status": "active|block|verify",
             "userType": "basic|premium",
-            "socialType": "system|facebook|github|google"
+            "socialType": "system|facebook|github|google",
+            "bookmarks" : [],
+            "followers" : [],
         }
     ],
     "notifications": [

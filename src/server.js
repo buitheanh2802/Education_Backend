@@ -19,7 +19,7 @@ const serverConfig = async () => {
     app.use(cors({
         methods : 'GET,POST,PUT,DELETE',
         credentials : true,
-        origin : ['http://localhost:3000','http://172.20.10.2:3000']
+        origin : ['http://localhost:3000','http://172.20.10.2:3000','http://127.0.0.1:5500']
     }))
     app.use(express.json());
     app.use(express.urlencoded({ extended: true }));
