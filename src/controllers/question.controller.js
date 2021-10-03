@@ -12,6 +12,7 @@ export const gets = async (req, res) => {
     const totalPage = Math.ceil(countDocuments / limit);
     QuestionModel
         .find({}, '-__v -updateAt')
+        .populate({ path: "createBy", select: 'fullname' })
         .skip(skip)
         .limit(limit)
         .lean()

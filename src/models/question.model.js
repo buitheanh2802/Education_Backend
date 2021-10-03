@@ -5,10 +5,10 @@ const QuestionSchema = new mongoose.Schema({
     content: { type: String },
     views: { type: Number },
     slug: { type: String },
-    createBy: { type: mongoose.Schema.Types.ObjectId, ref: 'users' },
-    likes: [{ type: mongoose.Schema.Types.ObjectId, ref: 'users' }],
-    dislike: [{ type: mongoose.Schema.Types.ObjectId, ref: 'users' }],
-    comfirmAnswers: [{ type: mongoose.Schema.Types.ObjectId, ref: 'users' }],
+    createBy: { type: mongoose.Schema.Types.ObjectId, ref: 'Users' },
+    likes: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Users' }],
+    dislike: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Users' }],
+    comfirmAnswers: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Users' }],
     tags: [{ type: String }],
 }, { timestamps: true });
 
