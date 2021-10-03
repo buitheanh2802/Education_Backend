@@ -5,8 +5,14 @@ import { TAGNAME, PAGINATION_REGEX } from 'constants/regexDefination';
 import { cropper } from 'helpers/imageCropper';
 import { createFile, createFolder } from 'services/drive';
 import { assignIn } from 'lodash';
+import jwt from "jsonwebtoken";
 
 export const gets = async (req, res) => {
+    try {
+        var token = jwt.verify(req.headers?.authorization?.split(" ")[1], process.env.SECRET_KEY);
+    } catch (error) {
+        console.log('error', error.message);
+    }
     const { page } = req.query;
     let currentPage = 1;
     if (PAGINATION_REGEX.test(page)) currentPage = Number(page);
@@ -16,12 +22,6 @@ export const gets = async (req, res) => {
     const totalPage = Math.ceil(countDocuments / limit);
     TagModel.aggregate([
         {
-            $skip : skip
-        },
-        {
-            $limit : limit
-        },
-        {
             $lookup: {
                 from: "questions",
                 localField: "name",
@@ -30,54 +30,61 @@ export const gets = async (req, res) => {
             }
         },
         {
-            $lookup : {
-                from : "posts",
-                localField : "name",
-                foreignField : "tags",
-                as : "posts"
+            $lookup: {
+                from: "posts",
+                localField: "name",
+                foreignField: "tags",
+                as: "posts"
             }
         },
         {
-            $lookup : {
-                from : "follows",
-                localField : "_id",
-                foreignField : "followingUserId",
-                as : "followers"
+            $lookup: {
+                from: "follows",
+                localField: "_id",
+                foreignField: "followingUserId",
+                as: "followers"
             }
         },
         {
             $addFields: {
                 questionCounts: { $size: "$questions" },
                 postCounts: { $size: "$posts" },
-                followerCounts: { $size: "$followers" }
+                followerCounts: { $size: "$followers" },
+                isFollowing: { $cond: [{ $eq: ["$followers.userId", token?._id] }, true, false] }
             }
         },
         {
+            $skip: skip
+        },
+        {
+            $limit: limit
+        },
+        {
             $project: {
-                _id: 0,
+                // _id: 0,
                 updatedAt: 0,
                 __v: 0,
                 createdAt: 0,
                 driveId: 0,
                 questions: 0,
-                posts : 0,
-                followers : 0
+                posts: 0,
+                followers: 0
             }
         }
     ]).exec((err, docs) => {
         if (err) return response(res, 500, ['ERROR_SERVER', err.message]);
         return response(res, 200, [],
-                        {
-                            models: docs,
-                            metaData: {
-                                pagination: {
-                                    perPage: limit,
-                                    totalPage: totalPage,
-                                    currentPage: currentPage,
-                                    countDocuments: docs.length
-                                }
-                            }
-                        });
+            {
+                models: docs,
+                metaData: {
+                    pagination: {
+                        perPage: limit,
+                        totalPage: totalPage,
+                        currentPage: currentPage,
+                        countDocuments: docs.length
+                    }
+                }
+            });
     })
 }
 
