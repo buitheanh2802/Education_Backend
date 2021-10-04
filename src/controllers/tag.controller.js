@@ -50,7 +50,13 @@ export const gets = async (req, res) => {
                 questionCounts: { $size: "$questions" },
                 postCounts: { $size: "$posts" },
                 followerCounts: { $size: "$followers" },
-                isFollowing: { $cond: [{ $eq: ["$followers.userId", token?._id] }, true, false] }
+                isFollowing: { $filter : {
+                    input : "$followers",
+                    as : "each",
+                    cond : { 
+                        $eq : ["$$each.userId",token?._id]
+                    }
+                } },
             }
         },
         {
@@ -75,7 +81,11 @@ export const gets = async (req, res) => {
         if (err) return response(res, 500, ['ERROR_SERVER', err.message]);
         return response(res, 200, [],
             {
-                models: docs,
+                models: docs.map(doc => {
+                    if(doc.isFollowing.length === 0) doc.isFollowing = false;
+                    else doc.isFollowing = true;
+                    return doc
+                }),
                 metaData: {
                     pagination: {
                         perPage: limit,
