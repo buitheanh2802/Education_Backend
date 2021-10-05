@@ -26,8 +26,8 @@ export const path = {
         rootRoute: '/api/post',
         get: '/:postId',
         newest: '/newest',
-        following : '/following',
-        trending : '/trending',
+        following: '/following',
+        trending: '/trending',
         post: '/',
         put: '/:postId',
         delete: '/:postId'
@@ -44,6 +44,10 @@ export const path = {
         get: '/:questionId',
         put: '/:questionId',
         delete: '/:questionId',
+        like: '/:questionId/like',
+        deletelike: '/:questionId/deletelike',
+        dislike: '/:questionId/dislike',
+        deletedislike: '/:questionId/delete-dislike',
     },
     tag: {
         rootRoute: '/api/tag',
@@ -51,7 +55,7 @@ export const path = {
         get: '/:tagname',
         post: '/',
         delete: '/:tagname',
-        search : '/search',
-        put : '/:tagname'
+        search: '/search',
+        put: '/:tagname'
     }
 }
