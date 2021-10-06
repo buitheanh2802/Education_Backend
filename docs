@@ -83,3 +83,184 @@ res = {
     }
 }
 
+    - Question;
+
+// get list question
+GET: "https://devstar-api.herokuapp.com/api/question"
+res = {
+    "message": [],
+    "status": true,
+    "data": {
+        "models": [
+            {
+                "_id": "615c6f5e12837c07d0350f32",
+                "likes": [
+                    "614eda623970d700162ae698",
+                    "614e21071932800016a2056d"
+                ],
+                "dislike": [
+                    "614eda623970d700162ae698",
+                    "614e21071932800016a2056d"
+                ],
+                "comfirmAnswers": [],
+                "tags": [
+                    {
+                        "_id": "6159e1356c0534303c2ba360",
+                        "name": "ReactJS"
+                    }
+                ],
+                "title": "Cau hoi so 5",
+                "content": "Day la noi dung 5",
+                "views": 10,
+                "slug": "cau_hoi_1",
+                "createBy": {
+                    "_id": "614ee1a8141ae93af8ad5202",
+                    "fullname": "Nguyen A"
+                },
+                "createdAt": "2021-10-05T15:29:34.950Z",
+                "updatedAt": "2021-10-05T16:08:01.598Z"
+            }
+        ],
+        "metaData": {
+            "pagination": {
+                "perPage": 5,
+                "totalPage": 1,
+                "currentPage": 1,
+                "countDocuments": 1
+            }
+        }
+    }
+}
+
+//get detail question
+GET: "http://localhost:4000/api/question/:questionId"
+res = {
+    "message": [],
+    "status": true,
+    "data": {
+        "likes": [
+            "614eda623970d700162ae698",
+            "614e21071932800016a2056d"
+        ],
+        "dislike": [
+            "614eda623970d700162ae698",
+            "614e21071932800016a2056d"
+        ],
+        "comfirmAnswers": [],
+        "tags": [
+            {
+                "_id": "6159e1356c0534303c2ba360",
+                "name": "ReactJS"
+            }
+        ],
+        "_id": "615c6f5e12837c07d0350f32",
+        "title": "Cau hoi so 5",
+        "content": "Day la noi dung 5",
+        "views": 10,
+        "slug": "cau_hoi_1",
+        "createBy": {
+            "_id": "614ee1a8141ae93af8ad5202",
+            "fullname": "Nguyen A"
+        },
+        "createdAt": "2021-10-05T15:29:34.950Z",
+        "updatedAt": "2021-10-05T16:08:01.598Z",
+        "__v": 0
+    }
+}
+
+// create question (token)
+POST: "https://devstar-api.herokuapp.com/api/question"
+"( requiry: title, content, tags )"
+
+req = {
+    "title": "Cau hoi so 6",
+    "content": "Day la noi dung 6",
+    "views": 10,
+    "slug": "cau_hoi_1",
+    "likes": ["614eda623970d700162ae698", "614e21071932800016a2056d"],
+    "dislike": ["614eda623970d700162ae698", "614e21071932800016a2056d"],
+    "tags": ["6159e1356c0534303c2ba360"]
+}
+res = {
+    "message": [],
+    "status": true,
+    "data": {
+        "likes": [
+            "614eda623970d700162ae698",
+            "614e21071932800016a2056d"
+        ],
+        "dislike": [
+            "614eda623970d700162ae698",
+            "614e21071932800016a2056d"
+        ],
+        "comfirmAnswers": [],
+        "tags": [
+            "6159e1356c0534303c2ba360"
+        ],
+        "_id": "615db11b17f479209c7d0967",
+        "title": "Cau hoi so 6",
+        "content": "Day la noi dung 6",
+        "views": 10,
+        "slug": "cau_hoi_1",
+        "createBy": "614ee1a8141ae93af8ad5202",
+        "createdAt": "2021-10-06T14:22:19.256Z",
+        "updatedAt": "2021-10-06T14:22:19.256Z",
+        "__v": 0
+    }
+}
+
+//update question (token)
+PUT: "https://devstar-api.herokuapp.com/api/question/615c6f5e12837c07d0350f32"
+"( requiry: title, content, tags )"
+req = {
+    "likes": [
+        "614eda623970d700162ae698",
+        "614e21071932800016a2056d"
+    ],
+    "dislike": [
+        "614eda623970d700162ae698",
+        "614e21071932800016a2056d"
+    ],
+    "comfirmAnswers": [],
+    "tags": [
+        {
+            "_id": "6159e1356c0534303c2ba360",
+            "name": "ReactJS"
+        }
+    ],
+    "_id": "615c6f5e12837c07d0350f32",
+    "title": "Cau hoi so 55",
+    "content": "Day la noi dung 55",
+    "views": 10,
+    "slug": "cau_hoi_1",
+    "createBy": {
+        "_id": "614ee1a8141ae93af8ad5202",
+        "fullname": "Nguyen A"
+    },
+    "createdAt": "2021-10-05T15:29:34.950Z",
+    "updatedAt": "2021-10-05T16:08:01.598Z",
+    "__v": 0
+}
+res = {
+    "message": [],
+    "status": true
+}
+
+//delete question (token)
+DELETE: "https://devstar-api.herokuapp.com/api/question/615c58aecc59660538962ca0"
+res = {
+    "message": [],
+    "status": true
+}
+
+// like question (token)
+POST: "https://devstar-api.herokuapp.com/api/question/:questionId/like"
+
+// remove like question (token)
+DELETE: "https://devstar-api.herokuapp.com/api/question/:question/deletelike"
+
+// dislike question (token)
+POST: "https://devstar-api.herokuapp.com/api/question/:questionId/dislike"
+
+// remove dislike question (token)
+DELETE: "https://devstar-api.herokuapp.com/api/question/:questionId/delete-dislike"

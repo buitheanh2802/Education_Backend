@@ -6,8 +6,8 @@ import { questionValidator } from 'middlewares/validate.middleware';
 
 const router = express.Router();
 
-router.get(path.question.gets, accessToken, gets);
-router.get(path.question.get, accessToken, get);
+router.get(path.question.gets, gets);
+router.get(path.question.get, get);
 router.post(path.question.post, questionValidator, accessToken, create);
 router.put(path.question.put, questionValidator, accessToken, update);
 router.delete(path.question.delete, accessToken, remove);
