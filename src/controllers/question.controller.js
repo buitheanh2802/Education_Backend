@@ -13,6 +13,7 @@ export const gets = async (req, res) => {
     QuestionModel
         .find({}, '-__v -updateAt')
         .populate({ path: "createBy", select: 'fullname' })
+        .populate({ path: "tags", select: "name" })
         .skip(skip)
         .limit(limit)
         .lean()
@@ -45,12 +46,16 @@ export const create = (req, res) => {
     })
 }
 export const get = (req, res) => {
-    QuestionModel.findOne({ _id: req.params.questionId }, (err, docs) => {
-        if (err) return response(res, 500, ['ERROR_SERVER', err.message]);
-        if (!docs) return response(res, 400, ['EMPTY_DATA']);
-        const { type, ...data } = docs.toObject();
-        return response(res, 200, [], data);
-    })
+    QuestionModel
+        .findOne({ _id: req.params.questionId })
+        .populate({ path: "createBy", select: 'fullname' })
+        .populate({ path: "tags", select: "name" })
+        .exec((err, docs) => {
+            if (err) return response(res, 500, ['ERROR_SERVER', err.message]);
+            if (!docs) return response(res, 400, ['EMPTY_DATA']);
+            const { type, ...data } = docs.toObject();
+            return response(res, 200, [], data);
+        })
 }
 export const update = (req, res) => {
     const questionDefination = {
@@ -137,7 +142,76 @@ export const removeLike = (req, res) => {
         QuestionModel.updateOne({ _id: req.params.questionId }, postObj, (err, docs) => {
             if (err) return response(res, 500, ['ERROR_SERVER', err.message]);
             if (!docs) return response(res, 400, ['EMPTY_DATA']);
-            return response(res, 200, [], docs);
+            return response(res, 200, []);
+        })
+    })
+}
+
+export const addDislike = (req, res) => {
+    QuestionModel.findById(req.params.questionId, (err, doc) => {
+        if (err) {
+            console.log(err);
+            return false;
+        }
+        var check = false;
+
+        for (let i = 0; i < doc.dislike.length; i++) {
+            if (doc.dislike[i] == req.userId) {
+                check = true;
+            }
+        }
+        if (check == false) {
+            doc.dislike.push(req.userId)
+        }
+
+        const postObj = {
+            likes: doc.likes,
+            dislike: doc.dislike,
+            comfirmAnswers: doc.comfirmAnswers,
+            tags: doc.tags,
+            _id: doc._id,
+            title: doc.title,
+            content: doc.content,
+            views: doc.views,
+            slug: doc.slug,
+            createBy: doc.createBy,
+        }
+        QuestionModel.updateOne({ _id: req.params.questionId }, postObj, (err, docs) => {
+            if (err) return response(res, 500, ['ERROR_SERVER', err.message]);
+            if (!docs) return response(res, 400, ['EMPTY_DATA']);
+            return response(res, 200, []);
+        })
+    })
+}
+
+export const removeDislike = (req, res) => {
+    QuestionModel.findById(req.params.questionId, (err, doc) => {
+        if (err) {
+            console.log(err);
+            return false;
+        }
+        var result = [];
+        doc.dislike.filter(x => {
+            if (x != req.userId) {
+                result.push(x);
+            }
+        })
+        const postObj = {
+            likes: doc.likes,
+            dislike: result,
+            comfirmAnswers: doc.comfirmAnswers,
+            tags: doc.tags,
+            _id: doc._id,
+            title: doc.title,
+            content: doc.content,
+            views: doc.views,
+            slug: doc.slug,
+            createBy: doc.createBy,
+        }
+        QuestionModel.updateOne({ _id: req.params.questionId }, postObj, (err, docs) => {
+            if (err) return response(res, 500, ['ERROR_SERVER', err.message]);
+            if (!docs) return response(res, 400, ['EMPTY_DATA']);
+            return response(res, 200, []);
         })
     })
 }
