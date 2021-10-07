@@ -103,17 +103,9 @@
             "content": "zz",
             "likes": [],
             "dislike": [],
-            "reply": [
-                {
-                    "_id": "ID",
-                    "content": "String",
-                    "createBy": "String",
-                    "likes": [],
-                    "dislike": []
-                }
-            ],
-            "userId": "fysaofyoisdyf",
-            "postId": "ID"
+            "parentId" : "",
+            "createBy": "fysaofyoisdyf",
+            "postOrQuestionId": "ID"
         }
     ],
     "follows": [

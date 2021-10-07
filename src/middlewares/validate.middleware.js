@@ -75,8 +75,8 @@ export const postValidator = async (req, res, next) => {
         .withMessage('Không được để trống nội dung')
         .run(req);
     await body('tags')
-        .isArray({ min: 5 })
-        .withMessage('Chọn tối thiểu 5 thẻ')
+        .isArray({ min: 3 })
+        .withMessage('Chọn tối thiểu 3 thẻ')
         .run(req);
     const validatorResult = validationResult(req);
     if (!validatorResult.isEmpty()) return response(res, 400, ['INVALID_DATA', ...validatorResult.errors])
@@ -84,12 +84,32 @@ export const postValidator = async (req, res, next) => {
 }
 
 // comment validator
+export const commentUpdateValidator = async (req, res, next) => {
+    await body('content').trim()
+        .notEmpty()
+        .withMessage('Không được để trống nội dung !')
+        .run(req);
+    const check = validationResult(req);
+    if (!check.isEmpty()) {
+        return res.status(400).json({
+            // vì errors trả về một mảng nên destructuring luôn
+            message: [
+                ...check.errors
+            ],
+            status: false
+        })
+    }
+    next();
+}
 export const commentValidator = async (req, res, next) => {
-    await body('content').trim().notEmpty().withMessage('Nhập content').run(req);
-    await body('userID').trim().notEmpty().withMessage('Nhập user Id').run(req);
-    await body('postID').trim().notEmpty().withMessage('Nhập post id').run(req);
-    await body('isExact').trim().notEmpty().withMessage('Nhập exact boolen').run(req);
-
+    await body('content').trim()
+        .notEmpty()
+        .withMessage('Không được để trống nội dung !')
+        .run(req);
+    await body('postOrQuestionId').trim()
+        .notEmpty()
+        .withMessage('Không được để trống ID của bài viết hoặc câu hỏi !')
+        .run(req);
     const check = validationResult(req);
     if (!check.isEmpty()) {
         return res.status(400).json({

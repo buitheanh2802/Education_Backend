@@ -1,17 +1,47 @@
 import express from 'express';
-import { create, fetchAll, read, remove, update } from '../controllers/comment.controller';
-import { commentValidator } from '../middlewares/validate.middleware';
+import { path } from 'constants/routeDefination';
+import { create, gets, remove, update,action } from 'controllers/comment.controller';
+import { commentValidator,commentUpdateValidator } from 'middlewares/validate.middleware';
+import { accessToken } from 'middlewares/auth.middleware';
 
 const router = express.Router();
 
-router.get('/:commentId', read)
-router.get('/', fetchAll)
-router.post('/', commentValidator, create)
-router.put('/:commentId', commentValidator, update)
-router.delete('/:commentId', remove)
+// gets route
+router.get(
+    path.comment.gets,
+    gets
+);
+// create route
+router.post(path.comment.post, 
+    commentValidator, 
+    accessToken,
+    create
+);
+// edit route
+router.put(
+    path.comment.put, 
+    commentUpdateValidator, 
+    accessToken,
+    update
+);
+// delete route
+router.delete(
+    path.comment.put,
+    accessToken,
+    remove
+);
+// like route
+router.post(
+    path.comment.like,
+    accessToken,
+    action({ type : 'likes'})
+);
+// dislike route
+router.post(
+    path.comment.dislike,
+    accessToken,
+    action({ type : 'dislikes'})
+);
 
-// router.param('commentId', commentById)
-
-// router.param('commentId',)
 
 export default router;

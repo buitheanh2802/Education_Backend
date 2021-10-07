@@ -24,7 +24,7 @@ export const gets = async (req, res) => {
         {
             $lookup: {
                 from: "questions",
-                localField: "name",
+                localField: "_id",
                 foreignField: "tags",
                 as: "questions"
             }
@@ -32,7 +32,7 @@ export const gets = async (req, res) => {
         {
             $lookup: {
                 from: "posts",
-                localField: "name",
+                localField: "_id",
                 foreignField: "tags",
                 as: "posts"
             }
