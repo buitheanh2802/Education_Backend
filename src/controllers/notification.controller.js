@@ -8,7 +8,7 @@ export const gets = async (req, res) => {
     if (PAGINATION_REGEX.test(page)) currentPage = Number(page);
     const limit = 5;
     const skip = (currentPage - 1) * limit;
-    const countDocuments = await NotificationModel.countDocuments();
+    const countDocuments = await NotificationModel.countDocuments({ sendTo: req.userId });
     const totalPage = Math.ceil(countDocuments / limit);
     NotificationModel
         .find({ sendTo: req.userId }, '-__v -updatedAt')
