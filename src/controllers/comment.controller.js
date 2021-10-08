@@ -104,23 +104,23 @@ export const gets = async (req, res) => {
         if (err) return response(res, 500, ['ERROR_SERVER', err.message]);
         docs.forEach(doc => {
             doc.likes.forEach(like => {
-                if(like === token?._id) doc.isLiked = true
-                else doc.isLiked = false;
+                if (like === token?._id) doc.isLike = true
+                else doc.isLike = false;
             })
             doc.dislikes.forEach(dislike => {
-                if(dislike === token?._id) doc.isDisliked = true
-                else doc.isDisliked = false;
+                if (dislike === token?._id) doc.isDislike = true
+                else doc.isDislike = false;
             })
             doc.replyComments.forEach(reply => {
-                if(!reply._id) {
+                if (!reply._id) {
                     delete doc.replyComments;
                     return;
                 }
                 reply.likes = reply.likes.length;
                 reply.dislikes = reply.dislikes.length;
             });
-            if(doc.likes.length === 0) doc.isLiked = false;
-            if(doc.dislikes.length === 0) doc.isDisliked = false;
+            if (doc.likes.length === 0) doc.isLike = false;
+            if (doc.dislikes.length === 0) doc.isDislike = false;
             doc.likes = doc.likes.length;
             doc.dislikes = doc.dislikes.length;
         })
@@ -149,18 +149,24 @@ export const create = (req, res) => {
     const comment = new CommentModel(dataDefination);
     comment.save((err, docs) => {
         if (err) return response(res, 500, ['ERROR_SERVER', err.message]);
-        const documentReponse = docs.toObject({
-            transform: (_, pureObject) => {
-                delete pureObject.updatedAt;
-                delete pureObject.__v;
-                delete pureObject.postOrQuestionId;
-                delete pureObject?.parentId;
-                pureObject.likes = pureObject.likes.length;
-                pureObject.dislikes = pureObject.dislikes.length;
-                return pureObject;
-            }
-        });
-        return response(res, 200, [], documentReponse);
+        docs
+            .populate({ path: 'createBy', select: 'avatar username fullname email -_id' })
+            .execPopulate()
+            .then(docs => {
+                const documentReponse = docs.toObject({
+                    transform: (_, pureObject) => {
+                        delete pureObject.updatedAt;
+                        delete pureObject.__v;
+                        delete pureObject.postOrQuestionId;
+                        delete pureObject?.parentId;
+                        pureObject.likes = pureObject.likes?.length;
+                        pureObject.dislikes = pureObject.dislikes?.length;
+                        return pureObject;
+                    }
+                });
+                return response(res, 200, [], { ...documentReponse, isLike: false, isDislike: false });
+            })
+            .catch(err => response(res, 500, ['ERROR_SERVER', err.message]))
     })
 }
 // update

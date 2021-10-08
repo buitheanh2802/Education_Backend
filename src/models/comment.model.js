@@ -5,7 +5,7 @@ const CommentSchema = new mongoose.Schema({
     likes: [{ type: String }],
     dislikes: [{ type: String }],
     parentId: { type: mongoose.Schema.Types.ObjectId, default: null },
-    createBy: { type: mongoose.Schema.Types.ObjectId },
+    createBy: { type: mongoose.Schema.Types.ObjectId, ref: 'Users' },
     postOrQuestionId: { type: String }
 }, { timestamps: true })
 
