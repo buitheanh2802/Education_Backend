@@ -126,12 +126,12 @@ export const oauthLoginCallback = (strategy) => {
                     let currentUser = docs;
                     if (err) return response(res, 500, ['ERROR_SERVER', err.message]);
                     if (!docs) {
-                        const driveFolder = await createFolder(toSlug(profile.displayName).concat(randomNumber()), '1PWS1iJLKp02kOGGQ-o2WwFYFQE8E6Scs');
+                        const driveFolder = await createFolder(toSlug(profile.displayName,'').concat(randomNumber()), '1PWS1iJLKp02kOGGQ-o2WwFYFQE8E6Scs');
                         const createUser = new UserModel({
                             email: profile.emails[0].value,
                             socialType: strategy,
                             fullname: profile.displayName,
-                            username: toSlug(profile.displayName).concat(randomNumber()),
+                            username: toSlug(profile.displayName,'').concat(randomNumber()),
                             driveId: driveFolder.id,
                             status: 'active'
                         });

@@ -1,4 +1,4 @@
-export const toSlug = (str) =>
+export const toSlug = (str,replace = '') =>
 {
     // Chuyển hết sang chữ thường
     str = str.toLowerCase();     
@@ -16,7 +16,7 @@ export const toSlug = (str) =>
     str = str.replace(/([^0-9a-z-\s])/g, '');
  
     // Xóa khoảng trắng thay bằng ký tự -
-    str = str.replace(/(\s+)/g, '');
+    str = str.replace(/(\s+)/g, replace);
  
     // xóa phần dự - ở đầu
     str = str.replace(/^-+/g, '');
