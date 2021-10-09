@@ -213,3 +213,45 @@ POST: "https://devstar-api.herokuapp.com/api/question/:questionId/dislike"
 
 // remove dislike question (token)
 DELETE: "https://devstar-api.herokuapp.com/api/question/:questionId/delete-dislike"
+
+// get list question theo tag
+GET: "http://localhost:4000/api/question/tag/:tagId"
+res = {
+    "message": [],
+    "status": true,
+    "data": {
+        "models": [
+            {
+                "_id": "61604fd610b6a540b8875575",
+                "likes": [
+                    "614eda623970d700162ae698",
+                    "614e21071932800016a2056d"
+                ],
+                "dislike": [
+                    "614eda623970d700162ae698",
+                    "614e21071932800016a2056d"
+                ],
+                "comfirmAnswers": [],
+                "tags": [
+                    "6159e1356c0534303c2ba360"
+                ],
+                "title": "Cau hoi ve React",
+                "content": "Day la noi dung REact",
+                "views": 10,
+                "slug": "cau_hoi_1",
+                "createBy": "614ee1a8141ae93af8ad5202",
+                "createdAt": "2021-10-08T14:04:06.075Z",
+                "updatedAt": "2021-10-08T14:04:06.075Z",
+                "__v": 0
+            }
+        ],
+        "metaData": {
+            "pagination": {
+                "perPage": 5,
+                "totalPage": 1,
+                "currentPage": 1,
+                "countDocuments": 2
+            }
+        }
+    }
+}

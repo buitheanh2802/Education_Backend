@@ -1,6 +1,7 @@
 import { PAGINATION_REGEX } from "constants/regexDefination";
 import { response } from "constants/responseHandler";
 import QuestionModel from "models/question.model";
+import { async } from "regenerator-runtime";
 
 export const gets = async (req, res) => {
     const { page } = req.query;
@@ -214,4 +215,34 @@ export const removeDislike = (req, res) => {
             return response(res, 200, []);
         })
     })
+}
+
+export const searchTag = async (req, res) => {
+    const { page } = req.query;
+    let currentPage = 1;
+    if (PAGINATION_REGEX.test(page)) currentPage = Number(page);
+    const limit = 5;
+    const skip = (currentPage - 1) * limit;
+    const countDocuments = await QuestionModel.countDocuments();
+    const totalPage = Math.ceil(countDocuments / limit);
+    QuestionModel
+        .find({ tags: req.params.tagid })
+        .skip(skip)
+        .limit(limit)
+        .lean()
+        .exec((err, docs) => {
+            if (err) return response(res, 500, ['ERROR_SERVER', err.message]);
+            if (!docs) return response(res, 400, ['EMPTY_DATA']);
+            return response(res, 200, [], {
+                models: docs,
+                metaData: {
+                    pagination: {
+                        perPage: limit,
+                        totalPage: totalPage,
+                        currentPage: currentPage,
+                        countDocuments: docs.length
+                    }
+                }
+            })
+        })
 }
