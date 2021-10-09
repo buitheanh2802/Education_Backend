@@ -8,12 +8,14 @@ export const gets = async (req, res) => {
     if (PAGINATION_REGEX.test(page)) currentPage = Number(page);
     const limit = 5;
     const skip = (currentPage - 1) * limit;
-    const countDocuments = await NotificationModel.countDocuments();
+    const countDocuments = await NotificationModel.countDocuments({ sendTo : req.userId});
     const totalPage = Math.ceil(countDocuments / limit);
     NotificationModel
-        .find({ sendTo: req.userId }, '-__v -updatedAt')
+        .find({ sendTo: req.userId }, '-__v -updatedAt -sendTo')
         .skip(skip)
         .limit(limit)
+        .populate({ path : 'sender',select : '-_id username email avatar fullname'})
+        .sort({ createdAt : -1 })
         .lean()
         .exec((err, docs) => {
             if (err) return response(res, 500, ['ERROR_SERVER', err.message]);
@@ -33,6 +35,7 @@ export const gets = async (req, res) => {
 }
 
 export const create = (req, res) => {
+    console.log(req.params.sendTo);
     const notificationDefination = {
         title: req.body.title,
         url: req.body.url,

@@ -14,6 +14,15 @@ const PostSchema = new mongoose.Schema({
     bookmarks: [{ type: mongoose.Schema.Types.ObjectId }],
     likes: [{ type: mongoose.Schema.Types.ObjectId }],
     dislikes: [{ type: mongoose.Schema.Types.ObjectId }]
-}, { timestamps: true })
+}, { timestamps: true });
+
+PostSchema.virtual('comments',{
+    localField : 'shortId',
+    foreignField : 'postOrQuestionId',
+    ref : 'Comments',
+    count : true
+});
+
+
 
 module.exports = mongoose.model('posts', PostSchema);

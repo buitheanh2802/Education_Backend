@@ -11,13 +11,13 @@ export const get = (req, res) => {
 
 }
 
-export const newest = async(req, res) => {
+export const newest = async (req, res) => {
     const { page } = req.query;
     let currentPage = 1;
     if (PAGINATION_REGEX.test(page)) currentPage = Number(page);
     const limit = 15;
     const skip = (currentPage - 1) * limit;
-    const countDocuments = await PostModel.countDocuments();
+    const countDocuments = await PostModel.countDocuments({ isAccept: true,isDraft : false,isPublished : true });
     const totalPage = Math.ceil(countDocuments / limit);
     PostModel.aggregate([
         {
@@ -52,21 +52,22 @@ export const newest = async(req, res) => {
                 likes: { $size: '$likes' },
                 dislikes: { $size: '$dislikes' },
                 comments: { $size: '$comments' },
+                bookmarks: { $size: '$bookmarks' },
             }
         },
         {
             $sort: { createdAt: -1 }
         },
         {
-            $skip : skip
+            $skip: skip
         },
         {
-            $limit : limit
+            $limit: limit
         }
         ,
         {
             $project: {
-                _id : 0,
+                _id: 0,
                 views: 1,
                 shortId: 1,
                 title: 1,
@@ -81,6 +82,7 @@ export const newest = async(req, res) => {
                 'createBy.email': 1,
                 'createBy.fullname': 1,
                 comments: 1,
+                bookmarks: 1
             }
         }
     ]).exec((err, docs) => {
@@ -100,12 +102,20 @@ export const newest = async(req, res) => {
     })
 }
 
-export const following = (req, res) => {
+export const following = async (req, res) => {
     try {
         var token = jwt.verify(req.headers?.authorization?.split(" ")[1], process.env.SECRET_KEY);
     } catch (error) {
         console.log('error', error.message);
+        return response(res, 400, ['EMPTY_TOKEN']); 
     }
+    const { page } = req.query;
+    let currentPage = 1;
+    if (PAGINATION_REGEX.test(page)) currentPage = Number(page);
+    const limit = 15;
+    const skip = (currentPage - 1) * limit;
+    const countDocuments = await PostModel.countDocuments({ isAccept: true,isDraft : false,isPublished : true });
+    const totalPage = Math.ceil(countDocuments / limit);
     FollowModel.aggregate([
         {
             $match: {
@@ -115,44 +125,71 @@ export const following = (req, res) => {
         {
             $group: {
                 _id: '$userId',
-                followings: { $push: '$followingUserId' }
+                postFollowings: { $push: '$followingUserId' }
             }
-        }
+        },
+        {
+            $lookup: {
+                from: 'tags',
+                localField: 'postFollowings',
+                foreignField: '_id',
+                as: 'tagFollowings'
+            }
+        },
+        {
+            $unwind: { path: '$tagFollowings', preserveNullAndEmptyArrays: true }
+        },
+        {
+            $group: {
+                _id: '$_id',
+                postFollowings: { $first: '$postFollowings' },
+                tagFollowings: { $push: '$tagFollowings.name' }
+            }
+        },
     ]).exec((err, docs) => {
         if (err) return response(res, 500, ['ERROR_SERVER', err.message]);
-        PostModel.find({ $or: [{ createBy: { $in: docs[0].followings } }, { tags: { $in: docs[0].followings } }] })
-            .exec((err, data) => {
+        PostModel.find({
+            $or: [{ createBy: { $in: docs[0].postFollowings } }, { tags: { $in: docs[0].tagFollowings } }],
+            isAccept: true, isDraft: false
+        })
+            .skip(skip)
+            .limit(limit)
+            .populate({ path : 'createBy', select : '-_id username email avatar fullname'})
+            .populate({ path : 'comments'})
+            .select('-_id views shortId title slug tags likes dislikes createBy createdAt bookmarks')
+            .sort({ createdAt : -1 })
+            .lean()
+            .exec((err, docs) => {
                 if (err) return response(res, 500, ['ERROR_SERVER', err.message]);
-                return response(res, 200, [], data)
+                return response(res, 200, [],
+                    {
+                        models: docs.map(doc => ({...doc,
+                            bookmarks : doc.bookmarks.length,
+                            likes : doc.likes.length,
+                            dislikes : doc.dislikes.length
+                        })),
+                        metaData: {
+                            pagination: {
+                                perPage: limit,
+                                totalPage: totalPage,
+                                currentPage: currentPage,
+                                countDocuments: docs.length
+                            }
+                        }
+                    });
             })
-        // return response(res, 200, [],
-        //     {
-        //         models: docs.map(doc => {
-        //             if(doc.isFollowing.length === 0) doc.isFollowing = false;
-        //             else doc.isFollowing = true;
-        //             return doc
-        //         }),
-        //         metaData: {
-        //             pagination: {
-        //                 perPage: limit,
-        //                 totalPage: totalPage,
-        //                 currentPage: currentPage,
-        //                 countDocuments: docs.length
-        //             }
-        //         }
-        //     });
     })
 }
 
 export const create = async (req, res) => {
-    const { tags, title, content, isDraft, slug } = req.body;
+    const { tags, title, content, isDraft } = req.body;
     try {
         await TagModel.create(tags?.map(tag => {
             return {
                 slug: toSlug(tag, '-'),
                 name: tag
             }
-        }))
+        }));
     } catch (error) {
         console.log(error.message);
     }
