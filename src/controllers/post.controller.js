@@ -41,7 +41,7 @@ export const get = (req, res) => {
         .exec((err, docs) => {
             if (err) return response(res, 500, ['ERROR_SERVER', err.message]);
             if (!docs) return response(res, 200, [], {});
-            userModel.findOne({ _id: docs.createBy }, 'username email fullname points avatar posts questions')
+            userModel.findOne({ _id: docs.createBy }, '-_id username email fullname points avatar posts questions')
                 .populate({ path: 'postCounts' })
                 .populate({ path: 'questionCounts' })
                 .populate({ path: 'followers', select: '-_id userId' })
@@ -450,4 +450,17 @@ export const action = (config) => {
             })
         })
     }
+}
+
+// publish lish 
+export const publishList = (req,res) => {
+    console.log(req.userId);
+}
+// publish accept
+export const publish = (req,res) => {
+
+}
+// unpublish 
+export const unPublish = (req,res) => {
+
 }

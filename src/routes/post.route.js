@@ -1,8 +1,8 @@
 import express from 'express';
-import { newest,following,create,get,action,trending,update,remove } from '../controllers/post.controller';
+import { newest,following,create,get,action,trending,update,remove,publish,publishList,unPublish } from '../controllers/post.controller';
 import { path } from "constants/routeDefination";
 import { postValidator } from 'middlewares/validate.middleware';
-import { accessToken } from 'middlewares/auth.middleware';
+import { accessToken,accessRole } from 'middlewares/auth.middleware';
 const router = express.Router();
 
 // newest
@@ -62,6 +62,23 @@ router.post(
     path.post.bookmark,
     accessToken,
     action({ type : 'bookmarks'})
+);
+// publish list
+router.get(
+    path.post.publishList,
+    accessToken,
+    accessRole(['admin','collaborators']),
+    publishList
+);
+// publish accept 
+router.put(
+    path.post.publishPost,
+    publish
+);
+// unpublish
+router.delete(
+    path.post.unPublishPost,
+    unPublish
 );
 
 export default router;
