@@ -1,4 +1,5 @@
 import mongoose from 'mongoose';
+import findOrCreate from 'mongoose-findorcreate';
 
 const TagModel = new mongoose.Schema({
     name: { type: String },
@@ -13,5 +14,8 @@ const TagModel = new mongoose.Schema({
         timestamps: true
     }
 );
+
+TagModel.plugin(findOrCreate)
+
 
 export default mongoose.model('tags', TagModel)

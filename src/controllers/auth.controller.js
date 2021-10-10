@@ -7,6 +7,9 @@ import jwt from 'jsonwebtoken';
 import passport from 'passport';
 import _ from 'lodash';
 
+// global variables
+const expiredToken = 60 * 60 * 10;
+// end
 
 export const signup = async (req, res) => {
     const { fullname, email, username } = req.body;
@@ -18,7 +21,7 @@ export const signup = async (req, res) => {
             if (err.message.indexOf('username_1') !== -1) return response(res, 400, ['USERNAME_EXIST', err.message]);
         }
         try {
-            const token = jwt.sign({ _id: docs._id }, process.env.SECRET_KEY, { expiresIn: 60 * 60 })
+            const token = jwt.sign({ _id: docs._id }, process.env.SECRET_KEY, { expiresIn: expiredToken })
             await sendMail(email, 'Xác thực tài khoản của bạn !', 'verifyEmailTemplate', {
                 activeUrl: `${process.env.DOMAIN}/api/auth/active/${token}`
             });
@@ -58,7 +61,7 @@ export const signin = (req, res) => {
             if (err) return response(res, 500, ['ERROR_SERVER', err.message]);
             if (!docs) return response(res, 400, ['EMAIL_NOTEXIST']);
             if (!docs.verifyPassword(passwordRequest)) return response(res, 400, ['INVALID_PASSWORD']);
-            const token = jwt.sign({ _id: docs._id, driveId: docs.driveId }, process.env.SECRET_KEY, { expiresIn: 60 * 60 });
+            const token = jwt.sign({ _id: docs._id, driveId: docs.driveId }, process.env.SECRET_KEY, { expiresIn: expiredToken });
             if (docs.status == 'verify') {
                 return response(res, 400, ['NOT_VERIFY'])
             }
@@ -68,7 +71,7 @@ export const signin = (req, res) => {
                 delete pureObject._id;
                 return pureObject;
             }});
-            // res.cookie('auth_tk', token, { maxAge: 1000 * 60 * 60,sameSite : 'None',secure : true})
+            // res.cookie('auth_tk', token, { maxAge: 1000 * expiredToken,sameSite : 'None',secure : true})
             return response(res, 200, [], {
                 profile: {
                     ...documentReponse,
@@ -141,7 +144,7 @@ export const oauthLoginCallback = (strategy) => {
                         _id: currentUser._id,
                         driveId: currentUser.driveId,
                         oauthPicture: profile.photos[0].value
-                    }, process.env.SECRET_KEY, { expiresIn: 60 * 60 });
+                    }, process.env.SECRET_KEY, { expiresIn: expiredToken });
                     return res.redirect(`${process.env.ACCESS_DOMAIN}/auth/login?authenticate=true&token=${token}`);
                 })
         })(req, res)

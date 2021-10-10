@@ -13,7 +13,7 @@ const NotificationSchema = new mongoose.Schema({
 );
 
 NotificationSchema.pre('save',async function(next){
-    console.log(this.sendTo);
+    // console.log(this.sendTo);
     const docs = await UserModel.findOne({ username : this.sendTo });
     this.sendTo = docs._id;
     next()

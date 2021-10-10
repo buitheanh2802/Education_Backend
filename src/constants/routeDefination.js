@@ -24,13 +24,20 @@ export const path = {
     },
     post: {
         rootRoute: '/api/post',
-        get: '/:postId',
+        get: '/:shortId',
         newest: '/newest',
         following: '/following',
         trending: '/trending',
         post: '/',
-        put: '/:postId',
-        delete: '/:postId'
+        put: '/:shortId',
+        delete: '/:shortId',
+        like : '/:shortId/like',
+        dislike : '/:shortId/dislike',
+        bookmark : '/:shortId/bookmark',
+        publishPost : '/publish/:shortId',
+        unPublishPost : '/unpublish/:shortId',
+        publishList : '/publish/list',
+        edit : '/edit/:shortId'
     },
     follow: {
         rootRoute: '/api/follow',

@@ -5,10 +5,9 @@ const PostSchema = new mongoose.Schema({
     content: { type: String },
     views: { type: Number, default: 0 },
     slug: { type: String,default : '' },
-    isPublished: { type: Boolean, default: true },
     isAccept: { type: Boolean, default: false },
     isDraft: { type: Boolean, default: false },
-    tags: [{ type: String }],
+    tags: [{ type: mongoose.Schema.Types.ObjectId,ref : 'tags' }],
     createBy: { type: mongoose.Schema.Types.ObjectId, ref: 'Users' },
     shortId: { type: String, default: '' },
     bookmarks: [{ type: mongoose.Schema.Types.ObjectId }],
@@ -22,7 +21,6 @@ PostSchema.virtual('comments',{
     ref : 'Comments',
     count : true
 });
-
 
 
 module.exports = mongoose.model('posts', PostSchema);

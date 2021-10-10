@@ -35,7 +35,7 @@ export const gets = async (req, res) => {
 }
 
 export const create = (req, res) => {
-    console.log(req.params.sendTo);
+    // console.log(req.params.sendTo);
     const notificationDefination = {
         title: req.body.title,
         url: req.body.url,

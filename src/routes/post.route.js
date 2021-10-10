@@ -1,5 +1,5 @@
 import express from 'express';
-import { newest,following,create } from '../controllers/post.controller';
+import { newest,following,create,get,action,trending,update,remove } from '../controllers/post.controller';
 import { path } from "constants/routeDefination";
 import { postValidator } from 'middlewares/validate.middleware';
 import { accessToken } from 'middlewares/auth.middleware';
@@ -15,14 +15,53 @@ router.get(
     path.post.following,
     following
 )
-// router.get(path.post.get, read);
-// router.get(path.post.gets, fetchAll)
-router.post(path.post.post, 
+// trending
+router.get(
+    path.post.trending,
+    trending
+);
+// update
+router.put(
+    path.post.put,
+    postValidator,
+    accessToken,
+    update
+)
+// get
+router.get(
+    path.post.get,
+    get
+);
+// create
+router.post(
+    path.post.post, 
     postValidator,
     accessToken,
     create
 );
-// router.put(path.post.put, postValidator, update)
-// router.delete(path.post.delete, remove)
+// remove
+router.delete(
+    path.post.delete,
+    accessToken,
+    remove
+)
+// like and dislike
+router.post(
+    path.post.like,
+    accessToken,
+    action({ type : 'likes'})
+)
+// dislike
+router.post(
+    path.post.dislike,
+    accessToken,
+    action({ type : 'dislikes'})
+)
+// bookmark
+router.post(
+    path.post.bookmark,
+    accessToken,
+    action({ type : 'bookmarks'})
+);
 
 export default router;

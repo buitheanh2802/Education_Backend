@@ -67,7 +67,6 @@
             "title": "String",
             "content": "",
             "views": "Number",
-            "isPublished": "Boolean",
             "isDraft": "Boolean",
             "slug": "bui-the-anh",
             "isApprove": "Boolean",

@@ -11,7 +11,7 @@ export const gets = async (req, res) => {
     try {
         var token = jwt.verify(req.headers?.authorization?.split(" ")[1], process.env.SECRET_KEY);
     } catch (error) {
-        console.log('error', error.message);
+        // console.log('error', error.message);
     }
     const { page } = req.query;
     let currentPage = 1;

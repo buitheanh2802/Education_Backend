@@ -9,7 +9,7 @@ export const gets = async (req, res) => {
     try {
         var token = jwt.verify(req.headers?.authorization?.split(" ")[1], process.env.SECRET_KEY);
     } catch (error) {
-        console.log('error', error.message);
+        // console.log('error', error.message);
     }
     const { page } = req.query;
     let currentPage = 1;
@@ -103,24 +103,32 @@ export const gets = async (req, res) => {
     ]).exec((err, docs) => {
         if (err) return response(res, 500, ['ERROR_SERVER', err.message]);
         docs.forEach(doc => {
-            doc.likes.forEach(like => {
-                if (like === token?._id) doc.isLike = true
-                else doc.isLike = false;
-            })
-            doc.dislikes.forEach(dislike => {
-                if (dislike === token?._id) doc.isDislike = true
-                else doc.isDislike = false;
-            })
+            doc.isLike = false;
+            doc.isDislike = false;
+            if(token){
+                doc.likes.forEach(like => {
+                    if (like == token?._id) doc.isLike = true;
+                })
+                doc.dislikes.forEach(dislike => {
+                    if (dislike == token?._id) doc.isDislike = true;
+                })
+            }
             doc.replyComments.forEach(reply => {
                 if (!reply._id) {
                     delete doc.replyComments;
                     return;
                 }
+                reply.isLike = false;
+                reply.isDislike = false;
+                reply.likes.forEach(like => {
+                    if (like == token?._id) reply.isLike = true;
+                })
+                reply.dislikes.forEach(dislike => {
+                    if (dislike == token?._id) reply.isDislike = true;
+                })
                 reply.likes = reply.likes.length;
                 reply.dislikes = reply.dislikes.length;
             });
-            if (doc.likes.length === 0) doc.isLike = false;
-            if (doc.dislikes.length === 0) doc.isDislike = false;
             doc.likes = doc.likes.length;
             doc.dislikes = doc.dislikes.length;
         })
