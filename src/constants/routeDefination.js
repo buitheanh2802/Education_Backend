@@ -41,7 +41,7 @@ export const path = {
     },
     follow: {
         rootRoute: '/api/follow',
-        post: '/',
+        post: '/:followId',
         delete: '/:followId'
     },
     question: {
