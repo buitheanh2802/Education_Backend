@@ -1,5 +1,5 @@
 import { path } from 'constants/routeDefination';
-import { addDislike, addLike, create, get, gets, remove, removeDislike, removeLike, update } from 'controllers/question.controller';
+import { addDislike, addLike, create, get, gets, remove, removeDislike, removeLike, searchTag, update } from 'controllers/question.controller';
 import express from 'express';
 import { accessToken } from 'middlewares/auth.middleware';
 import { questionValidator } from 'middlewares/validate.middleware';
@@ -17,5 +17,8 @@ router.delete(path.question.deletelike, accessToken, removeLike);
 
 router.post(path.question.dislike, accessToken, addDislike);
 router.delete(path.question.deletedislike, accessToken, removeDislike);
+
+//loc cau hoi theo tag
+router.get("/tag/:tagid", searchTag);
 
 export default router;
