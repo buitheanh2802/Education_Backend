@@ -119,8 +119,8 @@
             "_id": "string",
             "photoUrl": "string"
         },
-        "createBy": "String",
-        "socialType": "String"
+        "createBy": "req.userId",
+        "socialType": "drive"
     },
     "tags": {
         "_id": "ID",
