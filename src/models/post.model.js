@@ -12,7 +12,8 @@ const PostSchema = new mongoose.Schema({
     shortId: { type: String, default: '' },
     bookmarks: [{ type: mongoose.Schema.Types.ObjectId }],
     likes: [{ type: mongoose.Schema.Types.ObjectId }],
-    dislikes: [{ type: mongoose.Schema.Types.ObjectId }]
+    dislikes: [{ type: mongoose.Schema.Types.ObjectId }],
+    publishedBy : { type : mongoose.Schema.Types.ObjectId ,ref : 'Users', default : ''}
 }, { timestamps: true });
 
 PostSchema.virtual('comments',{

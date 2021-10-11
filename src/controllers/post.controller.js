@@ -108,11 +108,11 @@ export const newest = async (req, res) => {
             }
         },
         {
-            $lookup : {
-                from : 'tags',
-                localField : 'tags',
-                foreignField : '_id',
-                as : 'tags'
+            $lookup: {
+                from: 'tags',
+                localField: 'tags',
+                foreignField: '_id',
+                as: 'tags'
             }
         }
         ,
@@ -238,7 +238,7 @@ export const following = async (req, res) => {
             .limit(limit)
             .populate({ path: 'createBy', select: '-_id username email avatar fullname' })
             .populate({ path: 'comments' })
-            .populate({ path: 'tags',select : '-_id name slug' })
+            .populate({ path: 'tags', select: '-_id name slug' })
             .select('-_id views shortId title slug tags likes dislikes createBy createdAt bookmarks')
             .sort({ createdAt: -1 })
             .lean()
@@ -299,11 +299,11 @@ export const trending = async (req, res) => {
             }
         },
         {
-            $lookup : {
-                from : 'tags',
-                localField : 'tags',
-                foreignField : '_id',
-                as : 'tags'
+            $lookup: {
+                from: 'tags',
+                localField: 'tags',
+                foreignField: '_id',
+                as: 'tags'
             }
         },
         {
@@ -377,11 +377,11 @@ export const create = async (req, res) => {
     const { tags, title, content, isDraft } = req.body;
     // create tag
     try {
-        var data = await Promise.all(tags.map(async tag =>{
-                const docs = await TagModel.findOrCreate({ slug: tag.toLowerCase() }
-                    , { name: tag, slug: tag.toLowerCase() });
-                return docs.doc._id;
-            }))
+        var data = await Promise.all(tags.map(async tag => {
+            const docs = await TagModel.findOrCreate({ slug: tag.toLowerCase() }
+                , { name: tag, slug: tag.toLowerCase() });
+            return docs.doc._id;
+        }))
     } catch (error) {
         console.log(error.message);
     }
@@ -412,7 +412,7 @@ export const update = async (req, res) => {
     // create tag
     try {
         var data = await Promise.all(updateDefination
-            .tags.map(async tag =>{
+            .tags.map(async tag => {
                 const docs = await TagModel.findOrCreate({ slug: tag.toLowerCase() }
                     , { name: tag, slug: tag.toLowerCase() });
                 return docs.doc._id;
@@ -453,14 +453,58 @@ export const action = (config) => {
 }
 
 // publish lish 
-export const publishList = (req,res) => {
-    console.log(req.userId);
+export const publishList = async (req, res) => {
+    const { page } = req.query;
+    let currentPage = 1;
+    if (PAGINATION_REGEX.test(page)) currentPage = Number(page);
+    const limit = postLimit;
+    const skip = (currentPage - 1) * limit;
+    const countDocuments = await PostModel.countDocuments({ isAccept: false, isDraft: false });
+    const totalPage = Math.ceil(countDocuments / limit);
+    PostModel.find({ isDraft: false, isAccept: false }, '-_id shortId slug title content ')
+        .skip(skip)
+        .limit(limit)
+        .populate({ path: 'createBy', select: '-_id avatar points fullname username email' })
+        .lean()
+        .exec((err, docs) => {
+            if (err) return response(res, 500, ['ERROR_SERVER', err.message]);
+            return response(res, 200, [],
+                {
+                    models: docs,
+                    metaData: {
+                        pagination: {
+                            perPage: limit,
+                            totalPage: totalPage,
+                            currentPage: currentPage,
+                            countDocuments: docs.length
+                        }
+                    }
+                });
+        })
 }
 // publish accept
-export const publish = (req,res) => {
-
+export const publish = (req, res) => {
+    const dataDefination = {
+        isDraft : false,
+        isAccept : true,
+        publishedBy : req.userId
+    }
+    PostModel.updateOne({ shortId: req.params.shortId, isDraft: false, isAccept: false }
+        ,dataDefination, (err, docs) => 
+        {
+            if (err) return response(res, 500, ['ERROR_SERVER', err.message]);
+            return response(res, 200, []);
+        })
 }
 // unpublish 
-export const unPublish = (req,res) => {
+export const unPublish = (req, res) => {
+    PostModel.updateOne({ shortId: req.params.shortId, isDraft: false, isAccept: false }, (err, docs) => 
+        {
+            if (err) return response(res, 500, ['ERROR_SERVER', err.message]);
+            return response(res, 200, []);
+        })
+}
+// edit post
+export const edit = (req, res) => {
 
 }

@@ -1,5 +1,5 @@
 import express from 'express';
-import { newest,following,create,get,action,trending,update,remove,publish,publishList,unPublish } from '../controllers/post.controller';
+import { newest,following,create,get,action,trending,update,remove,publish,publishList,unPublish,edit } from '../controllers/post.controller';
 import { path } from "constants/routeDefination";
 import { postValidator } from 'middlewares/validate.middleware';
 import { accessToken,accessRole } from 'middlewares/auth.middleware';
@@ -73,12 +73,21 @@ router.get(
 // publish accept 
 router.put(
     path.post.publishPost,
+    accessToken,
+    accessRole(['admin','collaborators']),
     publish
 );
 // unpublish
 router.delete(
     path.post.unPublishPost,
+    accessToken,
+    accessRole(['admin','collaborators']),
     unPublish
 );
+// edit 
+router.get(
+    path.post.edit,
+    edit
+)
 
 export default router;
