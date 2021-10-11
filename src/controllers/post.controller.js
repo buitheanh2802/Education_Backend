@@ -7,6 +7,7 @@ import shortid from 'shortid';
 import jwt from 'jsonwebtoken';
 import { PAGINATION_REGEX } from 'constants/regexDefination';
 import userModel from 'models/user.model';
+import mongoose from 'mongoose';
 
 // global variables
 const trendingViews = 200;
@@ -464,6 +465,7 @@ export const publishList = async (req, res) => {
     PostModel.find({ isDraft: false, isAccept: false }, '-_id shortId slug title content ')
         .skip(skip)
         .limit(limit)
+        .sort({ createdAt : -1 })
         .populate({ path: 'createBy', select: '-_id avatar points fullname username email' })
         .lean()
         .exec((err, docs) => {
@@ -487,7 +489,7 @@ export const publish = (req, res) => {
     const dataDefination = {
         isDraft : false,
         isAccept : true,
-        publishedBy : req.userId
+        publishedBy : new mongoose.Types.ObjectId(req.userId)
     }
     PostModel.updateOne({ shortId: req.params.shortId, isDraft: false, isAccept: false }
         ,dataDefination, (err, docs) => 

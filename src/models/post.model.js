@@ -13,7 +13,7 @@ const PostSchema = new mongoose.Schema({
     bookmarks: [{ type: mongoose.Schema.Types.ObjectId }],
     likes: [{ type: mongoose.Schema.Types.ObjectId }],
     dislikes: [{ type: mongoose.Schema.Types.ObjectId }],
-    publishedBy : { type : mongoose.Schema.Types.ObjectId ,ref : 'Users', default : ''}
+    publishedBy : { type : mongoose.Schema.Types.Mixed ,ref : 'Users', default : ''}
 }, { timestamps: true });
 
 PostSchema.virtual('comments',{
