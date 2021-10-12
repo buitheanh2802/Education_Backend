@@ -50,13 +50,15 @@ export const gets = async (req, res) => {
                 questionCounts: { $size: "$questions" },
                 postCounts: { $size: "$posts" },
                 followerCounts: { $size: "$followers" },
-                isFollowing: { $filter : {
-                    input : "$followers",
-                    as : "each",
-                    cond : { 
-                        $eq : ["$$each.userId",token?._id]
+                isFollowing: {
+                    $filter: {
+                        input: "$followers",
+                        as: "each",
+                        cond: {
+                            $eq: ["$$each.userId", token?._id]
+                        }
                     }
-                } },
+                },
             }
         },
         {
@@ -82,7 +84,7 @@ export const gets = async (req, res) => {
         return response(res, 200, [],
             {
                 models: docs.map(doc => {
-                    if(doc.isFollowing.length === 0) doc.isFollowing = false;
+                    if (doc.isFollowing.length === 0) doc.isFollowing = false;
                     else doc.isFollowing = true;
                     return doc
                 }),

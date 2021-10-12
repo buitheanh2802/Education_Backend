@@ -31,13 +31,13 @@ export const path = {
         post: '/',
         put: '/:shortId',
         delete: '/:shortId',
-        like : '/:shortId/like',
-        dislike : '/:shortId/dislike',
-        bookmark : '/:shortId/bookmark',
-        publishPost : '/publish/:shortId',
-        unPublishPost : '/unpublish/:shortId',
-        publishList : '/publish/list',
-        edit : '/edit/:shortId'
+        like: '/:shortId/like',
+        dislike: '/:shortId/dislike',
+        bookmark: '/:shortId/bookmark',
+        publishPost: '/publish/:shortId',
+        unPublishPost: '/unpublish/:shortId',
+        publishList: '/publish/list',
+        edit: '/edit/:shortId'
     },
     follow: {
         rootRoute: '/api/follow',
@@ -73,5 +73,12 @@ export const path = {
         delete: '/:commentId',
         like: '/:commentId/like',
         dislike: '/:commentId/dislike'
+    },
+    picture: {
+        rootRoute: '/api/picture',
+        post: '/',
+        gets: '/',
+        get: '/:pictureId',
+        delete: '/:pictureId'
     }
 }

@@ -6,6 +6,7 @@ import postRoute from './post.route';
 import followRoute from './follow.route';
 import tagRoute from './tag.route';
 import questionRoute from './question.route';
+import pictureRoute from './picture.route';
 
 export const routes = (app) => {
     app.use(path.auth.rootRoute, authRoute)
@@ -15,4 +16,5 @@ export const routes = (app) => {
     app.use(path.follow.rootRoute, followRoute)
     app.use(path.question.rootRoute, questionRoute)
     app.use(path.tag.rootRoute, tagRoute)
+    app.use(path.picture.rootRoute, pictureRoute)
 }
