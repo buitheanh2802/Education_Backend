@@ -1,54 +1,4 @@
-- Notifications(token)
-
-POST: "https://devstar-api.herokuapp.com/api/notification/:sendToUserId"
-req = {
-    title: "Tieu de",
-    isRead: true,
-    url: "https://ap.poly.edu.vn/",
-    sender: "userId123123",
-    sendTo: "userId232323",
-    type: "user"
-}
-// type = ['user','system']
-
-res = {
-    message: [],
-    status: true,
-    data: {
-        isRead: true,
-        _id: "123qqqqq",
-        title: "Tieu de",
-        url: "https://ap.poly.edu.vn/",
-        sender: "userId123123",
-        sendTo: "userId232323",
-        createdAt: "2021-09-25T09:20:13.448Z",
-        updatedAt: "2021-09-25T09:20:13.448Z",
-    }
-}
-
-GET: "https://devstar-api.herokuapp.com/api/notification"
-    (page, limit)
-
-res = {
-    "message": [],
-    "status": true,
-    "data": [
-        {
-            "isRead": false,
-            "type": "user",
-            "_id": "6134d3685022c13a10e81162",
-            "title": "Test thong báo333333",
-            "url": "google.com",
-            "sender": "6133b86997e45b2f68939d9f",
-            "sendTo": "6134a0ad2c820600164d15a6",
-            "createdAt": "2021-09-05T14:25:44.298Z",
-            "updatedAt": "2021-09-05T14:25:44.298Z",
-            "__v": 0
-        },
-    ]
-}
-
-    - Follow(token)
+- Follow(token) 
 
 GET: "https://devstar-api.herokuapp.com/api/follow"
 res = {
@@ -68,7 +18,6 @@ res = {
 POST: "https://devstar-api.herokuapp.com/api/follow"
 req = {
     "followingUserId": "614855d1508c45393cf33937",
-    "userId": "61486248ca833d14c039c040"
 }
 res = {
     "message": [],
@@ -82,7 +31,7 @@ res = {
         "__v": 0
     }
 }
-
+--------------------------------------------------------------------------------------------------------
     - Question;
 
 // get list question
@@ -133,7 +82,7 @@ res = {
 }
 
 //get detail question
-GET: "http://localhost:4000/api/question/:questionId"
+GET: "https://devstar-api.herokuapp.com/api/question/:questionId"
 res = {
     "message": [],
     "status": true,
@@ -264,3 +213,99 @@ POST: "https://devstar-api.herokuapp.com/api/question/:questionId/dislike"
 
 // remove dislike question (token)
 DELETE: "https://devstar-api.herokuapp.com/api/question/:questionId/delete-dislike"
+
+// get list question theo tag
+GET: "https://devstar-api.herokuapp.com/api/question/tag/:tagId"
+res = {
+    "message": [],
+    "status": true,
+    "data": {
+        "models": [
+            {
+                "_id": "61604fd610b6a540b8875575",
+                "likes": [
+                    "614eda623970d700162ae698",
+                    "614e21071932800016a2056d"
+                ],
+                "dislike": [
+                    "614eda623970d700162ae698",
+                    "614e21071932800016a2056d"
+                ],
+                "comfirmAnswers": [],
+                "tags": [
+                    "6159e1356c0534303c2ba360"
+                ],
+                "title": "Cau hoi ve React",
+                "content": "Day la noi dung REact",
+                "views": 10,
+                "slug": "cau_hoi_1",
+                "createBy": "614ee1a8141ae93af8ad5202",
+                "createdAt": "2021-10-08T14:04:06.075Z",
+                "updatedAt": "2021-10-08T14:04:06.075Z",
+                "__v": 0
+            }
+        ],
+        "metaData": {
+            "pagination": {
+                "perPage": 5,
+                "totalPage": 1,
+                "currentPage": 1,
+                "countDocuments": 2
+            }
+        }
+    }
+}
+
+--------------------------------------------------------------------------------------------------------
+
+    - Upload image (token)
+
+//get list image
+GET: "https://devstar-api.herokuapp.com/api/picture/"
+res ={
+    "message": [],
+    "status": true,
+    "data": [
+        {
+            "photo": {
+                "id": "10R5Qd4__hqhib18zPMV3dyOnGSxx7wkK",
+                "photoUrl": "https://drive.google.com/uc?id=10R5Qd4__hqhib18zPMV3dyOnGSxx7wkK&export=download"
+            },
+            "_id": "6165ae91a56765227c1b550c",
+            "createBy": "614ee1a8141ae93af8ad5202",
+            "createdAt": "2021-10-12T15:49:37.460Z",
+            "updatedAt": "2021-10-12T15:49:37.460Z",
+            "__v": 0
+        }
+    ]
+}
+
+//create upload image (upload by formdata)
+POST: "https://devstar-api.herokuapp.com/api/picture/"
+req: 
+    KEY: image
+    VALUE: File 
+
+res = {
+    "message": [],
+    "status": true,
+    "data": {
+        "_id": "6166f00c6cf7e413687e001d",
+        "photo": {
+            "id": "1uleP4iuE9TRbUA9ve-A05Q5W_S7h4zaL",
+            "photoUrl": "https://drive.google.com/uc?id=1uleP4iuE9TRbUA9ve-A05Q5W_S7h4zaL&export=download"
+        },
+        "createBy": "614ee1a8141ae93af8ad5202",
+        "createdAt": "2021-10-13T14:41:16.013Z",
+        "updatedAt": "2021-10-13T14:41:16.013Z",
+        "__v": 0
+    }
+}
+
+//delete image 
+DELETE: "https://devstar-api.herokuapp.com/api/picture/:pictureId"
+res = {
+    "message": [],
+    "status": true
+}
+ 

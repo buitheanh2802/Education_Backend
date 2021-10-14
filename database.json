@@ -67,7 +67,6 @@
             "title": "String",
             "content": "",
             "views": "Number",
-            "isPublished": "Boolean",
             "isDraft": "Boolean",
             "slug": "bui-the-anh",
             "isApprove": "Boolean",
@@ -120,8 +119,8 @@
             "_id": "string",
             "photoUrl": "string"
         },
-        "createBy": "String",
-        "socialType": "String"
+        "createBy": "req.userId",
+        "socialType": "drive"
     },
     "tags": {
         "_id": "ID",

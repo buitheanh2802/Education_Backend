@@ -1,6 +1,6 @@
 import * as pattern from 'constants/regexDefination';
 import { response } from 'constants/responseHandler';
-import { body, validationResult } from 'express-validator';
+import { body, validationResult,param } from 'express-validator';
 
 // /userValidator
 export const userValidator = async (req, res, next) => {
@@ -145,7 +145,7 @@ export const feedbackValidator = async (req, res, next) => {
 
 // followValidator
 export const followValidator = async (req, res, next) => {
-    await body('followingUserId').trim().notEmpty().withMessage("Nhập followingUserId").run(req);
+    await param('followingUserId').trim().notEmpty().withMessage("Nhập followingUserId").run(req);
     // await body('userId').trim().notEmpty().withMessage("Nhập userId").run(req);
     const check = validationResult(req);
     if (!check.isEmpty()) {
