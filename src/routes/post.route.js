@@ -52,7 +52,7 @@ router.post(
     action({ type : 'likes'})
 )
 // dislike
-router.post(
+router.delete(
     path.post.dislike,
     accessToken,
     action({ type : 'dislikes'})

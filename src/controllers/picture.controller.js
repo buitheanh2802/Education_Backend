@@ -2,6 +2,7 @@ import { response } from "constants/responseHandler";
 import formidable from "formidable";
 import { cropper } from "helpers/imageCropper";
 import PictureModel from "models/picture.model";
+import { async } from "regenerator-runtime";
 import { createFile, deleteFile } from "services/drive";
 
 export const create = (req, res) => {
@@ -36,6 +37,7 @@ export const create = (req, res) => {
 
     })
 }
+// gets
 export const gets = (req, res) => {
     PictureModel.find({ createBy: req.userId }, (err, docs) => {
         if (err) return response(res, 500, ['ERROR_SERVER']);
@@ -44,13 +46,14 @@ export const gets = (req, res) => {
 }
 export const remove = (req, res) => {
     //xoa trong google drive
-    PictureModel.find({ _id: req.params.pictureId }, (err, docs) => {
+    PictureModel.find({ _id: req.params.pictureId }, async(err, docs) => {
         if (err) return response(res, 500, ['ERROR_SERVER', err.message]);
+        console.log(docs);
+        const fileId = docs[0].photo.id;
+        await deleteFile(fileId)
         if (docs.length == 0) {
             return response(res, 400, ['Can not find id!']);
         }
-        const fileId = docs[0].photo.id;
-        deleteFile(fileId)
     })
     //xoa trong db
     PictureModel.deleteOne({ _id: req.params.pictureId }, (err, docs) => {

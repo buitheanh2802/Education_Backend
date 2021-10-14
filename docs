@@ -1,38 +1,20 @@
-- Follow(token) 
+// api follow cần token để xác thực
 
-GET: "https://devstar-api.herokuapp.com/api/follow"
-res = {
-    "data": [
-        {
-            "_id": "614859c8dcda9e2d843ea46b",
-            "followingUserId": "123qqq4444",
-            "userId": "614855d1508c45393cf33937",
-            "createdAt": "2021-09-20T09:52:08.381Z",
-            "updatedAt": "2021-09-20T09:52:08.381Z",
-            "__v": 0
-        },
-    ],
-    "status": true
-}
-
-POST: "https://devstar-api.herokuapp.com/api/follow"
-req = {
-    "followingUserId": "614855d1508c45393cf33937",
-}
+// follow
+POST: "https://devstar-api.herokuapp.com/api/follow/:username"
 res = {
     "message": [],
     "status": true,
-    "data": {
-        "_id": "615084aa10e32d263413bcaf",
-        "followingUserId": "614855d1508c45393cf33937",
-        "userId": "61486248ca833d14c039c040",
-        "createdAt": "2021-09-26T14:33:14.914Z",
-        "updatedAt": "2021-09-26T14:33:14.914Z",
-        "__v": 0
-    }
+}
+
+// unfollow
+DELETE: "https://devstar-api.herokuapp.com/api/follow/:username"
+res = {
+    "message": [],
+    "status": true,
 }
 --------------------------------------------------------------------------------------------------------
-    - Question;
+// Question
 
 // get list question
 GET: "https://devstar-api.herokuapp.com/api/question"
@@ -206,7 +188,7 @@ res = {
 POST: "https://devstar-api.herokuapp.com/api/question/:questionId/like"
 
 // remove like question (token)
-DELETE: "https://devstar-api.herokuapp.com/api/question/:question/deletelike"
+DELETE: "https://devstar-api.herokuapp.com/api/question/:questionId/deletelike"
 
 // dislike question (token)
 POST: "https://devstar-api.herokuapp.com/api/question/:questionId/dislike"
@@ -258,7 +240,7 @@ res = {
 
 --------------------------------------------------------------------------------------------------------
 
-    - Upload image (token)
+- Upload image (token)
 
 //get list image
 GET: "https://devstar-api.herokuapp.com/api/picture/"
@@ -282,7 +264,7 @@ res ={
 
 //create upload image (upload by formdata)
 POST: "https://devstar-api.herokuapp.com/api/picture/"
-req: 
+req: (form-data)
     KEY: image
     VALUE: File 
 
@@ -309,3 +291,45 @@ res = {
     "status": true
 }
  
+
+--------------------------------------------------------------
+// bài viết
+GET
+Danh sách mới nhất :  "https://devstar-api.herokuapp.com/api/post/newest";
+
+GET : API này cần gửi token để biết user này đang theo dõi ai, nghĩa là phải đăng nhập
+Đang theo dõi : "https://devstar-api.herokuapp.com/api/post/following";
+
+GET : 
+Trending : "https://devstar-api.herokuapp.com/api/post/trending";
+
+GET : 
+chi tiết bài viết : "https://devstar-api.herokuapp.com/api/post/:shortId";
+
+POST : 
+Tạo bài viết : "https://devstar-api.herokuapp.com/api/post";
+
+PUT :
+Sửa bài viết : "https://devstar-api.herokuapp.com/api/post/:shortId";
+
+request cần có : {
+    "title" : "tiêu đề bài viết",
+    "tags" : ["tên của tag"],
+    "content" : "nội dung bài viết",
+    "isDraft" : "Giá trị là boolean nếu là true thì lưu là nháp , còn false thì chấp nhận gửi công khai"
+}
+
+DELETE : cần token
+Xóa bài viết : "https://devstar-api.herokuapp.com/api/post/:shortId";
+
+POST
+like bài viết : "https://devstar-api.herokuapp.com/api/post/:shortId/like";
+
+DELETE :
+dislike bài viết : "https://devstar-api.herokuapp.com/api/post/:shortId/dislike";
+
+POST :
+bookmark một bài viết : "https://devstar-api.herokuapp.com/api/post/:shortId/bookmark";
+
+PUT :
+chấp nhận duyệt bài viết này : 
