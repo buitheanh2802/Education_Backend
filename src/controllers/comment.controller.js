@@ -158,7 +158,7 @@ export const create = (req, res) => {
     comment.save((err, docs) => {
         if (err) return response(res, 500, ['ERROR_SERVER', err.message]);
         docs
-            .populate({ path: 'createBy', select: 'avatar username fullname email _id' })
+            .populate({ path: 'createBy', select: 'avatar username fullname email' })
             .execPopulate()
             .then(docs => {
                 const documentReponse = docs.toObject({
