@@ -37,7 +37,8 @@ export const path = {
         publishPost : '/publish/:shortId',
         unPublishPost : '/unpublish/:shortId',
         publishList : '/publish/list',
-        edit : '/edit/:shortId'
+        edit : '/edit/:shortId',
+        myBookmark : '/bookmark'
     },
     follow: {
         rootRoute: '/api/follow',

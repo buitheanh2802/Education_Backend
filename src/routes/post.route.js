@@ -1,5 +1,5 @@
 import express from 'express';
-import { newest,following,create,get,action,trending,update,remove,publish,publishList,unPublish,edit } from '../controllers/post.controller';
+import { newest,following,create,get,action,trending,update,remove,publish,publishList,unPublish,edit,myBookmark } from '../controllers/post.controller';
 import { path } from "constants/routeDefination";
 import { postValidator } from 'middlewares/validate.middleware';
 import { accessToken,accessRole } from 'middlewares/auth.middleware';
@@ -20,6 +20,12 @@ router.get(
     path.post.trending,
     trending
 );
+// my bookmark 
+router.get(
+    path.post.myBookmark,
+    accessToken,
+    myBookmark
+)
 // update
 router.put(
     path.post.put,
@@ -87,7 +93,8 @@ router.delete(
 // edit 
 router.get(
     path.post.edit,
+    accessToken,
     edit
-)
+);
 
 export default router;
