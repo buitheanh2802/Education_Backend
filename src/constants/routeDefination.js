@@ -74,5 +74,12 @@ export const path = {
         delete: '/:commentId',
         like: '/:commentId/like',
         dislike: '/:commentId/dislike'
+    },
+    picture: {
+        rootRoute: '/api/picture',
+        post: '/',
+        gets: '/',
+        get: '/:pictureId',
+        delete: '/:pictureId'
     }
 }

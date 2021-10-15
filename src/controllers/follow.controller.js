@@ -11,7 +11,7 @@ export const create = (req, res) => {
     follow.save((err, docs) => {
         if (err) return response(res, 500, ['ERROR_SERVER', err.message]);
         const { type, ...data } = docs.toObject();
-        return response(res, 200, [], data);
+        return response(res, 200, []);
     })
 }
 
