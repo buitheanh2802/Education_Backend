@@ -436,7 +436,7 @@ export const remove = (req, res) => {
         return response(res, 200, []);
     })
 }
-// like and dislike
+// like and dislike, bookmark
 export const action = (config) => {
     return (req, res) => {
         PostModel.findOne({ shortId: req.params.shortId }, (err, docs) => {
@@ -525,16 +525,23 @@ export const myBookmark = async(req, res) => {
     const skip = (currentPage - 1) * limit;
     const countDocuments = await PostModel.countDocuments({ bookmarks: new mongoose.Types.ObjectId(req.userId) });
     const totalPage = Math.ceil(countDocuments / limit);
-    PostModel.find({ bookmarks: new mongoose.Types.ObjectId(req.userId) })
+    PostModel.find({ bookmarks: new mongoose.Types.ObjectId(req.userId) },'-_id title bookmarks dislikes likes dislike tags createdAt slug views shortId createBy')
         .skip(skip)
         .limit(limit)
+        .populate({path : 'comments'})
+        .populate({path : 'tags',select : '-_id name slug'})
+        .populate({path : 'createBy',select : '-_id email username fullname avatar'})
         .lean()
         .exec((err, docs) => {
             if (err) return response(res, 500, ['ERROR_SERVER', err.message]);
             if (!docs) return response(res, 401, ['ACCESS_DENIED']);
             return response(res, 200, [],
                 {
-                    models: docs,
+                    models: docs.map(doc => ({...doc,likes: doc.likes.length,
+                                                dislikes : doc.dislikes.length,
+                                                bookmarks : doc.bookmarks.length,
+                                                isTrending : doc.views > trendingViews ? true : false
+                                            })),
                     metaData: {
                         pagination: {
                             perPage: limit,
