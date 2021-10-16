@@ -81,5 +81,9 @@ export const path = {
         gets: '/',
         get: '/:pictureId',
         delete: '/:pictureId'
+    },
+    user : {
+        rootRoute : '/api/user',
+        get : '/api/user/:username'
     }
 }

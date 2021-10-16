@@ -301,6 +301,9 @@ GET : API này cần gửi token để biết user này đang theo dõi ai, ngh�
 Đang theo dõi : "https://devstar-api.herokuapp.com/api/post/following";
 
 GET : 
+Bookmark của tôi : "https://devstar-api.herokuapp.com/api/post/bookmark"
+
+GET : 
 Trending : "https://devstar-api.herokuapp.com/api/post/trending";
 
 GET : 
@@ -308,6 +311,15 @@ chi tiết bài viết : "https://devstar-api.herokuapp.com/api/post/:shortId";
 
 POST : 
 Tạo bài viết : "https://devstar-api.herokuapp.com/api/post";
+request cần có : {
+    "title" : "tiêu đề bài viết",
+    "tags" : ["tên của tag"],
+    "content" : "nội dung bài viết",
+    "isDraft" : "Giá trị là boolean nếu là true thì lưu là nháp , còn false thì chấp nhận gửi công khai"
+}
+
+GET 
+Get dữ liệu của bài viết để sửa : "https://devstar-api.herokuapp.com/api/post/edit/:shortId";
 
 PUT :
 Sửa bài viết : "https://devstar-api.herokuapp.com/api/post/:shortId";
@@ -331,6 +343,40 @@ dislike bài viết : "https://devstar-api.herokuapp.com/api/post/:shortId/disli
 POST :
 bookmark một bài viết : "https://devstar-api.herokuapp.com/api/post/:shortId/bookmark";
 
-PUT :
-chấp nhận duyệt bài viết này : 
-loading.....
+GET : (yêu cầu token,role : admin,collaborators)
+danh sách các bài viết chưa được duyệt : "https://devstar-api.herokuapp.com/api/post/publish/list";
+
+PUT : (yêu cầu token,role : admin,collaborators)
+chấp nhận duyệt bài viết này : "https://devstar-api.herokuapp.com/api/post/publish/:shortId";
+
+DELETE : (yêu cầu token,role : admin,collaborators)
+không chấp nhận duyệt bài viết này : "https://devstar-api.herokuapp.com/api/post/unpublish/:shortId";
+
+--------------------------------------------
+comment API 
+
+GET : 
+lấy toàn bộ comment : "https://devstar-api.herokuapp.com/api/comment/:postOrQuestionId";
+
+POST : (yêu cầu có token)
+tạo mới comment : "https://devstar-api.herokuapp.com/api/comment/";
+request cần có : {
+    "content" : "Chán như con dán hahaha nhỉ",
+    "postOrQuestionId" : "kSP2IbyJU",chính là shortId của bài viết hoặc question
+    // "parentId" : "6161730262986c3cc4bb1c03"
+}
+
+PUT : (yêu cầu có token)
+sửa một comment : "https://devstar-api.herokuapp.com/api/comment/:commentId";
+request cần có : {
+    "content" : "Chán như con dán hahaha nhỉ"
+}
+
+DELETE : (yêu cầu có token)
+xóa một comment : "https://devstar-api.herokuapp.com/api/comment/:commentId";
+
+PUT : (yêu cầu có token)
+like comment : "https://devstar-api.herokuapp.com/api/comment/:commentId/like";
+
+DELETE : (yêu cầu có token)
+dislike comment : "https://devstar-api.herokuapp.com/api/comment/:commentId/dislike";
