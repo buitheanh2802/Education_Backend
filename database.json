@@ -130,5 +130,27 @@
             "avatarUrl": "String"
         },
         "driveId": "String"
+    },
+    "exercise-layout": {
+        "_id": "ID",
+        "title": "String",
+        "content": "String",
+        "authorId": "authorId",
+        "price": "Number",
+        "rate": [2,3,5],
+        "linkFigma": "String"
+    },
+    "author": {
+        "id": "Id",
+        "name": "Nguyen Hong Hai"
+    },
+    "exercise-javascript": {
+        "courseName": "Javascript",
+        "isPass": false,
+        "content": "Tinh tong 2 so A va B, cho A = 10, B = 20, hay in ra man hinh C la tong cua A va B",
+        "result": "30",
+        "time": "90",
+        "userId": "ID"
     }
+
 }
