@@ -135,14 +135,10 @@
         "_id": "ID",
         "title": "String",
         "content": "String",
-        "authorId": "authorId",
+        "userId": "userId",
         "price": "Number",
         "rate": [2,3,5],
         "linkFigma": "String"
-    },
-    "author": {
-        "id": "Id",
-        "name": "Nguyen Hong Hai"
     },
     "exercise-javascript": {
         "courseName": "Javascript",
