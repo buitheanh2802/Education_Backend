@@ -40,22 +40,23 @@ UserSchema.methods = {
     }
 }
 
-UserSchema.virtual('postCounts',{
-    localField : '_id',
-    foreignField : 'createBy',
-    ref : 'posts',
-    count : true
+UserSchema.virtual('postCounts', {
+    localField: '_id',
+    foreignField: 'createBy',
+    ref: 'posts',
+    count: true
 });
-UserSchema.virtual('questionCounts',{
-    localField : '_id',
-    foreignField : 'createBy',
-    ref : 'Questions',
-    count : true
+UserSchema.virtual('questionCounts', {
+    localField: '_id',
+    foreignField: 'createBy',
+    ref: 'Questions',
+    count: true
 });
-UserSchema.virtual('followers',{
-    localField : '_id',
-    foreignField : 'followingUserId',
-    ref : 'Follows'
-})
+UserSchema.virtual('followers', {
+    localField: '_id',
+    foreignField: 'followingUserId',
+    ref: 'Follows'
+});
+
 
 export default mongoose.model('Users', UserSchema)

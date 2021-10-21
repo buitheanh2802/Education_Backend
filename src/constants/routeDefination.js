@@ -84,6 +84,12 @@ export const path = {
     },
     user : {
         rootRoute : '/api/user',
-        get : '/api/user/:username'
+        get : '/:username',
+        post : '/:username/post',
+        question : '/:username/question',
+        following : '/:username/following',
+        followers : '/:username/followers',
+        bookmark : '/:username/bookmark',
+        tag : '/:username/tag'
     }
 }

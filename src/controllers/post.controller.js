@@ -34,19 +34,17 @@ export const get = (req, res) => {
             }
         ]
     }, '-_id views shortId title slug tags likes dislikes createBy createdAt bookmarks')
-        .populate({
-            path: 'createBy', select: '_id username email fullname avatar',
-            populate: { path: 'posts', model: 'Users' },
-        })
+        .populate({path : 'tags',select : '-_id name slug'})
         .lean()
         .exec((err, docs) => {
             if (err) return response(res, 500, ['ERROR_SERVER', err.message]);
             if (!docs) return response(res, 200, [], {});
-            userModel.findOne({ _id: docs.createBy }, '-_id username email fullname points avatar posts questions')
+            userModel.findOne({ _id: docs.createBy })
                 .populate({ path: 'postCounts' })
                 .populate({ path: 'questionCounts' })
                 .populate({ path: 'followers', select: '-_id userId' })
                 .lean()
+                .select('username email fullname points avatar posts questions')
                 .exec((err, docsUser) => {
                     if (err) return response(res, 500, ['ERROR_SERVER', err.message]);
                     const mergeData = { ...docs, createBy: docsUser };
@@ -71,7 +69,8 @@ export const get = (req, res) => {
                     mergeData.likes = mergeData.likes.length;
                     mergeData.dislikes = mergeData.dislikes.length;
                     mergeData.bookmarks = mergeData.bookmarks.length;
-                    delete mergeData.createBy.followers
+                    delete mergeData.createBy.followers;
+                    delete mergeData.createBy._id
                     return response(res, 200, [], mergeData);
                 })
         })
