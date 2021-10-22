@@ -500,7 +500,7 @@ export const publish = (req, res) => {
 }
 // unpublish 
 export const unPublish = (req, res) => {
-    PostModel.updateOne({ shortId: req.params.shortId, isDraft: false, isAccept: false }, (err, docs) => 
+    PostModel.deleteOne({ shortId: req.params.shortId, isDraft: false, isAccept: false }, (err, docs) => 
         {
             if (err) return response(res, 500, ['ERROR_SERVER', err.message]);
             return response(res, 200, []);
@@ -508,5 +508,5 @@ export const unPublish = (req, res) => {
 }
 // edit post
 export const edit = (req, res) => {
-
+    
 }
