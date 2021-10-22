@@ -1,6 +1,6 @@
 import * as pattern from 'constants/regexDefination';
 import { response } from 'constants/responseHandler';
-import { body, validationResult,param } from 'express-validator';
+import { body, validationResult, param } from 'express-validator';
 
 // /userValidator
 export const userValidator = async (req, res, next) => {
@@ -158,6 +158,19 @@ export const questionValidator = async (req, res, next) => {
     await body('title').trim().notEmpty().withMessage("Nhập title").run(req);
     await body('content').trim().notEmpty().withMessage("Nhập content").run(req);
     await body('tags').notEmpty().withMessage("Nhập tags").run(req);
+    const check = validationResult(req);
+    if (!check.isEmpty()) {
+        return response(res, 400, ['INVALID_DATA', ...check.errors])
+    }
+    return next();
+}
+
+//exercise layout
+export const exerciseLayoutValidator = async (req, res, next) => {
+    await body('title').trim().notEmpty().withMessage("Nhập title").run(req);
+    await body('content').trim().notEmpty().withMessage("Nhập content").run(req);
+    await body('linkFigma').notEmpty().withMessage("Nhập link Figma").run(req);
+    await body('price').notEmpty().withMessage("Nhập giá").run(req);
     const check = validationResult(req);
     if (!check.isEmpty()) {
         return response(res, 400, ['INVALID_DATA', ...check.errors])
