@@ -135,7 +135,10 @@
         "content": "String",
         "userId": "userId",
         "price": "Number",
-        "rate": [2,3,5],
+        "rate": [{
+            "userId" : "theanh",
+            "vote" : 2
+        }],
         "linkFigma": "String"
     },
     "exercise-javascript": {

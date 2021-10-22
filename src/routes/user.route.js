@@ -1,6 +1,6 @@
 import express from 'express';
 import { path } from 'constants/routeDefination';
-import { followers,following,get,myBookmark,myPost,myTag,myQuestion } from 'controllers/user.controller';
+import { followers,following,get,myPostBookmark,myPost,myTag,myQuestion } from 'controllers/user.controller';
 import { accessRole, accessToken } from 'middlewares/auth.middleware';
 const router = express.Router();
 
@@ -13,6 +13,11 @@ router.get(
 router.get(
     path.user.followers,
     followers
+)
+// post bookmark
+router.get(
+    path.user.postBookmark,
+    myPostBookmark
 )
 
 export default router;

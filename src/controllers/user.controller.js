@@ -1,5 +1,6 @@
 import UserModel from 'models/user.model';
 import FollowModel from 'models/follow.model';
+import PostModel from 'models/post.model';
 import { response } from "constants/responseHandler";
 import jwt from 'jsonwebtoken';
 
@@ -34,8 +35,29 @@ export const get = (req, res) => {
         })
 }
 
-export const myBookmark = (req, res) => {
-
+export const myPostBookmark = (req, res) => {
+    const { page } = req.query;
+    let currentPage = 1;
+    if (PAGINATION_REGEX.test(page)) currentPage = Number(page);
+    const limit = 5;
+    const skip = (currentPage - 1) * limit;
+    // const countDocuments = await PostModel.countDocuments({ bookmarks : });
+    const totalPage = Math.ceil(countDocuments / limit);
+    // .exec((err, docs) => {
+    //     if (err) return response(res, 500, ['ERROR_SERVER', err.message]);
+    //     return response(res, 200, [],
+    //         {
+    //             models: docs,
+    //             metaData: {
+    //                 pagination: {
+    //                     perPage: limit,
+    //                     totalPage: totalPage,
+    //                     currentPage: currentPage,
+    //                     countDocuments: docs.length
+    //                 }
+    //             }
+    //         });
+    // })
 }
 
 export const myQuestion = (req, res) => {
