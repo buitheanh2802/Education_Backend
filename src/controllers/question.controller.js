@@ -14,14 +14,31 @@ export const gets = async (req, res) => {
     QuestionModel
         .find({}, '-__v -updateAt')
         .populate({ path: "createBy", select: 'fullname' })
+        .populate({ path: "createBy", select: 'avatar' })
         .populate({ path: "tags", select: "name" })
         .skip(skip)
         .limit(limit)
         .lean()
         .exec((err, docs) => {
             if (err) return response(res, 500, ['ERROR_SERVER', err.message]);
+            let result = docs.map(x => {
+                return {
+                    _id: x._id,
+                    likes: x.likes.length,
+                    dislike: x.dislike.length,
+                    comfirmAnswers: [],
+                    tags: docs.tags,
+                    title: docs.title,
+                    content: docs.content,
+                    views: docs.views,
+                    slug: docs.slug,
+                    createBy: docs.createBy,
+                    createdAt: docs.createAt,
+                    updatedAt: docs.updatedAt
+                }
+            })
             return response(res, 200, [], {
-                models: docs,
+                models: result,
                 metaData: {
                     pagination: {
                         perPage: limit,

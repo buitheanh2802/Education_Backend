@@ -21,6 +21,8 @@ router.put(
     accessToken,
     accessRole(['admin', 'collaborators']),
     update
-)
+);
+
+
 
 export default router;

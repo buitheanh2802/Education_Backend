@@ -31,13 +31,13 @@ router.delete(
     remove
 );
 // like route
-router.post(
+router.put(
     path.comment.like,
     accessToken,
     action({ type : 'likes'})
 );
 // dislike route
-router.post(
+router.delete(
     path.comment.dislike,
     accessToken,
     action({ type : 'dislikes'})

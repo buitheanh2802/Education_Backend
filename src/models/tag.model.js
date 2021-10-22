@@ -15,7 +15,9 @@ const TagModel = new mongoose.Schema({
     }
 );
 
-TagModel.plugin(findOrCreate)
+TagModel.plugin(findOrCreate);
+
+
 
 
 export default mongoose.model('tags', TagModel)

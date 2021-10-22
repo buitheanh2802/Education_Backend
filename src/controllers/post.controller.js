@@ -436,7 +436,7 @@ export const remove = (req, res) => {
         return response(res, 200, []);
     })
 }
-// like and dislike
+// like and dislike, bookmark
 export const action = (config) => {
     return (req, res) => {
         PostModel.findOne({ shortId: req.params.shortId }, (err, docs) => {
@@ -465,7 +465,7 @@ export const publishList = async (req, res) => {
     PostModel.find({ isDraft: false, isAccept: false }, '-_id shortId slug title content ')
         .skip(skip)
         .limit(limit)
-        .sort({ createdAt : -1 })
+        .sort({ createdAt: -1 })
         .populate({ path: 'createBy', select: '-_id avatar points fullname username email' })
         .lean()
         .exec((err, docs) => {
@@ -487,26 +487,69 @@ export const publishList = async (req, res) => {
 // publish accept
 export const publish = (req, res) => {
     const dataDefination = {
-        isDraft : false,
-        isAccept : true,
-        publishedBy : new mongoose.Types.ObjectId(req.userId)
+        isDraft: false,
+        isAccept: true,
+        publishedBy: new mongoose.Types.ObjectId(req.userId)
     }
     PostModel.updateOne({ shortId: req.params.shortId, isDraft: false, isAccept: false }
-        ,dataDefination, (err, docs) => 
-        {
+        , dataDefination, (err, docs) => {
             if (err) return response(res, 500, ['ERROR_SERVER', err.message]);
             return response(res, 200, []);
         })
 }
 // unpublish 
 export const unPublish = (req, res) => {
-    PostModel.deleteOne({ shortId: req.params.shortId, isDraft: false, isAccept: false }, (err, docs) => 
-        {
-            if (err) return response(res, 500, ['ERROR_SERVER', err.message]);
-            return response(res, 200, []);
-        })
+    PostModel.updateOne({ shortId: req.params.shortId, isDraft: false, isAccept: false }, (err, docs) => {
+        if (err) return response(res, 500, ['ERROR_SERVER', err.message]);
+        return response(res, 200, []);
+    })
 }
 // edit post
 export const edit = (req, res) => {
-    
+    // console.log(req.userId);
+    PostModel.findOne({ shortId: req.params.shortId, createBy: req.userId }, '-_id shortId title content tags')
+        .populate({ path: 'tags', select: '-_id name slug' })
+        .lean()
+        .exec((err, docs) => {
+            if (err) return response(res, 500, ['ERROR_SERVER', err.message]);
+            if (!docs) return response(res, 401, ['ACCESS_DENIED']);
+            return response(res, 200, [], docs);
+        })
+}
+// my bookmark
+export const myBookmark = async(req, res) => {
+    const { page } = req.query;
+    let currentPage = 1;
+    if (PAGINATION_REGEX.test(page)) currentPage = Number(page);
+    const limit = postLimit;
+    const skip = (currentPage - 1) * limit;
+    const countDocuments = await PostModel.countDocuments({ bookmarks: new mongoose.Types.ObjectId(req.userId) });
+    const totalPage = Math.ceil(countDocuments / limit);
+    PostModel.find({ bookmarks: new mongoose.Types.ObjectId(req.userId) },'-_id title bookmarks dislikes likes dislike tags createdAt slug views shortId createBy')
+        .skip(skip)
+        .limit(limit)
+        .populate({path : 'comments'})
+        .populate({path : 'tags',select : '-_id name slug'})
+        .populate({path : 'createBy',select : '-_id email username fullname avatar'})
+        .lean()
+        .exec((err, docs) => {
+            if (err) return response(res, 500, ['ERROR_SERVER', err.message]);
+            if (!docs) return response(res, 401, ['ACCESS_DENIED']);
+            return response(res, 200, [],
+                {
+                    models: docs.map(doc => ({...doc,likes: doc.likes.length,
+                                                dislikes : doc.dislikes.length,
+                                                bookmarks : doc.bookmarks.length,
+                                                isTrending : doc.views > trendingViews ? true : false
+                                            })),
+                    metaData: {
+                        pagination: {
+                            perPage: limit,
+                            totalPage: totalPage,
+                            currentPage: currentPage,
+                            countDocuments: docs.length
+                        }
+                    }
+                });
+        })
 }
