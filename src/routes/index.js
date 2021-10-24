@@ -7,7 +7,7 @@ import followRoute from './follow.route';
 import tagRoute from './tag.route';
 import questionRoute from './question.route';
 import pictureRoute from './picture.route';
-import userRoute from './user.route';
+import exerciseLayoutRoute from "./exercise-layout.route";
 
 export const routes = (app) => {
     app.use(path.auth.rootRoute, authRoute);
@@ -19,4 +19,5 @@ export const routes = (app) => {
     app.use(path.tag.rootRoute, tagRoute);
     app.use(path.picture.rootRoute, pictureRoute);
     app.use(path.user.rootRoute,userRoute);
+    app.use(path.exerciseLayout.rootRoute, exerciseLayoutRoute);
 }

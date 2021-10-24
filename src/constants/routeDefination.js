@@ -31,14 +31,14 @@ export const path = {
         post: '/',
         put: '/:shortId',
         delete: '/:shortId',
-        like : '/:shortId/like',
-        dislike : '/:shortId/dislike',
-        bookmark : '/:shortId/bookmark',
-        publishPost : '/publish/:shortId',
-        unPublishPost : '/unpublish/:shortId',
-        publishList : '/publish/list',
-        edit : '/edit/:shortId',
-        myBookmark : '/bookmark'
+        like: '/:shortId/like',
+        dislike: '/:shortId/dislike',
+        bookmark: '/:shortId/bookmark',
+        publishPost: '/publish/:shortId',
+        unPublishPost: '/unpublish/:shortId',
+        publishList: '/publish/list',
+        edit: '/edit/:shortId',
+        myBookmark: '/bookmark'
     },
     follow: {
         rootRoute: '/api/follow',
@@ -82,7 +82,7 @@ export const path = {
         get: '/:pictureId',
         delete: '/:pictureId'
     },
-    user : {
+    user: {
         rootRoute : '/api/user',
         get : '/:username',
         post : '/:username/post',
@@ -92,5 +92,14 @@ export const path = {
         postBookmark : '/:username/bookmark/post',
         questionBookmark : '/:username/bookmark/question',
         tag : '/:username/tag'
+    },
+    exerciseLayout: {
+        rootRoute: '/api/exercise-layout',
+        gets: '/',
+        post: '/',
+        get: '/:layoutId',
+        put: '/:layoutId',
+        delete: '/:layoutId',
+        rate: '/rate/:layoutId'
     }
 }
