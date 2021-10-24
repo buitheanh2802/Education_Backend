@@ -2,7 +2,7 @@ import mongoose from 'mongoose';
 import userModel from './user.model';
 
 const FollowSchema = new mongoose.Schema({
-    followingUserId: { type: mongoose.Schema.Types.Mixed, ref: 'users' },
+    followingUserId: { type: mongoose.Schema.Types.Mixed, ref: 'Users' },
     userId: { type: mongoose.Schema.Types.Mixed, ref: 'users' }
 }, { timestamps: true });
 

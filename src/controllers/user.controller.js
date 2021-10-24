@@ -106,33 +106,35 @@ export const followers = async (req, res) => {
     const userData = await UserModel.findOne({ username: req.params.username });
     if (!userData) return response(res, 400, ['EMPTY_DATA']);
     const skip = (currentPage - 1) * limited;
-    const countDocuments = await PostModel.countDocuments({ bookmarks: userData._id });
+    const countDocuments = await FollowModel.countDocuments({ followingUserId: userData._id });
     const totalPage = Math.ceil(countDocuments / limited);
     FollowModel.find({ followingUserId: userData._id })
         .skip(skip)
         .limit(limited)
+        .sort({ createdAt: -1 })
         .select('-_id userId')
         .lean()
-        .exec(async(err, docs) => {
+        .exec(async (err, docs) => {
             if (err) return response(res, 500, ['ERROR_SERVER', err.message]);
             if (docs.length !== 0) {
                 docs = docs.map(doc => new mongoose.Types.ObjectId(doc.userId));
                 let data = await UserModel.find({ _id: { $in: docs } },
-                                    'username email fullname points avatar posts questions')
-                                    .populate({ path: 'postCounts' })
-                                    .populate({ path: 'questionCounts' })
-                                    .populate({ path: 'followers', select: '-_id userId -followingUserId' })
-                                    .lean()
-                                    .exec()
+                    'username email fullname points avatar posts questions')
+                    .populate({ path: 'postCounts' })
+                    .populate({ path: 'questionCounts' })
+                    .populate({ path: 'followers', select: '-_id userId -followingUserId' })
+                    .lean()
+                    .exec()
                 // console.log(data);
                 data = data.map(doc => {
                     doc.isFollowing = false;
-                    if(token && doc.followers.length !== 0){
+                    if (token && doc.followers.length !== 0) {
                         doc.followers.forEach(follow => {
-                            if(follow.userId === token._id ) doc.isFollowing = true;
+                            if (follow.userId === token._id) doc.isFollowing = true;
                         })
                     }
-                    delete doc.followers;
+                    doc.followerCounts = doc.followers.length;
+                    delete doc.followers
                     delete doc._id;
                     return doc;
                 })
@@ -153,6 +155,61 @@ export const followers = async (req, res) => {
         })
 }
 
-export const following = (req, res) => {
-
+export const following = async (req, res) => {
+    try {
+        var token = jwt.verify(req.headers?.authorization?.split(" ")[1], process.env.SECRET_KEY);
+    } catch (error) {
+        // console.log('error', error.message);
+    }
+    const { page } = req.query;
+    let currentPage = 1;
+    if (PAGINATION_REGEX.test(page)) currentPage = Number(page);
+    const userData = await UserModel.findOne({ username: req.params.username });
+    if (!userData) return response(res, 400, ['EMPTY_DATA']);
+    const skip = (currentPage - 1) * limited;
+    const countDocuments = await FollowModel.countDocuments({ userId: String(userData._id) });
+    const totalPage = Math.ceil(countDocuments / limited);
+    FollowModel.find({ userId: String(userData._id) })
+        .skip(skip)
+        .limit(limited)
+        .sort({ createdAt: -1 })
+        .populate({
+            path: 'followingUserId', select: 'username email fullname points avatar posts questions',
+            populate: [{ path: 'followers', select: '-_id userId -followingUserId' },
+            { path: 'postCounts' },
+            { path: 'questionCounts' }
+            ]
+        })
+        .select('-_id followingUserId')
+        .lean()
+        .exec(async (err, docs) => {
+            if (err) return response(res, 500, ['ERROR_SERVER', err.message]);
+            if (docs.length == 0) return response(res, 400, ['EMPTY_DATA']);
+            docs = docs.map(doc => {
+                const currentDoc = doc.followingUserId;
+                currentDoc.isFollowing = false;
+                currentDoc.followerCounts = currentDoc.followers.length;
+                if (token && currentDoc.followers.length !== 0) {
+                    currentDoc.followers.forEach(follow => {
+                        if (follow.userId === token._id) currentDoc.isFollowing = true;
+                    })
+                }
+                delete currentDoc._id;
+                delete currentDoc.followers;
+                return currentDoc;
+            })
+            return response(res, 200, [],
+                {
+                    models: docs,
+                    metaData: {
+                        pagination: {
+                            perPage: limited,
+                            totalPage: totalPage,
+                            currentPage: currentPage,
+                            countDocuments: docs.length
+                        }
+                    }
+                }
+            );
+        })
 }

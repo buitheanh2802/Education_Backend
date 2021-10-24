@@ -8,6 +8,7 @@ import tagRoute from './tag.route';
 import questionRoute from './question.route';
 import pictureRoute from './picture.route';
 import exerciseLayoutRoute from "./exercise-layout.route";
+import userRoute from './user.route';
 
 export const routes = (app) => {
     app.use(path.auth.rootRoute, authRoute);

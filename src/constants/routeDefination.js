@@ -87,7 +87,7 @@ export const path = {
         get : '/:username',
         post : '/:username/post',
         question : '/:username/question',
-        following : '/:username/following',
+        following : '/:username/followings',
         followers : '/:username/followers',
         postBookmark : '/:username/bookmark/post',
         questionBookmark : '/:username/bookmark/question',
