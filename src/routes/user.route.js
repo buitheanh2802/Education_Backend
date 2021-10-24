@@ -9,6 +9,11 @@ router.get(
     path.user.get,
     get
 );
+// my post
+router.get(
+    path.user.post,
+    myPost
+)
 // followers
 router.get(
     path.user.followers,

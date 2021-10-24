@@ -86,8 +86,46 @@ export const myQuestion = (req, res) => {
 
 }
 
-export const myPost = (req, res) => {
-
+export const myPost = async (req, res) => {
+    const { page } = req.query;
+    let currentPage = 1;
+    if (PAGINATION_REGEX.test(page)) currentPage = Number(page);
+    const userData = await UserModel.findOne({ username: req.params.username });
+    if (!userData) return response(res, 400, ['EMPTY_DATA']);
+    const skip = (currentPage - 1) * limited;
+    const countDocuments = await PostModel.countDocuments({ createBy: userData._id });
+    const totalPage = Math.ceil(countDocuments / limited);
+    // console.log(countDocuments);
+    PostModel.find({ createBy: userData._id })
+        .skip(skip)
+        .limit(limited)
+        .select('-_id views shortId title slug tags likes dislikes createBy createdAt bookmarks')
+        .sort({ createdAt: -1 })
+        .populate({ path: 'comments' })
+        .populate({ path: 'createBy', select: '-_id username email avatar fullname' })
+        .populate({ path: 'tags', select: '-_id name slug' })
+        .lean()
+        .exec((err, docs) => {
+            if (err) return response(res, 500, ['ERROR_SERVER', err.message]);
+            return response(res, 200, [],
+                {
+                    models: docs.map(doc => ({
+                        ...doc,
+                        bookmarks: doc.bookmarks.length,
+                        likes: doc.likes.length,
+                        dislikes: doc.dislikes.length,
+                        isTrending: doc.views > trendingViews ? true : false
+                    })),
+                    metaData: {
+                        pagination: {
+                            perPage: limited,
+                            totalPage: totalPage,
+                            currentPage: currentPage,
+                            countDocuments: docs.length
+                        }
+                    }
+                });
+        })
 }
 
 export const myTag = (req, res) => {
