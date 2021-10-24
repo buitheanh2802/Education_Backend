@@ -19,6 +19,11 @@ router.get(
     path.user.postBookmark,
     myPostBookmark
 )
+// following
+router.get(
+    path.user.following,
+    following
+)
 
 export default router;
 
