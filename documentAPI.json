@@ -380,3 +380,15 @@ like comment : "https://devstar-api.herokuapp.com/api/comment/:commentId/like";
 
 DELETE : (yêu cầu có token)
 dislike comment : "https://devstar-api.herokuapp.com/api/comment/:commentId/dislike";
+
+__________________________________________________________________
+GET : 
+get data user : "https://devstar-api.herokuapp.com/api/user/:username/";
+GET : 
+bài viết của tôi : "https://devstar-api.herokuapp.com/api/user/:username/post";
+GET : 
+người theo dõi tôi : "https://devstar-api.herokuapp.com/api/user/:username/follower";
+GET : 
+người tôi đang theo dõi : "https://devstar-api.herokuapp.com/api/user/:username/following";
+GET : 
+Các bài viết bookmark của tôi : "https://devstar-api.herokuapp.com/api/user/:username/bookmark/post";
