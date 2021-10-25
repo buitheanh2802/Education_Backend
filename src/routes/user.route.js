@@ -14,6 +14,11 @@ router.get(
     path.user.post,
     myPost
 );
+// my question 
+router.get(
+    path.user.question,
+    myQuestion
+)
 // my tags
 router.get(
     path.user.tag,
