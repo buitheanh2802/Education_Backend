@@ -13,8 +13,7 @@ export const gets = async (req, res) => {
     const totalPage = Math.ceil(countDocuments / limit);
     QuestionModel
         .find({}, '-__v -updateAt')
-        .populate({ path: "createBy", select: 'fullname' })
-        .populate({ path: "createBy", select: 'avatar' })
+        .populate({ path: "createBy", select: 'fullname avatar' })
         .populate({ path: "tags", select: "name" })
         .skip(skip)
         .limit(limit)
@@ -66,7 +65,7 @@ export const create = (req, res) => {
 export const get = (req, res) => {
     QuestionModel
         .findOne({ _id: req.params.questionId })
-        .populate({ path: "createBy", select: 'fullname' })
+        .populate({ path: "createBy", select: 'fullname avatar' })
         .populate({ path: "tags", select: "name" })
         .exec((err, docs) => {
             if (err) return response(res, 500, ['ERROR_SERVER', err.message]);

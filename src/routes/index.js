@@ -7,14 +7,18 @@ import followRoute from './follow.route';
 import tagRoute from './tag.route';
 import questionRoute from './question.route';
 import pictureRoute from './picture.route';
+import exerciseLayoutRoute from "./exercise-layout.route";
+import userRoute from './user.route';
 
 export const routes = (app) => {
-    app.use(path.auth.rootRoute, authRoute)
-    app.use(path.comment.rootRoute, commentRoute)
-    app.use(path.notification.rootRoute, notification)
-    app.use(path.post.rootRoute, postRoute)
-    app.use(path.follow.rootRoute, followRoute)
-    app.use(path.question.rootRoute, questionRoute)
-    app.use(path.tag.rootRoute, tagRoute)
-    app.use(path.picture.rootRoute, pictureRoute)
+    app.use(path.auth.rootRoute, authRoute);
+    app.use(path.comment.rootRoute, commentRoute);
+    app.use(path.notification.rootRoute, notification);
+    app.use(path.post.rootRoute, postRoute);
+    app.use(path.follow.rootRoute, followRoute);
+    app.use(path.question.rootRoute, questionRoute);
+    app.use(path.tag.rootRoute, tagRoute);
+    app.use(path.picture.rootRoute, pictureRoute);
+    app.use(path.user.rootRoute,userRoute);
+    app.use(path.exerciseLayout.rootRoute, exerciseLayoutRoute);
 }
