@@ -5,6 +5,7 @@ import { response } from "constants/responseHandler";
 import mongoose from 'mongoose';
 import jwt from 'jsonwebtoken';
 import { PAGINATION_REGEX } from 'constants/regexDefination';
+import TagModel from 'models/tag.model';
 
 // global data 
 const limited = 10;
@@ -128,8 +129,62 @@ export const myPost = async (req, res) => {
         })
 }
 
-export const myTag = (req, res) => {
-
+export const myTag = async (req, res) => {
+    try {
+        var token = jwt.verify(req.headers?.authorization?.split(" ")[1], process.env.SECRET_KEY);
+    } catch (error) {
+        // console.log('error', error.message);
+    }
+    const { page } = req.query;
+    let currentPage = 1;
+    if (PAGINATION_REGEX.test(page)) currentPage = Number(page);
+    const userData = await UserModel.findOne({ username: req.params.username });
+    if (!userData) return response(res, 400, ['EMPTY_DATA']);
+    const skip = (currentPage - 1) * limited;
+    const countDocuments = await FollowModel.countDocuments({ userId: String(userData._id) });
+    const totalPage = Math.ceil(countDocuments / limited);
+    FollowModel
+        .find({ userId: String(userData._id) })
+        .select('-_id followingUserId createdAt')
+        .sort({ createdAt: -1 })
+        .lean()
+        .exec((err, docs) => {
+            if (err) return response(res, 500, ['ERROR_SERVER', err.message]);
+            if (!docs || docs.length == 0) return response(res, 400, ['EMPTY_DATA']);
+            const filterDocs = docs.map(doc => new mongoose.Types.ObjectId(doc.followingUserId));
+            TagModel.find({ _id: { $in: filterDocs } })
+                .skip(skip)
+                .limit(limited)
+                .sort({ createdAt: -1 })
+                .populate([{ path: 'postCounts' }, { path: 'questionCounts' }, { path: 'followerCounts', select: '-_id -followingUserId userId' }])
+                .select('-__v -updatedAt')
+                .lean()
+                .exec((err, docs) => {
+                    if (err) return response(res, 500, ['ERROR_SERVER', err.message]);
+                    return response(res, 200, [],
+                        {
+                            models: docs.map(doc => {
+                                doc.isFollowing = false;
+                                if(token && doc.followerCounts.length !== 0){
+                                    doc.followerCounts.forEach(follow => {
+                                        if(token._id === follow.userId) doc.isFollowing = true;
+                                    })
+                                }
+                                delete doc.createdAt;
+                                doc.followerCounts = doc.followerCounts.length;
+                                return doc;
+                            }),
+                            metaData: {
+                                pagination: {
+                                    perPage: limited,
+                                    totalPage: totalPage,
+                                    currentPage: currentPage,
+                                    countDocuments: docs.length
+                                }
+                            }
+                        });
+                })
+        })
 }
 
 export const followers = async (req, res) => {

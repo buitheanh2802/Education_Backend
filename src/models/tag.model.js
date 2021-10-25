@@ -17,6 +17,24 @@ const TagModel = new mongoose.Schema({
 
 TagModel.plugin(findOrCreate);
 
+TagModel.virtual('postCounts',{
+    localField : '_id',
+    foreignField : 'tags',
+    ref : 'posts',
+    count : true
+})
+TagModel.virtual('questionCounts',{
+    localField : '_id',
+    foreignField : 'tags',
+    ref : 'Questions',
+    count : true
+});
+TagModel.virtual('followerCounts',{
+    localField : '_id',
+    foreignField : 'followingUserId',
+    ref : 'Follows',
+    // count : true
+});
 
 
 

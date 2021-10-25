@@ -13,6 +13,11 @@ router.get(
 router.get(
     path.user.post,
     myPost
+);
+// my tags
+router.get(
+    path.user.tag,
+    myTag
 )
 // followers
 router.get(
