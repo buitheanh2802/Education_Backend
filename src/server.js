@@ -6,6 +6,7 @@ import { passportConfig } from 'services/passport';
 import cookie from 'cookie-parser';
 import cors from 'cors';
 
+
 const serverConfig = async () => {
     // environment
     dotenv.config();
