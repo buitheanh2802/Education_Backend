@@ -18,8 +18,25 @@ export const gets = async (req, res) => {
         .lean()
         .exec((err, docs) => {
             if (err) return response(res, 500, ['ERROR_SERVER', err.message]);
+            const average = arr => arr.reduce((p, c) => p + c, 0) / arr.length;
+            const result = docs.map(x => {
+                return {
+                    "_id": x._id,
+                    "title": x.title,
+                    "content": x.content,
+                    "price": x.price,
+                    "rate": average(x.rate.map(y => {
+                        return y.point
+                    })),
+                    "linkFigma": x.linkFigma,
+                    "createBy": x.createBy,
+                    "createdAt": x.createdAt,
+                    "updatedAt": x.updatedAt
+                }
+            })
+
             return response(res, 200, [], {
-                models: docs,
+                models: result,
                 metaData: {
                     pagination: {
                         perPage: limit,

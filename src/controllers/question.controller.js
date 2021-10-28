@@ -26,14 +26,14 @@ export const gets = async (req, res) => {
                     likes: x.likes.length,
                     dislike: x.dislike.length,
                     comfirmAnswers: [],
-                    tags: docs.tags,
-                    title: docs.title,
-                    content: docs.content,
-                    views: docs.views,
-                    slug: docs.slug,
-                    createBy: docs.createBy,
-                    createdAt: docs.createAt,
-                    updatedAt: docs.updatedAt
+                    tags: x.tags,
+                    title: x.title,
+                    content: x.content,
+                    views: x.views,
+                    slug: x.slug,
+                    createBy: x.createBy,
+                    createdAt: x.createdAt,
+                    updatedAt: x.updatedAt
                 }
             })
             return response(res, 200, [], {
