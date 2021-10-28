@@ -33,7 +33,7 @@ export const get = (req, res) => {
                 createBy: token?._id
             }
         ]
-    }, '-_id views shortId title slug tags likes dislikes createBy createdAt bookmarks')
+    }, '-_id views shortId title content slug tags likes dislikes createBy createdAt bookmarks')
         .populate({path : 'tags',select : '-_id name slug'})
         .lean()
         .exec((err, docs) => {
