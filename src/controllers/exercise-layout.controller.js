@@ -67,8 +67,23 @@ export const get = (req, res) => {
         .exec((err, docs) => {
             if (err) return response(res, 500, ['ERROR_SERVER', err.message]);
             if (!docs) return response(res, 400, ['EMPTY_DATA']);
-            const { type, ...data } = docs.toObject();
-            return response(res, 200, [], data);
+            const average = arr => arr.reduce((p, c) => p + c, 0) / arr.length;
+            const result = {
+                "_id": docs._id,
+                "title": docs.title,
+                "content": docs.content,
+                "price": docs.price,
+                "rate": average(docs.rate.map(y => {
+                    return y.point
+                })),
+                "linkFigma": docs.linkFigma,
+                "createBy": docs.createBy,
+                "createdAt": docs.createdAt,
+                "updatedAt": docs.updatedAt
+            }
+            // console.log(result);
+            // const { type, ...data } = result.toObject();
+            return response(res, 200, [], result);
         })
 }
 export const update = (req, res) => {
