@@ -238,6 +238,15 @@ res = {
     }
 }
 
+// luu vao bookmark (token)
+POST: "https://devstar-api.herokuapp.com/api/question/bookmark/:idQuestion"
+
+// xoa khoi bookmark (token)
+DELETE: "https://devstar-api.herokuapp.com/api/question/bookmark/:idQuestion"
+
+// get list bookmark (token)
+GET: "https://devstar-api.herokuapp.com/api/question/listbookmark"
+
 --------------------------------------------------------------------------------------------------------
 
 - Upload image (token)
@@ -436,6 +445,28 @@ exercise-layout
 
 - detail:
     GET: "https://devstar-api.herokuapp.com/api/exercise-layout/:idExercise"
+    res = {
+        "message": [],
+        "status": true,
+        "data": {
+            "_id": "6172d76854216d2274f41f99",
+            "title": "Web 222",
+            "content": "COntent 222",
+            "price": 0,
+            "rate": 2.5,
+            "linkFigma": "https://www.figma.com/file/vfFUgdFUx0tuPR17HxIcI2/Wireframing-(Copy)?node-id=0%3A1",
+            "createBy": {
+                "avatar": {
+                    "_id": "",
+                    "avatarUrl": ""
+                },
+                "_id": "614ee1a8141ae93af8ad5202",
+                "fullname": "Nguyen A"
+            },
+            "createdAt": "2021-10-22T15:23:20.288Z",
+            "updatedAt": "2021-10-29T13:49:28.520Z"
+        }
+    }
 
 - create: (token)
     POST: "https://devstar-api.herokuapp.com/api/exercise-layout" 

@@ -52,6 +52,8 @@ export const path = {
         get: '/:questionId',
         put: '/:questionId',
         delete: '/:questionId',
+        bookmark: '/bookmark/:questionId',
+        listbookmark: '/listbookmark',
         like: '/:questionId/like',
         deletelike: '/:questionId/deletelike',
         dislike: '/:questionId/dislike',
@@ -83,15 +85,15 @@ export const path = {
         delete: '/:pictureId'
     },
     user: {
-        rootRoute : '/api/user',
-        get : '/:username',
-        post : '/:username/post',
-        question : '/:username/question',
-        following : '/:username/following',
-        followers : '/:username/follower',
-        postBookmark : '/:username/bookmark/post',
-        questionBookmark : '/:username/bookmark/question',
-        tag : '/:username/tag'
+        rootRoute: '/api/user',
+        get: '/:username',
+        post: '/:username/post',
+        question: '/:username/question',
+        following: '/:username/following',
+        followers: '/:username/follower',
+        postBookmark: '/:username/bookmark/post',
+        questionBookmark: '/:username/bookmark/question',
+        tag: '/:username/tag'
     },
     exerciseLayout: {
         rootRoute: '/api/exercise-layout',

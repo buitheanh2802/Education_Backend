@@ -10,6 +10,7 @@ const QuestionSchema = new mongoose.Schema({
     dislike: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Users' }],
     comfirmAnswers: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Users' }],
     tags: [{ type: mongoose.Schema.Types.ObjectId, ref: 'tags' }],
+    bookmarks: [{ type: mongoose.Schema.Types.ObjectId, ref: "Users" }],
 }, { timestamps: true });
 
 export default mongoose.model('Questions', QuestionSchema);

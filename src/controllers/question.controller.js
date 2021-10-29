@@ -262,3 +262,139 @@ export const searchTag = async (req, res) => {
             })
         })
 }
+
+export const addBookmark = (req, res) => {
+    const questionId = req.params.questionId;
+    const userId = req.userId;
+    console.log(userId);
+    QuestionModel.findById(questionId, (err, docs) => {
+        if (err) return response(res, 500, ['ERROR_SERVER', err.message]);
+        if (!docs) return response(res, 400, ['EMPTY_DATA']);
+
+        if (docs.bookmarks.length == 0) {
+            docs.bookmarks.push(userId);
+            console.log("TH1");
+        } else {
+            console.log("TH2");
+            var check = false;
+            for (let i = 0; i < docs.bookmarks.length; i++) {
+                if (docs.bookmarks[i] == userId) {
+                    check = true;
+                    console.log('Da ton tai');
+                }
+            }
+            if (check == false) {
+                docs.bookmarks.push(userId);
+                console.log('Chua ton tai');
+            }
+        }
+
+        var newDocs = {
+            likes: docs.likes,
+            dislike: docs.dislike,
+            comfirmAnswers: docs.comfirmAnswers,
+            tags: docs.tags,
+            bookmarks: docs.bookmarks,
+            _id: docs._id,
+            title: docs.title,
+            content: docs.content,
+            views: docs.views,
+            slug: docs.slug,
+            createBy: docs.createBy,
+            createdAt: docs.createdAt,
+            updatedAt: docs.updatedAt,
+        }
+        console.log(newDocs);
+        QuestionModel.updateOne({ _id: questionId }, newDocs, (err, result) => {
+            if (err) return response(res, 500, ['ERROR_SERVER', err.message]);
+            if (!result) return response(res, 400, ['EMPTY_DATA']);
+            return response(res, 200, []);
+        })
+    })
+}
+
+export const delBookmark = (req, res) => {
+    const questionId = req.params.questionId;
+    const userId = req.userId;
+    QuestionModel.findById(questionId, (err, docs) => {
+        if (err) return response(res, 500, ['ERROR_SERVER', err.message]);
+        if (!docs) return response(res, 400, ['EMPTY_DATA']);
+
+        docs.bookmarks.filter(x => {
+            if (x != userId) {
+                return x
+            }
+        })
+
+        var newDocs = {
+            likes: docs.likes,
+            dislike: docs.dislike,
+            comfirmAnswers: docs.comfirmAnswers,
+            tags: docs.tags,
+            bookmarks: docs.bookmarks,
+            _id: docs._id,
+            title: docs.title,
+            content: docs.content,
+            views: docs.views,
+            slug: docs.slug,
+            createBy: docs.createBy,
+            createdAt: docs.createdAt,
+            updatedAt: docs.updatedAt,
+        }
+        console.log(newDocs);
+        QuestionModel.updateOne({ _id: questionId }, newDocs, (err, result) => {
+            if (err) return response(res, 500, ['ERROR_SERVER', err.message]);
+            if (!result) return response(res, 400, ['EMPTY_DATA']);
+            return response(res, 200, []);
+        })
+    })
+}
+
+export const listBookmark = async (req, res) => {
+    const userId = req.userId;
+    const { page } = req.query;
+    let currentPage = 1;
+    if (PAGINATION_REGEX.test(page)) currentPage = Number(page);
+    const limit = 5;
+    const skip = (currentPage - 1) * limit;
+    const countDocuments = await QuestionModel.countDocuments();
+    const totalPage = Math.ceil(countDocuments / limit);
+    QuestionModel
+        .find({ bookmarks: userId }, '-__v -updateAt')
+        .populate({ path: "createBy", select: 'fullname avatar' })
+        .populate({ path: "tags", select: "name" })
+        .skip(skip)
+        .limit(limit)
+        .lean()
+        .exec((err, docs) => {
+            if (err) return response(res, 500, ['ERROR_SERVER', err.message]);
+            let result = docs.map(x => {
+                return {
+                    _id: x._id,
+                    likes: x.likes.length,
+                    dislike: x.dislike.length,
+                    comfirmAnswers: [],
+                    tags: x.tags,
+                    title: x.title,
+                    content: x.content,
+                    views: x.views,
+                    slug: x.slug,
+                    createBy: x.createBy,
+                    createdAt: x.createdAt,
+                    updatedAt: x.updatedAt,
+                    bookmarks: x.bookmarks
+                }
+            })
+            return response(res, 200, [], {
+                models: result,
+                metaData: {
+                    pagination: {
+                        perPage: limit,
+                        totalPage: totalPage,
+                        currentPage: currentPage,
+                        countDocuments: docs.length
+                    }
+                }
+            });
+        })
+}
