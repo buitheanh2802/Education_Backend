@@ -33,9 +33,10 @@ export const get = (req, res) => {
                 createBy: token?._id
             }
         ]
-    }, '-_id views shortId title slug tags likes dislikes createBy createdAt bookmarks')
-        .populate({path : 'tags',select : '-_id name slug'})
+    }, '-_id views shortId title content slug tags likes dislikes createBy createdAt bookmarks')
+        .populate({ path: 'tags', select: '-_id name slug' })
         .lean()
+        .populate({ path: 'comments'})
         .exec((err, docs) => {
             if (err) return response(res, 500, ['ERROR_SERVER', err.message]);
             if (!docs) return response(res, 200, [], {});
@@ -516,7 +517,7 @@ export const edit = (req, res) => {
         })
 }
 // my bookmark
-export const myBookmark = async(req, res) => {
+export const myBookmark = async (req, res) => {
     const { page } = req.query;
     let currentPage = 1;
     if (PAGINATION_REGEX.test(page)) currentPage = Number(page);
@@ -524,23 +525,24 @@ export const myBookmark = async(req, res) => {
     const skip = (currentPage - 1) * limit;
     const countDocuments = await PostModel.countDocuments({ bookmarks: new mongoose.Types.ObjectId(req.userId) });
     const totalPage = Math.ceil(countDocuments / limit);
-    PostModel.find({ bookmarks: new mongoose.Types.ObjectId(req.userId) },'-_id title bookmarks dislikes likes dislike tags createdAt slug views shortId createBy')
+    PostModel.find({ bookmarks: new mongoose.Types.ObjectId(req.userId) }, '-_id title bookmarks dislikes likes dislike tags createdAt slug views shortId createBy')
         .skip(skip)
         .limit(limit)
-        .populate({path : 'comments'})
-        .populate({path : 'tags',select : '-_id name slug'})
-        .populate({path : 'createBy',select : '-_id email username fullname avatar'})
+        .populate({ path: 'comments' })
+        .populate({ path: 'tags', select: '-_id name slug' })
+        .populate({ path: 'createBy', select: '-_id email username fullname avatar' })
         .lean()
         .exec((err, docs) => {
             if (err) return response(res, 500, ['ERROR_SERVER', err.message]);
             if (!docs) return response(res, 401, ['ACCESS_DENIED']);
             return response(res, 200, [],
                 {
-                    models: docs.map(doc => ({...doc,likes: doc.likes.length,
-                                                dislikes : doc.dislikes.length,
-                                                bookmarks : doc.bookmarks.length,
-                                                isTrending : doc.views > trendingViews ? true : false
-                                            })),
+                    models: docs.map(doc => ({
+                        ...doc, likes: doc.likes.length,
+                        dislikes: doc.dislikes.length,
+                        bookmarks: doc.bookmarks.length,
+                        isTrending: doc.views > trendingViews ? true : false
+                    })),
                     metaData: {
                         pagination: {
                             perPage: limit,
