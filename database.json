@@ -144,7 +144,7 @@
         "solutionSubmitedBy" : ["list userId"],
         "figmaUrl" : "link figma",
         "resourceUrl" : "link file ví dụ : resource.zip",
-        "authorId" : "userId",
+        "createBy" : "userId",
         "avatar" : {
             "_id" : "ID",
             "url" : "avatar url"
