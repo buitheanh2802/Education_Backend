@@ -18,6 +18,7 @@ export const get = (req, res) => {
     } catch (error) {
         // console.log('error', error.message);
     }
+    // console.log(token);
     UserModel.findOne({ username: req.params.username })
         .populate({ path: 'postCounts' })
         .populate({ path: 'questionCounts' })
@@ -31,6 +32,7 @@ export const get = (req, res) => {
             docs.isFollowing = false;
             if (token) {
                 docs.followers.forEach(doc => {
+                    // console.log(doc);
                     if (doc.userId === token?._id) {
                         docs.isFollowing = true;
                     }

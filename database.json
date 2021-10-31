@@ -129,17 +129,35 @@
         },
         "driveId": "String"
     },
-    "exercise-layout": {
+    "challengeCategories" : {
+        "_id" : "ID",
+        "title" : "String",
+        "descriptions" : "String"
+    },
+    "challenges" : {
+        "_id" : "ID",
+        "title" : "String",
+        "descriptions" : "String",
+        "level" : "Number",
+        "challengeCategoryId" : "ref challengeCategory",
+        "submitedBy" : ["list userId"],
+        "solutionSubmitedBy" : ["list userId"],
+        "figmaUrl" : "link figma",
+        "resourceUrl" : "link file ví dụ : resource.zip",
+        "authorId" : "userId",
+        "avatar" : {
+            "_id" : "ID",
+            "url" : "avatar url"
+        }
+    },
+    "solutions": {
         "_id": "ID",
         "title": "String",
-        "content": "String",
+        "descriptions": "String",
+        "demoUrl" : "link demo sản phẩm làm được",
+        "repoUrl" : "repo github demo",
         "userId": "userId",
-        "price": "Number",
-        "rate": [{
-            "idUser": "String",
-            "point": "Number"
-        }],
-        "linkFigma": "String"
+        "votes" : ["list user id"],
+        "challengeId" : "ref challenges"
     }
-
 }
