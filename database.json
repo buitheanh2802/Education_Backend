@@ -132,7 +132,11 @@
     "challengeCategories" : {
         "_id" : "ID",
         "title" : "String",
-        "descriptions" : "String"
+        "descriptions" : "String",
+        "avatar" : {
+            "_id" : "ID",
+            "url" : "avatar url"
+        }
     },
     "challenges" : {
         "_id" : "ID",
@@ -157,7 +161,7 @@
         "demoUrl" : "link demo sản phẩm làm được",
         "repoUrl" : "repo github demo",
         "userId": "userId",
-        "votes" : ["list user id"],
+        "votes" : ["list user id"], 
         "challengeId" : "ref challenges"
     }
 }
