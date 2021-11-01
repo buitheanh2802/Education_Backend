@@ -75,7 +75,7 @@ export const postValidator = async (req, res, next) => {
         .withMessage('Không được để trống nội dung')
         .run(req);
     await body('tags')
-        .isArray({ min: 1,max : 5 })
+        .isArray({ min: 1, max: 5 })
         .withMessage('Chọn tối thiểu 1 thẻ và tối đa 5 thẻ')
         .run(req);
     const validatorResult = validationResult(req);
@@ -171,6 +171,17 @@ export const exerciseLayoutValidator = async (req, res, next) => {
     await body('content').trim().notEmpty().withMessage("Nhập content").run(req);
     await body('linkFigma').notEmpty().withMessage("Nhập link Figma").run(req);
     await body('price').notEmpty().withMessage("Nhập giá").run(req);
+    const check = validationResult(req);
+    if (!check.isEmpty()) {
+        return response(res, 400, ['INVALID_DATA', ...check.errors])
+    }
+    return next();
+}
+//challenge Categories
+export const challengeCategoriesValidator = async (req, res, next) => {
+    await body('title').trim().notEmpty().withMessage("Nhập title").run(req);
+    await body('descriptions').trim().notEmpty().withMessage("Nhập mô tả").run(req);
+    await body('avatar').notEmpty().withMessage("Nhập link avatar").run(req);
     const check = validationResult(req);
     if (!check.isEmpty()) {
         return response(res, 400, ['INVALID_DATA', ...check.errors])

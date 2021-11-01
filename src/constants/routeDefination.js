@@ -103,5 +103,13 @@ export const path = {
         put: '/:layoutId',
         delete: '/:layoutId',
         rate: '/rate/:layoutId'
-    }
+    },
+    challengeCategories: {
+        rootRoute: '/api/challenge-categories',
+        gets: '/',
+        post: '/',
+        get: '/:challengeCategoriesId',
+        put: '/:challengeCategoriesId',
+        delete: '/:challengeCategoriesId'
+    },
 }

@@ -9,6 +9,7 @@ import questionRoute from './question.route';
 import pictureRoute from './picture.route';
 import exerciseLayoutRoute from "./exercise-layout.route";
 import userRoute from './user.route';
+import challengeCategoriesRoute from './challenge-categories.route';
 
 export const routes = (app) => {
     app.use(path.auth.rootRoute, authRoute);
@@ -19,6 +20,7 @@ export const routes = (app) => {
     app.use(path.question.rootRoute, questionRoute);
     app.use(path.tag.rootRoute, tagRoute);
     app.use(path.picture.rootRoute, pictureRoute);
-    app.use(path.user.rootRoute,userRoute);
+    app.use(path.user.rootRoute, userRoute);
     app.use(path.exerciseLayout.rootRoute, exerciseLayoutRoute);
+    app.use(path.challengeCategories.rootRoute, challengeCategoriesRoute);
 }

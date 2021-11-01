@@ -507,3 +507,74 @@ exercise-layout
     req = {
         "point": 0
     }
+
+---------------------------------------------------------------------------------------
+
+- challenge categories
+
+- getAll
+GET: "localhost:4000/api/challenge-categories"
+res = {
+    "message": [],
+    "status": true,
+    "data": {
+        "models": [
+            {
+                "_id": "618013dbed3e213710c9c94a",
+                "title": "Hoc thiet ke giao dien don gian",
+                "descriptions": "Giup ban ren luyen cac ky nang code Html, Css",
+                "avatar": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQK2yuHuE_KiWXOfDSMKzBFbAFiolnyJ9gtbQ&usqp=CAU",
+                "createdAt": "2021-11-01T16:20:43.951Z",
+                "updatedAt": "2021-11-01T16:20:43.951Z"
+            }
+        ],
+        "metaData": {
+            "pagination": {
+                "perPage": 5,
+                "totalPage": 1,
+                "currentPage": 1,
+                "countDocuments": 2
+            }
+        }
+    }
+}
+
+- detail 
+GET: "localhost:4000/api/challenge-categories/:challengeCateId"
+res = {
+    "message": [],
+    "status": true,
+    "data": {
+        "_id": "618013dbed3e213710c9c94a",
+        "title": "Hoc thiet ke giao dien don gian",
+        "descriptions": "Giup ban ren luyen cac ky nang code Html, Css",
+        "avatar": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQK2yuHuE_KiWXOfDSMKzBFbAFiolnyJ9gtbQ&usqp=CAU",
+        "createdAt": "2021-11-01T16:20:43.951Z",
+        "updatedAt": "2021-11-01T16:20:43.951Z",
+        "__v": 0
+    }
+}
+
+- create
+POST: "localhost:4000/api/challenge-categories"
+req = {
+    "title": "Hoc thiet ke giao dien don gian 2",
+    "descriptions": "Giup ban ren luyen cac ky nang code Html, Css 2",
+    "avatar": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQK2yuHuE_KiWXOfDSMKzBFbAFiolnyJ9gtbQ&usqp=CAU"
+}
+
+- update
+PUT: "localhost:4000/api/challenge-categories/:challengeCateId"
+req = {
+    "_id": "618013dbed3e213710c9c94a",
+    "title": "Hoc thiet ke giao dien don gian 3",
+    "descriptions": "Giup ban ren luyen cac ky nang code Html, Css 3",
+    "avatar": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQK2yuHuE_KiWXOfDSMKzBFbAFiolnyJ9gtbQ&usqp=CAU"
+}
+
+- delete
+DELETE: "localhost:4000/api/challenge-categories/:challengeCateId"
+res = {
+    "message": [],
+    "status": true
+}
