@@ -1,6 +1,9 @@
 import { PAGINATION_REGEX } from "constants/regexDefination";
 import { response } from "constants/responseHandler";
+import formidable from "formidable";
+import { cropper } from "helpers/imageCropper";
 import ChallengeCategoriesModel from "models/challengeCategories.model";
+import { createFile } from "services/drive";
 
 export const gets = async (req, res) => {
     const { page } = req.query;
@@ -69,5 +72,28 @@ export const remove = (req, res) => {
         if (err) return response(res, 500, ['ERROR_SERVER', err.message]);
         if (!docs) return response(res, 400, ['EMPTY_DATA']);
         return response(res, 200, []);
+    })
+}
+
+export const uploadImage = (req, res) => {
+    const initialize = new formidable.IncomingForm({
+        maxFileSize: 1024 * 1024,
+        keepExtensions: true
+    });
+    initialize.parse(req, async (err, fields, file) => {
+        const { image } = file;
+        if (err) return response(res, 400, ['INVALID_SIZE', err.message])
+        if (image) {
+            await cropper({
+                width: 200,
+                height: 200,
+                path: image.path,
+                filename: image.name
+            });
+            var driveFileResponse = await createFile(image.name, '1wZ9yrdzNkIJLVgHLQUWYtXlUxfEF8Ata');
+            console.log(driveFileResponse);
+        }
+        return response(res, 200, [], driveFileResponse)
+
     })
 }

@@ -106,10 +106,11 @@ export const path = {
     },
     challengeCategories: {
         rootRoute: '/api/challenge-categories',
+        uploadImage: '/upload-image',
         gets: '/',
         post: '/',
         get: '/:challengeCategoriesId',
         put: '/:challengeCategoriesId',
-        delete: '/:challengeCategoriesId'
+        delete: '/:challengeCategoriesId',
     },
 }
