@@ -578,3 +578,16 @@ res = {
     "message": [],
     "status": true
 }
+
+- upload image for cate challenge (token)
+( su dung formdata )
+req = KEY: image, VALUE: File
+
+res = {
+    "message": [],
+    "status": true,
+    "data": {
+        "id": "16vEW6HI4TCgkZrrClpEggbFAGbOdZFMi",
+        "webContentLink": "https://drive.google.com/uc?id=16vEW6HI4TCgkZrrClpEggbFAGbOdZFMi&export=download"
+    }
+}
