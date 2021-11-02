@@ -165,12 +165,15 @@ export const questionValidator = async (req, res, next) => {
     return next();
 }
 
-//exercise layout
-export const exerciseLayoutValidator = async (req, res, next) => {
+//challenge
+export const challengesValidator = async (req, res, next) => {
     await body('title').trim().notEmpty().withMessage("Nhập title").run(req);
-    await body('content').trim().notEmpty().withMessage("Nhập content").run(req);
-    await body('linkFigma').notEmpty().withMessage("Nhập link Figma").run(req);
-    await body('price').notEmpty().withMessage("Nhập giá").run(req);
+    await body('descriptions').trim().notEmpty().withMessage("Nhập descriptions").run(req);
+    await body('figmaUrl').notEmpty().withMessage("Nhập link Figma").run(req);
+    await body('level').notEmpty().withMessage("Nhập level").run(req);
+    await body('challengeCategoryId').notEmpty().withMessage("Nhập Id danh muc").run(req);
+    // await body('resourceUrl').notEmpty().withMessage("Nhập link file download").run(req);
+    await body('avatar').notEmpty().withMessage("Nhập link avatar").run(req);
     const check = validationResult(req);
     if (!check.isEmpty()) {
         return response(res, 400, ['INVALID_DATA', ...check.errors])
