@@ -66,7 +66,11 @@ export const path = {
         post: '/',
         delete: '/:tagname',
         search: '/search',
-        put: '/:tagname'
+        put: '/:tagname',
+        popular : '/popular',
+        post : '/:tagname/post',
+        question : '/:tagname/question',
+        follower : '/:tagname/follower'
     },
     comment: {
         rootRoute: '/api/comment',

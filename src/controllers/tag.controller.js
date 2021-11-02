@@ -172,3 +172,16 @@ export const update = (req, res) => {
         })
     })
 }
+
+export const get = () => {
+
+}
+export const popular = () => {
+
+}
+export const post = () => {
+
+}
+export const question = () => {
+    
+}

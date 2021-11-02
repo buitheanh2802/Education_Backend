@@ -4,6 +4,7 @@ import { cropper } from "helpers/imageCropper";
 import PictureModel from "models/picture.model";
 import { async } from "regenerator-runtime";
 import { createFile, deleteFile } from "services/drive";
+import { createFileSystem,removeFileSystem } from 'services/system.js'
 
 export const create = (req, res) => {
     const initialize = new formidable.IncomingForm({
@@ -20,8 +21,11 @@ export const create = (req, res) => {
                 path: image.path,
                 filename: image.name
             });
+            // console.log(image);
+            // createFileSystem(image.name,image.path);
             var driveFileResponse = await createFile(image.name, req.driveId);
-            console.log(driveFileResponse);
+            // console.log(driveFileResponse);
+            // removeFileSystem(image.name);
         }
         const createNewImage = new PictureModel({
             photo: {
