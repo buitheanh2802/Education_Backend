@@ -95,14 +95,15 @@ export const path = {
         questionBookmark: '/:username/bookmark/question',
         tag: '/:username/tag'
     },
-    exerciseLayout: {
-        rootRoute: '/api/exercise-layout',
+    challenges: {
+        rootRoute: '/api/challenges',
+        uploadImage: '/upload-image',
+        uploadFileZip: '/upload-file',
         gets: '/',
         post: '/',
-        get: '/:layoutId',
-        put: '/:layoutId',
-        delete: '/:layoutId',
-        rate: '/rate/:layoutId'
+        get: '/:challengeId',
+        put: '/:challengeId',
+        delete: '/:challengeId',
     },
     challengeCategories: {
         rootRoute: '/api/challenge-categories',

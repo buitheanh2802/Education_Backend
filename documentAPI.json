@@ -591,3 +591,152 @@ res = {
         "webContentLink": "https://drive.google.com/uc?id=16vEW6HI4TCgkZrrClpEggbFAGbOdZFMi&export=download"
     }
 }
+
+
+--------------------------------------------------------------------------------------------------------------------
+
+- challenge
+
+- getAll:
+GET: "localhost:4000/api/challenges"
+res = {
+    "message": [],
+    "status": true,
+    "data": {
+        "models": [
+            {
+                "_id": "61815f019535042ef4c3381c",
+                "submitedBy": [
+                    "614b80d90a94d3289434c84d"
+                ],
+                "solutionSubmitedBy": [
+                    "614b80d90a94d3289434c84d"
+                ],
+                "title": "Thiet ket giao dien web",
+                "descriptions": "Ho tro nang cao trinh do code",
+                "level": 2,
+                "challengeCategoryId": "6180143fed3e213710c9c94c",
+                "figmaUrl": "https://www.figma.com/file/vfFUgdFUx0tuPR17HxIcI2/Wireframing-(Copy)?node-id=0%3A1",
+                "resourceUrl": "google.com",
+                "avatar": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR8D6yHxZWcnA6o2_tnDRALE87VkN5hDlyXpg&usqp=CAU",
+                "createBy": {
+                    "_id": "6165a8c37df3ff3150865cc8",
+                    "avatar": {
+                        "_id": "",
+                        "avatarUrl": ""
+                    },
+                    "fullname": "Nguyen B"
+                },
+                "createdAt": "2021-11-02T15:53:37.886Z",
+                "updatedAt": "2021-11-02T15:53:37.886Z"
+            }
+        ],
+        "metaData": {
+            "pagination": {
+                "perPage": 5,
+                "totalPage": 1,
+                "currentPage": 1,
+                "countDocuments": 1
+            }
+        }
+    }
+}
+
+- detail
+GET: "localhost:4000/api/challenges/:challengeId"
+res = {
+    "message": [],
+    "status": true,
+    "data": {
+        "submitedBy": [
+            "614b80d90a94d3289434c84d"
+        ],
+        "solutionSubmitedBy": [
+            "614b80d90a94d3289434c84d"
+        ],
+        "_id": "61815f019535042ef4c3381c",
+        "title": "Thiet ket giao dien web",
+        "descriptions": "Ho tro nang cao trinh do code",
+        "level": 2,
+        "challengeCategoryId": "6180143fed3e213710c9c94c",
+        "figmaUrl": "https://www.figma.com/file/vfFUgdFUx0tuPR17HxIcI2/Wireframing-(Copy)?node-id=0%3A1",
+        "resourceUrl": "google.com",
+        "avatar": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR8D6yHxZWcnA6o2_tnDRALE87VkN5hDlyXpg&usqp=CAU",
+        "createBy": {
+            "avatar": {
+                "_id": "",
+                "avatarUrl": ""
+            },
+            "_id": "6165a8c37df3ff3150865cc8",
+            "fullname": "Nguyen B"
+        },
+        "createdAt": "2021-11-02T15:53:37.886Z",
+        "updatedAt": "2021-11-02T15:53:37.886Z",
+        "__v": 0
+    }
+}
+
+- remove
+DELETE: "localhost:4000/api/challenges/:challengeId" (token)
+res = {
+    "message": [],
+    "status": true
+}
+
+- update
+PUT: "localhost:4000/api/challenges/:challengeId" (token)
+req = {
+    "submitedBy": [
+        "614b80d90a94d3289434c84d"
+    ],
+    "solutionSubmitedBy": [
+        "614b80d90a94d3289434c84d"
+    ],
+    "_id": "61815f019535042ef4c3381c",
+    "title": "Thiet ket giao dien web 123",
+    "descriptions": "Ho tro nang cao trinh do code 123",
+    "level": 2,
+    "challengeCategoryId": "6180143fed3e213710c9c94c",
+    "figmaUrl": "https://www.figma.com/file/vfFUgdFUx0tuPR17HxIcI2/Wireframing-(Copy)?node-id=0%3A1",
+    "resourceUrl": "google.com",
+    "avatar": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR8D6yHxZWcnA6o2_tnDRALE87VkN5hDlyXpg&usqp=CAU",
+    "createBy": {
+        "avatar": {
+            "_id": "",
+            "avatarUrl": ""
+        },
+        "_id": "6165a8c37df3ff3150865cc8",
+        "fullname": "Nguyen B"
+    }
+}
+res = {
+    "message": [],
+    "status": true
+}
+
+- create
+POST: "localhost:4000/api/challenges" (token)
+req = {
+    "title": "Thiet ket giao dien web 3333",
+    "descriptions": "Ho tro nang cao trinh do code 3333",
+    "level": 2,
+    "challengeCategoryId": "6180143fed3e213710c9c94c",
+    "submitedBy": [
+        "614b80d90a94d3289434c84d"
+    ],
+    "solutionSubmitedBy": [
+        "614b80d90a94d3289434c84d"
+    ],
+    "figmaUrl": "https://www.figma.com/file/vfFUgdFUx0tuPR17HxIcI2/Wireframing-(Copy)?node-id=0%3A1",
+    "resourceUrl": "google.com",
+    "avatar": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR8D6yHxZWcnA6o2_tnDRALE87VkN5hDlyXpg&usqp=CAU"
+}
+
+- upload file zip (zip file truoc khi up len) (token)
+POST: "localhost:4000/api/challenges/upload-file"
+req: KEY: image, VALUE: File 
+
+- upload image (token) (token)
+POST: "localhost:4000/api/challenges/upload-image"
+req: KEY: image, VALUE: File 
+

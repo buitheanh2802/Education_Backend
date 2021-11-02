@@ -7,7 +7,7 @@ import followRoute from './follow.route';
 import tagRoute from './tag.route';
 import questionRoute from './question.route';
 import pictureRoute from './picture.route';
-import exerciseLayoutRoute from "./exercise-layout.route";
+import challengesRoute from "./challengesRoute.route";
 import userRoute from './user.route';
 import challengeCategoriesRoute from './challenge-categories.route';
 
@@ -21,6 +21,6 @@ export const routes = (app) => {
     app.use(path.tag.rootRoute, tagRoute);
     app.use(path.picture.rootRoute, pictureRoute);
     app.use(path.user.rootRoute, userRoute);
-    app.use(path.exerciseLayout.rootRoute, exerciseLayoutRoute);
+    app.use(path.challenges.rootRoute, challengesRoute);
     app.use(path.challengeCategories.rootRoute, challengeCategoriesRoute);
 }

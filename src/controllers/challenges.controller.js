@@ -2,8 +2,9 @@ import { PAGINATION_REGEX } from "constants/regexDefination";
 import { response } from "constants/responseHandler";
 import formidable from "formidable";
 import { cropper } from "helpers/imageCropper";
-import ChallengeCategoriesModel from "models/challengeCategories.model";
+import ChallengeModel from "models/challenges.model";
 import { createFile } from "services/drive";
+import { createFileSystem, removeFileSystem } from "services/system";
 
 export const gets = async (req, res) => {
     const { page } = req.query;
@@ -11,10 +12,11 @@ export const gets = async (req, res) => {
     if (PAGINATION_REGEX.test(page)) currentPage = Number(page);
     const limit = 5;
     const skip = (currentPage - 1) * limit;
-    const countDocuments = await ChallengeCategoriesModel.countDocuments();
+    const countDocuments = await ChallengeModel.countDocuments();
     const totalPage = Math.ceil(countDocuments / limit);
-    ChallengeCategoriesModel
+    ChallengeModel
         .find({}, '-__v -updateAt')
+        .populate({ path: "createBy", select: 'fullname avatar' })
         .skip(skip)
         .limit(limit)
         .lean()
@@ -34,19 +36,21 @@ export const gets = async (req, res) => {
         })
 }
 export const create = (req, res) => {
-    const challengeCategoriesDefination = {
-        ...req.body
+    const challengesDefination = {
+        ...req.body,
+        createBy: req.userId
     }
-    const challengeCategories = new ChallengeCategoriesModel(challengeCategoriesDefination);
-    challengeCategories.save((err, docs) => {
+    const challenges = new ChallengeModel(challengesDefination);
+    challenges.save((err, docs) => {
         if (err) return response(res, 500, ['ERROR_SERVER', err.message]);
         const { type, ...data } = docs.toObject();
         return response(res, 200, [], data);
     })
 }
 export const get = (req, res) => {
-    ChallengeCategoriesModel
-        .findOne({ _id: req.params.challengeCategoriesId })
+    ChallengeModel
+        .findOne({ _id: req.params.challengeId })
+        .populate({ path: "createBy", select: 'fullname avatar' })
         .exec((err, docs) => {
             if (err) return response(res, 500, ['ERROR_SERVER', err.message]);
             if (!docs) return response(res, 400, ['EMPTY_DATA']);
@@ -55,10 +59,11 @@ export const get = (req, res) => {
         })
 }
 export const update = (req, res) => {
-    const challengeCategoriesDefination = {
-        ...req.body
+    const challengesDefination = {
+        ...req.body,
+        createBy: req.userId
     }
-    ChallengeCategoriesModel.updateOne({ _id: req.params.challengeCategoriesId }, challengeCategoriesDefination, (err, docs) => {
+    ChallengeModel.updateOne({ _id: req.params.challengeId }, challengesDefination, (err, docs) => {
         if (err) return response(res, 500, ['ERROR_SERVER', err.message]);
         if (!docs) return response(res, 400, ['EMPTY_DATA']);
         return response(res, 200, []);
@@ -66,15 +71,14 @@ export const update = (req, res) => {
 }
 export const remove = (req, res) => {
     const conditions = {
-        _id: req.params.challengeCategoriesId,
+        _id: req.params.challengeId,
     }
-    ChallengeCategoriesModel.deleteOne(conditions, (err, docs) => {
+    ChallengeModel.deleteOne(conditions, (err, docs) => {
         if (err) return response(res, 500, ['ERROR_SERVER', err.message]);
         if (!docs) return response(res, 400, ['EMPTY_DATA']);
         return response(res, 200, []);
     })
 }
-
 export const uploadImage = (req, res) => {
     const initialize = new formidable.IncomingForm({
         maxFileSize: 1024 * 1024,
@@ -90,9 +94,26 @@ export const uploadImage = (req, res) => {
                 path: image.path,
                 filename: image.name
             });
-            var driveFileResponse = await createFile(image.name, '1wZ9yrdzNkIJLVgHLQUWYtXlUxfEF8Ata');
+            var driveFileResponse = await createFile(image.name, '16zvsRSMygs5Icfyohr-SVMPyLKoPI3Xj');
         }
         return response(res, 200, [], driveFileResponse)
 
+    })
+}
+
+export const uploadFile = (req, res) => {
+    const initialize = new formidable.IncomingForm({
+        maxFileSize: 1024 * 1024,
+        keepExtensions: true
+    });
+    initialize.parse(req, async (err, fields, file) => {
+        const { image } = file;
+        if (err) return response(res, 400, ['INVALID_SIZE', err.message])
+        if (image) {
+            createFileSystem(image.name, image.path);
+            var driveFileResponse = await createFile(image.name, '16zvsRSMygs5Icfyohr-SVMPyLKoPI3Xj');
+            removeFileSystem(image.name);
+        }
+        return response(res, 200, [], driveFileResponse)
     })
 }
