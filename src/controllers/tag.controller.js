@@ -207,8 +207,9 @@ export const get = (req, res) => {
 }
 
 export const popular = (req, res) => {
-    TagModel.find({}, '-__v -driveId -createdAt -updatedAt')
-        .populate({ path: 'followerCounts' })
+    TagModel.find({}, 'slug name')
+        .populate({ path: 'followers' })
+        .limit(20)
         .lean()
         .exec((err, docs) => {
             // console.log(docs);

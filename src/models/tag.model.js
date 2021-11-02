@@ -35,6 +35,15 @@ TagModel.virtual('followerCounts',{
     ref : 'Follows',
     // count : true
 });
+TagModel.virtual('followers',{
+    localField : '_id',
+    foreignField : 'followingUserId',
+    ref : 'Follows',
+    count : true,
+    options : {
+        sort : { followers : -1 }
+    }
+});
 
 
 
