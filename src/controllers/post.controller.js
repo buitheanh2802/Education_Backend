@@ -380,7 +380,7 @@ export const create = async (req, res) => {
     try {
         var data = await Promise.all(tags.map(async tag => {
             const docs = await TagModel.findOrCreate({ slug: tag.toLowerCase() }
-                , { name: tag, slug: tag.toLowerCase() });
+                , { name: tag, slug: toSlug(tag.toLowerCase(),'-') });
             return docs.doc._id;
         }))
     } catch (error) {

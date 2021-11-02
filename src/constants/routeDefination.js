@@ -63,7 +63,7 @@ export const path = {
         rootRoute: '/api/tag',
         gets: '/',
         get: '/:tagname',
-        post: '/',
+        create: '/',
         delete: '/:tagname',
         search: '/search',
         put: '/:tagname',

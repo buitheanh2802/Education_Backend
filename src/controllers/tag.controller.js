@@ -4,6 +4,7 @@ import { response } from "constants/responseHandler";
 import { TAGNAME, PAGINATION_REGEX } from 'constants/regexDefination';
 import { cropper } from 'helpers/imageCropper';
 import { createFile, createFolder } from 'services/drive';
+import { toSlug } from 'helpers/slug';
 import { assignIn } from 'lodash';
 import jwt from "jsonwebtoken";
 
@@ -62,6 +63,9 @@ export const gets = async (req, res) => {
             }
         },
         {
+            $sort: { createdAt: -1 }
+        },
+        {
             $skip: skip
         },
         {
@@ -110,7 +114,7 @@ export const create = (req, res) => {
         const { name } = fields;
         const { photo } = file;
         if (err) return response(res, 400, ['INVALID_SIZE', err.message]);
-        if (!fields.name || !TAGNAME.test(fields.name)) return response(res, 400, ['INVALID_DATA']);
+        if (!fields.name) return response(res, 400, ['INVALID_DATA']);
         if (photo) {
             await cropper({
                 width: 200,
@@ -123,7 +127,7 @@ export const create = (req, res) => {
         }
         const createNewTag = new TagModel({
             name: name,
-            slug: name.toLowerCase(),
+            slug: toSlug(name.toLowerCase(), '-'),
             avatar: {
                 _id: driveFileResponse?.id,
                 avatarUrl: driveFileResponse?.webContentLink
@@ -145,43 +149,80 @@ export const update = (req, res) => {
     });
     initialize.parse(req, async (err, fields, file) => {
         const { photo } = file;
-        fields.slug = fields.name.toLowerCase();
+        fields.slug = toSlug(fields.name.toLowerCase(), '-');
         if (err) return response(res, 400, ['INVALID_SIZE', err.message]);
-        if (!fields.name || !TAGNAME.test(fields.name)) return response(res, 400, ['INVALID_DATA']);
+        if (!fields.name) return response(res, 400, ['INVALID_DATA']);
         TagModel.findOne({ slug: req.params.tagname.toLowerCase() }, async (err, docs) => {
             if (err) return response(res, 500, ['ERROR_SERVER']);
             if (!docs) return response(res, 400, ['TAG_NOTEXIST']);
-            if (photo) {
-                await cropper({
-                    width: 200,
-                    height: 200,
-                    path: photo.path,
-                    filename: photo.name
-                });
-                var driveFileResponse = await createFile(photo.name, docs.driveId);
-                fields.avatar = {
-                    _id: driveFileResponse.id,
-                    avatarUrl: driveFileResponse.webContentLink
-                }
-            }
             const currentData = assignIn(docs, fields);
-            currentData.save((err, docs) => {
+            currentData.save(async (err, docs) => {
                 if (err) return response(res, 500, ['ERROR_SERVER']);
+                if (photo) {
+                    await cropper({
+                        width: 200,
+                        height: 200,
+                        path: photo.path,
+                        filename: photo.name
+                    });
+                    var driveFileResponse = await createFile(photo.name, docs.driveId);
+                    fields.avatar = {
+                        _id: driveFileResponse.id,
+                        avatarUrl: driveFileResponse.webContentLink
+                    }
+                }
                 return response(res, 200, [])
             });
         })
     })
 }
 
-export const get = () => {
-
+export const get = (req, res) => {
+    try {
+        var token = jwt.verify(req.headers?.authorization?.split(" ")[1], process.env.SECRET_KEY);
+    } catch (error) {
+        // console.log('error', error.message);
+    }
+    TagModel.findOne({ slug: toSlug(req.params.tagname, '-') }, '-__v -driveId -createdAt -updatedAt')
+        .populate([
+            { path: 'postCounts' },
+            { path: 'questionCounts' },
+            { path: 'followerCounts' }
+        ])
+        .lean()
+        .exec((err, docs) => {
+            if (err) return response(res, 500, ['ERROR_SERVER', err.message]);
+            if (!docs) return response(res, 200, ['EMPTY_DATA']);
+            docs.isFollowing = false;
+            if (token) {
+                docs.followerCounts.forEach(doc => {
+                    // console.log(doc);
+                    if (doc.userId === token?._id) {
+                        docs.isFollowing = true;
+                    }
+                })
+            }
+            return response(res, 200, [], { ...docs, followerCounts: docs.followerCounts.length });
+        })
 }
-export const popular = () => {
 
+export const popular = (req, res) => {
+    TagModel.find({}, '-__v -driveId -createdAt -updatedAt')
+        .populate({ path: 'followerCounts' })
+        .lean()
+        .exec((err, docs) => {
+            // console.log(docs);
+            if (err) return response(res, 500, ['ERROR_SERVER', err.message]);
+            if (!docs) return response(res, 200, ['EMPTY_DATA']);
+            return response(res, 200, [], docs);
+        })
 }
 export const post = () => {
 
 }
 export const question = () => {
-    
+
+}
+export const follower = () => {
+
 }
