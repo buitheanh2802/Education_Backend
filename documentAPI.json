@@ -513,7 +513,7 @@ exercise-layout
 - challenge categories
 
 - getAll
-GET: "localhost:4000/api/challenge-categories"
+GET: "https://devstar-api.herokuapp.com/api/challenge-categories"
 res = {
     "message": [],
     "status": true,
@@ -540,7 +540,7 @@ res = {
 }
 
 - detail 
-GET: "localhost:4000/api/challenge-categories/:challengeCateId"
+GET: "https://devstar-api.herokuapp.com/api/challenge-categories/:challengeCateId"
 res = {
     "message": [],
     "status": true,
@@ -556,7 +556,7 @@ res = {
 }
 
 - create
-POST: "localhost:4000/api/challenge-categories"
+POST: "https://devstar-api.herokuapp.com/api/challenge-categories"
 req = {
     "title": "Hoc thiet ke giao dien don gian 2",
     "descriptions": "Giup ban ren luyen cac ky nang code Html, Css 2",
@@ -564,7 +564,7 @@ req = {
 }
 
 - update
-PUT: "localhost:4000/api/challenge-categories/:challengeCateId"
+PUT: "https://devstar-api.herokuapp.com/api/challenge-categories/:challengeCateId"
 req = {
     "_id": "618013dbed3e213710c9c94a",
     "title": "Hoc thiet ke giao dien don gian 3",
@@ -573,7 +573,7 @@ req = {
 }
 
 - delete
-DELETE: "localhost:4000/api/challenge-categories/:challengeCateId"
+DELETE: "https://devstar-api.herokuapp.com/api/challenge-categories/:challengeCateId"
 res = {
     "message": [],
     "status": true
@@ -598,7 +598,7 @@ res = {
 - challenge
 
 - getAll:
-GET: "localhost:4000/api/challenges"
+GET: "https://devstar-api.herokuapp.com/api/challenges"
 res = {
     "message": [],
     "status": true,
@@ -643,7 +643,7 @@ res = {
 }
 
 - detail
-GET: "localhost:4000/api/challenges/:challengeId"
+GET: "https://devstar-api.herokuapp.com/api/challenges/:challengeId"
 res = {
     "message": [],
     "status": true,
@@ -677,14 +677,14 @@ res = {
 }
 
 - remove
-DELETE: "localhost:4000/api/challenges/:challengeId" (token)
+DELETE: "https://devstar-api.herokuapp.com/api/challenges/:challengeId" (token)
 res = {
     "message": [],
     "status": true
 }
 
 - update
-PUT: "localhost:4000/api/challenges/:challengeId" (token)
+PUT: "https://devstar-api.herokuapp.com/api/challenges/:challengeId" (token)
 req = {
     "submitedBy": [
         "614b80d90a94d3289434c84d"
@@ -715,7 +715,7 @@ res = {
 }
 
 - create
-POST: "localhost:4000/api/challenges" (token)
+POST: "https://devstar-api.herokuapp.com/api/challenges" (token)
 req = {
     "title": "Thiet ket giao dien web 3333",
     "descriptions": "Ho tro nang cao trinh do code 3333",
@@ -733,10 +733,17 @@ req = {
 }
 
 - upload file zip (zip file truoc khi up len) (token)
-POST: "localhost:4000/api/challenges/upload-file"
+POST: "https://devstar-api.herokuapp.com/api/challenges/upload-file"
 req: KEY: image, VALUE: File 
 
 - upload image (token) (token)
-POST: "localhost:4000/api/challenges/upload-image"
+POST: "https://devstar-api.herokuapp.com/api/challenges/upload-image"
 req: KEY: image, VALUE: File 
+
+- submitedUserId: gọi api này khi người dùng click vào download tải file về
+POST: "https://devstar-api.herokuapp.com/api/challenges/submited-user/:challengeId" (token)
+res = {
+    "message": [],
+    "status": true
+}
 
