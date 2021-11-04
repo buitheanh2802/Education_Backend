@@ -104,6 +104,7 @@ export const path = {
         uploadImage: '/upload-image',
         uploadFileZip: '/upload-file',
         addSubmitedUser: '/submited-user/:challengeId',
+        solutionSubmitedBy: '/solution-submited/:challengeId',
         gets: '/:cateId/challenge-categories',
         post: '/',
         get: '/:challengeId',

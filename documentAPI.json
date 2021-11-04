@@ -740,10 +740,18 @@ req: KEY: image, VALUE: File
 POST: "https://devstar-api.herokuapp.com/api/challenges/upload-image"
 req: KEY: image, VALUE: File 
 
-- submitedUserId: gọi api này khi người dùng click vào download tải file về
+- submitedUserId: gọi api này khi người dùng cùng lúc click vào download tải file về
 POST: "https://devstar-api.herokuapp.com/api/challenges/submited-user/:challengeId" (token)
 res = {
     "message": [],
     "status": true
 }
+
+- solutionSubmitedBy: gọi api này khi user cùng lúc dùng api đăng tải các bài tập đã làm được lên.
+POST: "https://devstar-api.herokuapp.com/api/challenges/solution-submited/:challengeId" (token)
+res = {
+    "message": [],
+    "status": true
+}
+
 

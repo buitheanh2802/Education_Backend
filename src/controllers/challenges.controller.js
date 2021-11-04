@@ -166,3 +166,51 @@ export const addSubmitedUser = (req, res) => {
             })
         })
 }
+
+export const solutionSubmitedBy = (req, res) => {
+    const challengeId = req.params.challengeId;
+    const userId = req.userId;
+    ChallengeModel
+        .findOne({ _id: challengeId })
+        .exec((err, docs) => {
+            if (err) return response(res, 500, ['ERROR_SERVER', err.message]);
+            if (!docs) return response(res, 400, ['EMPTY_DATA']);
+
+            var newSolutionSubmitedBy = docs.solutionSubmitedBy;
+            if (newSolutionSubmitedBy.length == 0) {
+                newSolutionSubmitedBy.push(userId)
+            } else {
+                var check = false;
+                newSolutionSubmitedBy.filter(x => {
+                    if (x == userId) {
+                        check = true
+                    }
+                })
+                if (check == false) {
+                    newSolutionSubmitedBy.push(userId)
+                }
+            }
+
+            var result = {
+                submitedBy: docs.submitedBy,
+                solutionSubmitedBy: newSolutionSubmitedBy,
+                _id: docs._id,
+                title: docs.title,
+                descriptions: docs.descriptions,
+                level: docs.level,
+                challengeCategoryId: docs.challengeCategoryId,
+                figmaUrl: docs.figmaUrl,
+                resourceUrl: docs.resourceUrl,
+                avatar: docs.avatar,
+                createBy: docs.createBy,
+                createdAt: docs.createdAt,
+                updatedAt: docs.updatedAt,
+            }
+
+            ChallengeModel.updateOne({ _id: challengeId }, result, (err, newDocs) => {
+                if (err) return response(res, 500, ['ERROR_SERVER', err.message]);
+                if (!newDocs) return response(res, 400, ['EMPTY_DATA']);
+                return response(res, 200, []);
+            })
+        })
+}
