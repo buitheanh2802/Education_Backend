@@ -7,6 +7,15 @@ import { createFile, createFolder } from 'services/drive';
 import { toSlug } from 'helpers/slug';
 import { assignIn } from 'lodash';
 import jwt from "jsonwebtoken";
+import PostModel from 'models/post.model';
+import questionModel from "models/question.model";
+import FollowModel from "models/follow.model";
+import UserModel from 'models/user.model';
+import mongoose from 'mongoose';
+
+// global data 
+const limited = 10;
+const trendingViews = 100;
 
 export const gets = async (req, res) => {
     try {
@@ -218,12 +227,158 @@ export const popular = (req, res) => {
             return response(res, 200, [], docs);
         })
 }
-export const post = () => {
-
+export const post = (req, res) => {
+    TagModel.findOne({ slug: toSlug(req.params.tagname, '-') })
+        .lean()
+        .exec(async(err, docs) => {
+            if (err) return response(res, 500, ['ERROR_SERVER', err.message]);
+            if (!docs) return response(res, 200, ['EMPTY_DATA']);
+            const { page } = req.query;
+            let currentPage = 1;
+            if (PAGINATION_REGEX.test(page)) currentPage = Number(page);
+            const skip = (currentPage - 1) * limited;
+            const countDocuments = await PostModel.countDocuments({ tags: docs._id });
+            const totalPage = Math.ceil(countDocuments / limited);
+            PostModel.find({ tags: docs._id })
+                .skip(skip)
+                .limit(limited)
+                .select('-_id views shortId title slug tags likes dislikes createBy createdAt bookmarks')
+                .sort({ createdAt: -1 })
+                .populate({ path: 'comments' })
+                .populate({ path: 'createBy', select: '-_id username email avatar fullname' })
+                .populate({ path: 'tags', select: '-_id name slug' })
+                .lean()
+                .exec((err, docs) => {
+                    if (err) return response(res, 500, ['ERROR_SERVER', err.message]);
+                    return response(res, 200, [],
+                        {
+                            models: docs.map(doc => ({
+                                ...doc,
+                                bookmarks: doc.bookmarks.length,
+                                likes: doc.likes.length,
+                                dislikes: doc.dislikes.length,
+                                isTrending: doc.views > trendingViews ? true : false
+                            })),
+                            metaData: {
+                                pagination: {
+                                    perPage: limited,
+                                    totalPage: totalPage,
+                                    currentPage: currentPage,
+                                    countDocuments: docs.length
+                                }
+                            }
+                        });
+                })
+        })
 }
-export const question = () => {
-
+export const question = (req,res) => {
+    TagModel.findOne({ slug: toSlug(req.params.tagname, '-') })
+    .lean()
+    .exec(async(err, docs) => {
+        if (err) return response(res, 500, ['ERROR_SERVER', err.message]);
+        if (!docs) return response(res, 200, ['EMPTY_DATA']);
+        const { page } = req.query;
+        let currentPage = 1;
+        if (PAGINATION_REGEX.test(page)) currentPage = Number(page);
+        const skip = (currentPage - 1) * limited;
+        const countDocuments = await questionModel.countDocuments({ tags: docs._id });
+        const totalPage = Math.ceil(countDocuments / limited);
+        questionModel.find({ tags: docs._id })
+            .skip(skip)
+            .limit(limited)
+            .select('_id views shortId title slug tags likes dislikes createBy createdAt bookmarks')
+            .sort({ createdAt: -1 })
+            .populate({ path: 'comments' })
+            .populate({ path: 'createBy', select: '-_id username email avatar fullname' })
+            .populate({ path: 'tags', select: '-_id name slug' })
+            .lean()
+            .exec((err, docs) => {
+                if (err) return response(res, 500, ['ERROR_SERVER', err.message]);
+                return response(res, 200, [],
+                    {
+                        models: docs.map(doc => ({
+                            ...doc,
+                            bookmarks: doc.bookmarks?.length || 0,
+                            likes: doc.likes?.length || 0,
+                            dislike: doc.dislike?.length || 0,
+                            isTrending: doc.views > trendingViews ? true : false
+                        })),
+                        metaData: {
+                            pagination: {
+                                perPage: limited,
+                                totalPage: totalPage,
+                                currentPage: currentPage,
+                                countDocuments: docs.length
+                            }
+                        }
+                    });
+            })
+    })
 }
-export const follower = () => {
-
+export const follower = (req,res) => {
+    try {
+        var token = jwt.verify(req.headers?.authorization?.split(" ")[1], process.env.SECRET_KEY);
+        // console.log(token);
+    } catch (error) {
+        // console.log('error', error.message);
+    }
+    const { page } = req.query;
+    let currentPage = 1;
+    if (PAGINATION_REGEX.test(page)) currentPage = Number(page);
+    TagModel.findOne({ slug: toSlug(req.params.tagname, '-') })
+    .lean()
+    .exec(async(err, docs) => {
+        if (err) return response(res, 500, ['ERROR_SERVER', err.message]);
+        if (!docs) return response(res, 200, ['EMPTY_DATA'])
+        const skip = (currentPage - 1) * limited;
+        const countDocuments = await FollowModel.countDocuments({ followingUserId: docs._id });
+        const totalPage = Math.ceil(countDocuments / limited);
+        FollowModel.find({ followingUserId: docs._id })
+            .skip(skip)
+            .limit(limited)
+            .sort({ createdAt: -1 })
+            .select('-_id userId')
+            .lean()
+            .exec(async (err, docs) => {
+                if (err) return response(res, 500, ['ERROR_SERVER', err.message]);
+                if (docs.length !== 0) {
+                    docs = docs.map(doc => new mongoose.Types.ObjectId(doc.userId));
+                    let data = await UserModel.find({ _id: { $in: docs } },
+                        'username email fullname points avatar posts questions')
+                        .populate({ path: 'postCounts' })
+                        .populate({ path: 'questionCounts' })
+                        .populate({ path: 'followers', select: '-_id userId -followingUserId' })
+                        .lean()
+                        .exec()
+                    // console.log(data);
+                    data = data.map(doc => {
+                        // console.log(doc);
+                        doc.isFollowing = false;
+                        if (token && doc.followers.length !== 0) {
+                            console.log(token);
+                            doc.followers.forEach(follow => {
+                                if (follow.userId === token._id) doc.isFollowing = true;
+                            })
+                        }
+                        doc.followerCounts = doc.followers.length;
+                        delete doc.followers
+                        delete doc._id;
+                        return doc;
+                    })
+                    docs = data;
+                }
+                return response(res, 200, [],
+                    {
+                        models: docs,
+                        metaData: {
+                            pagination: {
+                                perPage: limited,
+                                totalPage: totalPage,
+                                currentPage: currentPage,
+                                countDocuments: docs.length
+                            }
+                        }
+                    });
+            })
+    })
 }

@@ -99,7 +99,7 @@ export const myQuestion = async(req, res) => {
     questionModel.find({ createBy: userData._id })
         .skip(skip)
         .limit(limited)
-        .select('-_id views shortId title slug tags likes dislikes createBy createdAt bookmarks')
+        .select('_id views shortId title slug tags likes dislike createBy createdAt bookmarks')
         .sort({ createdAt: -1 })
         .populate({ path: 'comments' })
         .populate({ path: 'createBy', select: '-_id username email avatar fullname' })
@@ -111,9 +111,9 @@ export const myQuestion = async(req, res) => {
                 {
                     models: docs.map(doc => ({
                         ...doc,
-                        bookmarks: doc.bookmarks.length,
-                        likes: doc.likes.length,
-                        dislikes: doc.dislikes.length,
+                        bookmarks: doc.bookmarks?.length || 0,
+                        likes: doc.likes?.length || 0,
+                        dislike: doc.dislike?.length || 0,
                         isTrending: doc.views > trendingViews ? true : false
                     })),
                     metaData: {

@@ -5,25 +5,6 @@ import { accessRole, accessToken } from 'middlewares/auth.middleware';
 
 const router = express.Router();
 
-// fetch all
-router.get(
-    path.tag.gets,
-    gets
-);
-// create
-router.post(
-    path.tag.create,
-    accessToken,
-    accessRole(['admin', 'collaborators']),
-    create
-);
-// update
-router.put(
-    path.tag.put,
-    accessToken,
-    accessRole(['admin', 'collaborators']),
-    update
-);
 // tag phổ biến 
 router.get(
     path.tag.popular,
@@ -49,5 +30,26 @@ router.get(
     path.tag.follower,
     follower
 );
+
+// fetch all
+router.get(
+    path.tag.gets,
+    gets
+);
+// create
+router.post(
+    path.tag.create,
+    accessToken,
+    accessRole(['admin', 'collaborators']),
+    create
+);
+// update
+router.put(
+    path.tag.put,
+    accessToken,
+    accessRole(['admin', 'collaborators']),
+    update
+);
+
 
 export default router;
