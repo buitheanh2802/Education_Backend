@@ -67,10 +67,10 @@ export const path = {
         delete: '/:tagname',
         search: '/search',
         put: '/:tagname',
-        popular : '/popular',
-        post : '/:tagname/post',
-        question : '/:tagname/question',
-        follower : '/:tagname/follower'
+        popular: '/popular',
+        post: '/:tagname/post',
+        question: '/:tagname/question',
+        follower: '/:tagname/follower'
     },
     comment: {
         rootRoute: '/api/comment',
@@ -103,7 +103,9 @@ export const path = {
         rootRoute: '/api/challenges',
         uploadImage: '/upload-image',
         uploadFileZip: '/upload-file',
-        gets: '/',
+        addSubmitedUser: '/submited-user/:challengeId',
+        solutionSubmitedBy: '/solution-submited/:challengeId',
+        gets: '/:cateId/challenge-categories',
         post: '/',
         get: '/:challengeId',
         put: '/:challengeId',

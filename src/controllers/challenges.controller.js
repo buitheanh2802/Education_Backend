@@ -7,6 +7,7 @@ import { createFile } from "services/drive";
 import { createFileSystem, removeFileSystem } from "services/system";
 
 export const gets = async (req, res) => {
+    const cateId = req.params.cateId;
     const { page } = req.query;
     let currentPage = 1;
     if (PAGINATION_REGEX.test(page)) currentPage = Number(page);
@@ -15,7 +16,7 @@ export const gets = async (req, res) => {
     const countDocuments = await ChallengeModel.countDocuments();
     const totalPage = Math.ceil(countDocuments / limit);
     ChallengeModel
-        .find({}, '-__v -updateAt')
+        .find({ challengeCategoryId: cateId }, '-__v -updateAt')
         .populate({ path: "createBy", select: 'fullname avatar' })
         .skip(skip)
         .limit(limit)
@@ -116,4 +117,100 @@ export const uploadFile = (req, res) => {
         }
         return response(res, 200, [], driveFileResponse)
     })
+}
+
+export const addSubmitedUser = (req, res) => {
+    const challengeId = req.params.challengeId;
+    const userId = req.userId;
+    ChallengeModel
+        .findOne({ _id: challengeId })
+        .exec((err, docs) => {
+            if (err) return response(res, 500, ['ERROR_SERVER', err.message]);
+            if (!docs) return response(res, 400, ['EMPTY_DATA']);
+
+            var newSubmitedBy = docs.submitedBy;
+            if (newSubmitedBy.length == 0) {
+                newSubmitedBy.push(userId)
+            } else {
+                var check = false;
+                newSubmitedBy.filter(x => {
+                    if (x == userId) {
+                        check = true
+                    }
+                })
+                if (check == false) {
+                    newSubmitedBy.push(userId)
+                }
+            }
+
+            var result = {
+                submitedBy: newSubmitedBy,
+                solutionSubmitedBy: docs.solutionSubmitedBy,
+                _id: docs._id,
+                title: docs.title,
+                descriptions: docs.descriptions,
+                level: docs.level,
+                challengeCategoryId: docs.challengeCategoryId,
+                figmaUrl: docs.figmaUrl,
+                resourceUrl: docs.resourceUrl,
+                avatar: docs.avatar,
+                createBy: docs.createBy,
+                createdAt: docs.createdAt,
+                updatedAt: docs.updatedAt,
+            }
+
+            ChallengeModel.updateOne({ _id: challengeId }, result, (err, newDocs) => {
+                if (err) return response(res, 500, ['ERROR_SERVER', err.message]);
+                if (!newDocs) return response(res, 400, ['EMPTY_DATA']);
+                return response(res, 200, []);
+            })
+        })
+}
+
+export const solutionSubmitedBy = (req, res) => {
+    const challengeId = req.params.challengeId;
+    const userId = req.userId;
+    ChallengeModel
+        .findOne({ _id: challengeId })
+        .exec((err, docs) => {
+            if (err) return response(res, 500, ['ERROR_SERVER', err.message]);
+            if (!docs) return response(res, 400, ['EMPTY_DATA']);
+
+            var newSolutionSubmitedBy = docs.solutionSubmitedBy;
+            if (newSolutionSubmitedBy.length == 0) {
+                newSolutionSubmitedBy.push(userId)
+            } else {
+                var check = false;
+                newSolutionSubmitedBy.filter(x => {
+                    if (x == userId) {
+                        check = true
+                    }
+                })
+                if (check == false) {
+                    newSolutionSubmitedBy.push(userId)
+                }
+            }
+
+            var result = {
+                submitedBy: docs.submitedBy,
+                solutionSubmitedBy: newSolutionSubmitedBy,
+                _id: docs._id,
+                title: docs.title,
+                descriptions: docs.descriptions,
+                level: docs.level,
+                challengeCategoryId: docs.challengeCategoryId,
+                figmaUrl: docs.figmaUrl,
+                resourceUrl: docs.resourceUrl,
+                avatar: docs.avatar,
+                createBy: docs.createBy,
+                createdAt: docs.createdAt,
+                updatedAt: docs.updatedAt,
+            }
+
+            ChallengeModel.updateOne({ _id: challengeId }, result, (err, newDocs) => {
+                if (err) return response(res, 500, ['ERROR_SERVER', err.message]);
+                if (!newDocs) return response(res, 400, ['EMPTY_DATA']);
+                return response(res, 200, []);
+            })
+        })
 }

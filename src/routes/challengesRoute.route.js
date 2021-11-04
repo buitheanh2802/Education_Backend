@@ -1,5 +1,5 @@
 import { path } from 'constants/routeDefination';
-import { create, get, gets, remove, update, uploadFile, uploadImage } from 'controllers/challenges.controller';
+import { addSubmitedUser, create, get, gets, remove, solutionSubmitedBy, update, uploadFile, uploadImage } from 'controllers/challenges.controller';
 import express from 'express';
 import { accessToken } from 'middlewares/auth.middleware';
 import { challengesValidator } from 'middlewares/validate.middleware';
@@ -11,7 +11,8 @@ router.post(path.challenges.post, challengesValidator, accessToken, create);
 router.put(path.challenges.put, challengesValidator, accessToken, update);
 router.delete(path.challenges.delete, accessToken, remove);
 router.post(path.challenges.uploadFileZip, accessToken, uploadFile);
-router.post(path.challenges.uploadImage, accessToken, uploadImage);
+router.post(path.challenges.addSubmitedUser, accessToken, addSubmitedUser);
+router.post(path.challenges.solutionSubmitedBy, accessToken, solutionSubmitedBy);
 
 
 export default router;
