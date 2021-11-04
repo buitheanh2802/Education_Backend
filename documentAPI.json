@@ -597,8 +597,8 @@ res = {
 
 - challenge
 
-- getAll:
-GET: "https://devstar-api.herokuapp.com/api/challenges"
+- getAll theo id danh muc
+GET: "https://devstar-api.herokuapp.com/api/challenges/:cateId/challenge-categories"
 res = {
     "message": [],
     "status": true,

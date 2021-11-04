@@ -7,6 +7,7 @@ import { createFile } from "services/drive";
 import { createFileSystem, removeFileSystem } from "services/system";
 
 export const gets = async (req, res) => {
+    const cateId = req.params.cateId;
     const { page } = req.query;
     let currentPage = 1;
     if (PAGINATION_REGEX.test(page)) currentPage = Number(page);
@@ -15,7 +16,7 @@ export const gets = async (req, res) => {
     const countDocuments = await ChallengeModel.countDocuments();
     const totalPage = Math.ceil(countDocuments / limit);
     ChallengeModel
-        .find({}, '-__v -updateAt')
+        .find({ challengeCategoryId: cateId }, '-__v -updateAt')
         .populate({ path: "createBy", select: 'fullname avatar' })
         .skip(skip)
         .limit(limit)
