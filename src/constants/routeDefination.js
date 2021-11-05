@@ -120,4 +120,12 @@ export const path = {
         put: '/:challengeCategoriesId',
         delete: '/:challengeCategoriesId',
     },
+    solution : {
+        rootRoute : '/api/solution',
+        gets : '/',
+        get : '/:solutionId',
+        post : '/',
+        put : '/:solutionId',
+        delete : '/:solutionId',
+    }
 }
