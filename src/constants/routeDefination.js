@@ -125,6 +125,7 @@ export const path = {
         gets : '/',
         get : '/:solutionId',
         post : '/',
-        put : '/:solutionId'
+        put : '/:solutionId',
+        delete : '/:solutionId',
     }
 }

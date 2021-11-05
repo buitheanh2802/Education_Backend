@@ -13,3 +13,6 @@ export const update = (req,res) => {
 export const remove = (req,res) => {
 
 }
+export const create = (req,res) => {
+    
+}
