@@ -1,6 +1,7 @@
 import { path } from 'constants/routeDefination';
 import { get,gets,remove,update,create  } from 'controllers/solution.controller';
 import { accessToken } from 'middlewares/auth.middleware';
+import { solutionValidator } from 'middlewares/validate.middleware';
 import express from 'express';
 
 
@@ -19,6 +20,8 @@ router.get(
 // create
 router.post(
     path.solution.post,
+    solutionValidator,
+    accessToken,
     create
 )
 // update
