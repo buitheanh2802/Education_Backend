@@ -379,13 +379,14 @@ export const create = async (req, res) => {
     // create tag
     try {
         var data = await Promise.all(tags.map(async tag => {
-            const docs = await TagModel.findOrCreate({ slug: tag.toLowerCase() }
+            const docs = await TagModel.findOrCreate({ slug: toSlug(tag.toLowerCase(),'-') }
                 , { name: tag, slug: toSlug(tag.toLowerCase(),'-') });
             return docs.doc._id;
         }))
     } catch (error) {
-        console.log(error.message);
+        // console.log(error.message);
     }
+    console.log(data);
     const createPost = new PostModel({
         title: title,
         content: content,

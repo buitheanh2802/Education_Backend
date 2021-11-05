@@ -237,9 +237,9 @@ export const post = (req, res) => {
             let currentPage = 1;
             if (PAGINATION_REGEX.test(page)) currentPage = Number(page);
             const skip = (currentPage - 1) * limited;
-            const countDocuments = await PostModel.countDocuments({ tags: docs._id });
+            const countDocuments = await PostModel.countDocuments({ tags: docs._id,isDraft : false,isAccept : true });
             const totalPage = Math.ceil(countDocuments / limited);
-            PostModel.find({ tags: docs._id })
+            PostModel.find({ tags: docs._id,isDraft : false,isAccept : true })
                 .skip(skip)
                 .limit(limited)
                 .select('-_id views shortId title slug tags likes dislikes createBy createdAt bookmarks')
