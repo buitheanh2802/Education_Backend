@@ -10,6 +10,7 @@ import pictureRoute from './picture.route';
 import challengesRoute from "./challengesRoute.route";
 import userRoute from './user.route';
 import challengeCategoriesRoute from './challenge-categories.route';
+import solutionRoute from './solution.route';
 
 export const routes = (app) => {
     app.use(path.auth.rootRoute, authRoute);
@@ -23,4 +24,5 @@ export const routes = (app) => {
     app.use(path.user.rootRoute, userRoute);
     app.use(path.challenges.rootRoute, challengesRoute);
     app.use(path.challengeCategories.rootRoute, challengeCategoriesRoute);
+    app.use(path.solution.rootRoute,solutionRoute);
 }
