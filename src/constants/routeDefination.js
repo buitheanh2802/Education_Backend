@@ -127,5 +127,6 @@ export const path = {
         post : '/',
         put : '/:solutionId',
         delete : '/:solutionId',
+        upVote : '/:solutionId/vote'
     }
 }

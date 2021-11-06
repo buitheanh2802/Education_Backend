@@ -6,7 +6,7 @@ const Solution = new mongoose.Schema({
     demoUrl: { type: String },
     repoUrl: { type: String },
     createBy : { type : mongoose.Schema.Types.ObjectId, ref : 'Users',required : true},
-    votes : [{ type : mongoose.Schema.Types.ObjectId, ref : 'Users',default : []}],
+    votes : [{ type : String,default : []}],
     challengeId : { type : mongoose.Schema.Types.ObjectId, ref : 'Challenges',required : true}
 }, { timestamps: true });
 
