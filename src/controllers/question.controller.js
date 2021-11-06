@@ -426,3 +426,33 @@ export const listBookmark = async (req, res) => {
             });
         })
 }
+
+export const addView = (req, res) => {
+    const questionId = req.params.questionId;
+    QuestionModel
+        .findOne({ _id: questionId })
+        .exec((err, docs) => {
+            if (err) return response(res, 500, ['ERROR_SERVER', err.message]);
+            if (!docs) return response(res, 400, ['EMPTY_DATA']);
+            var result = {
+                likes: docs.likes,
+                dislike: docs.dislike,
+                comfirmAnswers: docs.comfirmAnswers,
+                tags: docs.tags,
+                bookmarks: docs.bookmarks,
+                _id: docs._id,
+                title: docs.title,
+                content: docs.content,
+                views: docs.views + 1,
+                slug: docs.slug,
+                createBy: docs.createBy,
+                createdAt: docs.createdAt,
+                updatedAt: docs.updatedAt,
+            }
+            QuestionModel.updateOne({ _id: questionId }, result, (err, newDocs) => {
+                if (err) return response(res, 500, ['ERROR_SERVER', err.message]);
+                if (!newDocs) return response(res, 400, ['EMPTY_DATA']);
+                return response(res, 200, []);
+            })
+        })
+}
