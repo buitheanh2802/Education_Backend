@@ -25,9 +25,11 @@ export const gets = async (req, res) => {
                     _id: x._id,
                     countLikes: x.likes.length,
                     countDislike: x.dislike.length,
+                    countBookmarks: x.bookmarks.length,
+                    bookmarks: x.bookmarks,
                     likes: x.likes,
                     dislike: x.dislike,
-                    comfirmAnswers: [],
+                    comfirmAnswers: x.comfirmAnswers,
                     tags: x.tags,
                     title: x.title,
                     content: x.content,
@@ -64,16 +66,40 @@ export const create = (req, res) => {
         return response(res, 200, [], data);
     })
 }
-export const get = (req, res) => {
+export const get = async (req, res) => {
     QuestionModel
         .findOne({ _id: req.params.questionId })
-        .populate({ path: "createBy", select: 'fullname avatar' })
+        .populate({ path: "createBy", select: 'fullname avatar username' })
         .populate({ path: "tags", select: "name" })
         .exec((err, docs) => {
             if (err) return response(res, 500, ['ERROR_SERVER', err.message]);
             if (!docs) return response(res, 400, ['EMPTY_DATA']);
-            const { type, ...data } = docs.toObject();
-            return response(res, 200, [], data);
+
+            var createByUserId = docs.createBy._id;
+            var totalQuestion = 0;
+            QuestionModel.find({ createBy: createByUserId }, (err, data) => {
+                totalQuestion = data.length;
+                var result = {
+                    countLikes: docs.likes.length,
+                    countDislike: docs.dislike.length,
+                    countBookmarks: docs.bookmarks.length,
+                    countQuestion: totalQuestion,
+                    likes: docs.likes,
+                    dislike: docs.dislike,
+                    comfirmAnswers: docs.comfirmAnswers,
+                    tags: docs.tags,
+                    bookmarks: docs.bookmarks,
+                    _id: docs._id,
+                    title: docs.title,
+                    content: docs.content,
+                    views: docs.views,
+                    slug: docs.slug,
+                    createBy: docs.createBy,
+                    createdAt: docs.createdAt,
+                    updatedAt: docs.updatedAt,
+                }
+                return response(res, 200, [], result);
+            })
         })
 }
 export const update = (req, res) => {
