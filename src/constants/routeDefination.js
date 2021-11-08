@@ -52,6 +52,7 @@ export const path = {
         get: '/:questionId',
         put: '/:questionId',
         delete: '/:questionId',
+        view: '/:questionId/view',
         bookmark: '/bookmark/:questionId',
         listbookmark: '/listbookmark',
         like: '/:questionId/like',
