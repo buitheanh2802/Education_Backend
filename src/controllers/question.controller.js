@@ -125,9 +125,10 @@ export const remove = (req, res) => {
 }
 
 export const addLike = (req, res) => {
+    const userId = req.userId;
+
     QuestionModel.findById(req.params.questionId, (err, doc) => {
         if (err) {
-            console.log(err);
             return false;
         }
         var check = false;
@@ -139,10 +140,12 @@ export const addLike = (req, res) => {
         if (check == false) {
             doc.likes.push(req.userId)
         }
-
+        var newDislike = doc.dislike.filter(x => {
+            return x != userId
+        })
         const postObj = {
             likes: doc.likes,
-            dislike: doc.dislike,
+            dislike: newDislike,
             comfirmAnswers: doc.comfirmAnswers,
             tags: doc.tags,
             _id: doc._id,
@@ -163,7 +166,6 @@ export const addLike = (req, res) => {
 export const removeLike = (req, res) => {
     QuestionModel.findById(req.params.questionId, (err, doc) => {
         if (err) {
-            console.log(err);
             return false;
         }
         var result = [];
@@ -193,6 +195,7 @@ export const removeLike = (req, res) => {
 }
 
 export const addDislike = (req, res) => {
+    const userId = req.userId;
     QuestionModel.findById(req.params.questionId, (err, doc) => {
         if (err) {
             console.log(err);
@@ -208,9 +211,12 @@ export const addDislike = (req, res) => {
         if (check == false) {
             doc.dislike.push(req.userId)
         }
+        var newLike = doc.likes.filter(x => {
+            return x != userId
+        })
 
         const postObj = {
-            likes: doc.likes,
+            likes: newLike,
             dislike: doc.dislike,
             comfirmAnswers: doc.comfirmAnswers,
             tags: doc.tags,
