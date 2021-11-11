@@ -57,7 +57,7 @@ export const activeAccount = (req, res) => {
 export const signin = (req, res) => {
     passport.authenticate('local', (err, profile) => {
         const { email, password: passwordRequest } = profile;
-        UserModel.findOne({ email, socialType: 'system' },'-createdAt -updatedAt -status -__v -socialType ', (err, docs) => {
+        UserModel.findOne({ email, socialType: 'system' }, '-createdAt -updatedAt -status -__v -socialType ', (err, docs) => {
             if (err) return response(res, 500, ['ERROR_SERVER', err.message]);
             if (!docs) return response(res, 400, ['EMAIL_NOTEXIST']);
             if (!docs.verifyPassword(passwordRequest)) return response(res, 400, ['INVALID_PASSWORD']);
@@ -65,18 +65,20 @@ export const signin = (req, res) => {
             if (docs.status == 'verify') {
                 return response(res, 400, ['NOT_VERIFY'])
             }
-            const documentReponse = docs.toObject({ transform : (_,pureObject) => {
-                delete pureObject.password;
-                delete pureObject.driveId;
-                delete pureObject._id;
-                return pureObject;
-            }});
+            const documentReponse = docs.toObject({
+                transform: (_, pureObject) => {
+                    delete pureObject.password;
+                    delete pureObject.driveId;
+                    // delete pureObject._id;
+                    return pureObject;
+                }
+            });
             // res.cookie('auth_tk', token, { maxAge: 1000 * expiredToken,sameSite : 'None',secure : true})
             return response(res, 200, [], {
                 profile: {
                     ...documentReponse,
                     role: docs.role !== 'user' ? docs.role : undefined,
-                    userType : docs.userType !== 'basic' ? docs.userType : undefined
+                    userType: docs.userType !== 'basic' ? docs.userType : undefined
                 },
                 token: token
             })
@@ -95,7 +97,7 @@ export const profile = (req, res) => {
                 {
                     ...docs,
                     role: docs.role !== 'user' ? docs.role : undefined,
-                    userType : docs.userType !== 'basic' ? docs.userType : undefined
+                    userType: docs.userType !== 'basic' ? docs.userType : undefined
                 })
         })
 }
@@ -129,12 +131,12 @@ export const oauthLoginCallback = (strategy) => {
                     let currentUser = docs;
                     if (err) return response(res, 500, ['ERROR_SERVER', err.message]);
                     if (!docs) {
-                        const driveFolder = await createFolder(toSlug(profile.displayName,'').concat(randomNumber()), '1PWS1iJLKp02kOGGQ-o2WwFYFQE8E6Scs');
+                        const driveFolder = await createFolder(toSlug(profile.displayName, '').concat(randomNumber()), '1PWS1iJLKp02kOGGQ-o2WwFYFQE8E6Scs');
                         const createUser = new UserModel({
                             email: profile.emails[0].value,
                             socialType: strategy,
                             fullname: profile.displayName,
-                            username: toSlug(profile.displayName,'').concat(randomNumber()),
+                            username: toSlug(profile.displayName, '').concat(randomNumber()),
                             driveId: driveFolder.id,
                             status: 'active'
                         });
