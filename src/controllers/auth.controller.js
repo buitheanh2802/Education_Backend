@@ -69,7 +69,7 @@ export const signin = (req, res) => {
                 transform: (_, pureObject) => {
                     delete pureObject.password;
                     delete pureObject.driveId;
-                    // delete pureObject._id;
+                    delete pureObject._id;
                     return pureObject;
                 }
             });
@@ -88,7 +88,7 @@ export const signin = (req, res) => {
 
 export const profile = (req, res) => {
     UserModel
-        .findOne({ _id: req.userId }, '-_id -createdAt -updatedAt -driveId -password -status -__v -socialType ')
+        .findOne({ _id: req.userId }, '-createdAt -updatedAt -driveId -password -status -__v -socialType ')
         .lean()
         .exec((err, docs) => {
             if (err) return response(res, 500, ['ERROR_SERVER', err.message]);
