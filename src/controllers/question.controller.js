@@ -354,7 +354,7 @@ export const delBookmark = (req, res) => {
         if (err) return response(res, 500, ['ERROR_SERVER', err.message]);
         if (!docs) return response(res, 400, ['EMPTY_DATA']);
 
-        docs.bookmarks.filter(x => {
+        const newBookMark = docs.bookmarks.filter(x => {
             if (x != userId) {
                 return x
             }
@@ -365,7 +365,7 @@ export const delBookmark = (req, res) => {
             dislike: docs.dislike,
             comfirmAnswers: docs.comfirmAnswers,
             tags: docs.tags,
-            bookmarks: docs.bookmarks,
+            bookmarks: newBookMark,
             _id: docs._id,
             title: docs.title,
             content: docs.content,
@@ -375,7 +375,6 @@ export const delBookmark = (req, res) => {
             createdAt: docs.createdAt,
             updatedAt: docs.updatedAt,
         }
-        console.log(newDocs);
         QuestionModel.updateOne({ _id: questionId }, newDocs, (err, result) => {
             if (err) return response(res, 500, ['ERROR_SERVER', err.message]);
             if (!result) return response(res, 400, ['EMPTY_DATA']);
