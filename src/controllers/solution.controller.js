@@ -35,7 +35,6 @@ export const gets = async (req, res) => {
             if (err) return response(res, 500, ['ERROR_SERVER', err.message]);
             if(docs && token){
                 docs = docs.map(doc => {
-                    console.log(doc);
                     doc.isVoted = doc.votes.includes(token._id);
                     delete doc.votes;
                     return doc;

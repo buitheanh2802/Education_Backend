@@ -22,7 +22,7 @@ export const remove = (req, res) => {
     }
     FollowModel.deleteOne(conditions, (err, docs) => {
         if (err) return response(res, 500, ['ERROR_SERVER', err.message]);
-        if(docs.n === 0 ) return response(res,401,['ACCESS_DENIED'])
+        if(docs.n === 0 ) return response(res,401,['DATA_NOTEXIST'])
         return response(res, 200, []);
     })
 }
