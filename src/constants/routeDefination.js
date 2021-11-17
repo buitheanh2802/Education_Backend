@@ -59,6 +59,7 @@ export const path = {
         deletelike: '/:questionId/deletelike',
         dislike: '/:questionId/dislike',
         deletedislike: '/:questionId/delete-dislike',
+        follow: '/follow'
     },
     tag: {
         rootRoute: '/api/tag',
@@ -121,13 +122,13 @@ export const path = {
         put: '/:challengeCategoriesId',
         delete: '/:challengeCategoriesId',
     },
-    solution : {
-        rootRoute : '/api/solution',
-        gets : '/',
-        get : '/:solutionId',
-        post : '/',
-        put : '/:solutionId',
-        delete : '/:solutionId',
-        upVote : '/:solutionId/vote'
+    solution: {
+        rootRoute: '/api/solution',
+        gets: '/',
+        get: '/:solutionId',
+        post: '/',
+        put: '/:solutionId',
+        delete: '/:solutionId',
+        upVote: '/:solutionId/vote'
     }
 }

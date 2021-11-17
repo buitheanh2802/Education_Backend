@@ -1,10 +1,12 @@
 import { path } from 'constants/routeDefination';
-import { addBookmark, addDislike, addLike, addView, create, delBookmark, get, gets, listBookmark, remove, removeDislike, removeLike, searchTag, update } from 'controllers/question.controller';
+import { addBookmark, addDislike, addLike, addView, create, delBookmark, follow, get, gets, listBookmark, remove, removeDislike, removeLike, searchTag, update } from 'controllers/question.controller';
 import express from 'express';
 import { accessToken } from 'middlewares/auth.middleware';
 import { questionValidator } from 'middlewares/validate.middleware';
 
 const router = express.Router();
+
+router.get(path.question.follow, accessToken, follow)
 
 router.get(path.question.listbookmark, accessToken, listBookmark);
 
@@ -22,6 +24,7 @@ router.delete(path.question.deletedislike, accessToken, removeDislike);
 
 router.post(path.question.bookmark, accessToken, addBookmark);
 router.delete(path.question.bookmark, accessToken, delBookmark);
+
 
 router.post(path.question.view, addView);
 

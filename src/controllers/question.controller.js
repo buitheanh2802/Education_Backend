@@ -2,6 +2,8 @@ import { PAGINATION_REGEX } from "constants/regexDefination";
 import { response } from "constants/responseHandler";
 import QuestionModel from "models/question.model";
 import CommentModel from "../models/comment.model";
+import FollowModel from '../models/follow.model';
+
 
 export const gets = async (req, res) => {
     const { page } = req.query;
@@ -471,4 +473,65 @@ export const addView = (req, res) => {
                 return response(res, 200, []);
             })
         })
+}
+
+export const follow = (req, res) => {
+    const userId = req.userId;
+    var listUserFollow = [];
+
+    FollowModel.find({ userId: userId }, (err, docs) => {
+        if (err) {
+            console.log(err);
+        }
+        listUserFollow = docs.map(x => {
+            return x.followingUserId
+        })
+
+        const { page } = req.query;
+        let currentPage = 1;
+        if (PAGINATION_REGEX.test(page)) currentPage = Number(page);
+        const limit = 5;
+        const skip = (currentPage - 1) * limit;
+
+        QuestionModel
+            .find({ createBy: listUserFollow.map(x => { return x }) })
+            .populate({ path: "createBy", select: 'fullname avatar' })
+            .populate({ path: "tags", select: "name" })
+            .skip(skip)
+            .limit(limit)
+            .lean()
+            .exec((err, docs) => {
+                if (err) return response(res, 500, ['ERROR_SERVER', err.message]);
+                const countDocuments = docs.length;
+                const totalPage = Math.ceil(countDocuments / limit);
+                let result = docs.map(x => {
+                    return {
+                        _id: x._id,
+                        countLikes: x.likes.length,
+                        countDislike: x.dislike.length,
+                        comfirmAnswers: x.comfirmAnswers,
+                        tags: x.tags,
+                        title: x.title,
+                        content: x.content,
+                        views: x.views,
+                        slug: x.slug,
+                        createBy: x.createBy,
+                        createdAt: x.createdAt,
+                        updatedAt: x.updatedAt,
+                        bookmarks: x.bookmarks
+                    }
+                })
+                return response(res, 200, [], {
+                    models: result,
+                    metaData: {
+                        pagination: {
+                            perPage: limit,
+                            totalPage: totalPage,
+                            currentPage: currentPage,
+                            countDocuments: docs.length
+                        }
+                    }
+                });
+            })
+    })
 }

@@ -247,6 +247,10 @@ DELETE: "https://devstar-api.herokuapp.com/api/question/bookmark/:idQuestion"
 // get list bookmark (token)
 GET: "https://devstar-api.herokuapp.com/api/question/listbookmark"
 
+// get list follow question
+
+GET: "https://devstar-api.herokuapp.com/api/question/follow"
+
 --------------------------------------------------------------------------------------------------------
 
 - Upload image (token)
