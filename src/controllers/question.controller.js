@@ -415,8 +415,8 @@ export const listBookmark = async (req, res) => {
             let result = docs.map(x => {
                 return {
                     _id: x._id,
-                    likes: x.likes.length,
-                    dislike: x.dislike.length,
+                    countLikes: x.likes.length,
+                    countDislike: x.dislike.length,
                     comfirmAnswers: [],
                     tags: x.tags,
                     title: x.title,
