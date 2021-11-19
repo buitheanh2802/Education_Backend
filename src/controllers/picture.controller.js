@@ -2,7 +2,6 @@ import { response } from "constants/responseHandler";
 import formidable from "formidable";
 import { cropper } from "helpers/imageCropper";
 import PictureModel from "models/picture.model";
-import { async } from "regenerator-runtime";
 import { createFile, deleteFile } from "services/drive";
 import { createFileSystem, removeFileSystem } from 'services/system.js'
 
@@ -16,12 +15,7 @@ export const create = (req, res) => {
         const { image } = file;
         if (err) return response(res, 400, ['INVALID_SIZE', err.message])
         if (image) {
-            await cropper({
-                width: 200,
-                height: 200,
-                path: image.path,
-                filename: image.name
-            });
+            createFileSystem(image.name,image.path)
             var driveFileResponse = await createFile(image.name, req.driveId);
         }
         const createNewImage = new PictureModel({
