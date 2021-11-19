@@ -4,9 +4,10 @@ import { cropper } from "helpers/imageCropper";
 import PictureModel from "models/picture.model";
 import { async } from "regenerator-runtime";
 import { createFile, deleteFile } from "services/drive";
-import { createFileSystem,removeFileSystem } from 'services/system.js'
+import { createFileSystem, removeFileSystem } from 'services/system.js'
 
 export const create = (req, res) => {
+    console.log('running !');
     const initialize = new formidable.IncomingForm({
         maxFileSize: 1024 * 1024,
         keepExtensions: true
@@ -21,11 +22,7 @@ export const create = (req, res) => {
                 path: image.path,
                 filename: image.name
             });
-            // console.log(image);
-            // createFileSystem(image.name,image.path);
             var driveFileResponse = await createFile(image.name, req.driveId);
-            // console.log(driveFileResponse);
-            // removeFileSystem(image.name);
         }
         const createNewImage = new PictureModel({
             photo: {
@@ -38,6 +35,7 @@ export const create = (req, res) => {
             if (err) return response(res, 500, ['ERROR_SERVER']);
             return response(res, 200, [], docs)
         })
+        removeFileSystem(image.name);
 
     })
 }
@@ -50,7 +48,7 @@ export const gets = (req, res) => {
 }
 export const remove = (req, res) => {
     //xoa trong google drive
-    PictureModel.find({ _id: req.params.pictureId }, async(err, docs) => {
+    PictureModel.find({ _id: req.params.pictureId }, async (err, docs) => {
         if (err) return response(res, 500, ['ERROR_SERVER', err.message]);
         console.log(docs);
         const fileId = docs[0].photo.id;

@@ -52,12 +52,14 @@ export const path = {
         get: '/:questionId',
         put: '/:questionId',
         delete: '/:questionId',
+        view: '/:questionId/view',
         bookmark: '/bookmark/:questionId',
         listbookmark: '/listbookmark',
         like: '/:questionId/like',
         deletelike: '/:questionId/deletelike',
         dislike: '/:questionId/dislike',
         deletedislike: '/:questionId/delete-dislike',
+        follow: '/follow'
     },
     tag: {
         rootRoute: '/api/tag',
@@ -120,12 +122,13 @@ export const path = {
         put: '/:challengeCategoriesId',
         delete: '/:challengeCategoriesId',
     },
-    solution : {
-        rootRoute : '/api/solution',
-        gets : '/',
-        get : '/:solutionId',
-        post : '/',
-        put : '/:solutionId',
-        delete : '/:solutionId',
+    solution: {
+        rootRoute: '/api/solution',
+        gets: '/',
+        get: '/:solutionId',
+        post: '/',
+        put: '/:solutionId',
+        delete: '/:solutionId',
+        upVote: '/:solutionId/vote'
     }
 }

@@ -1,7 +1,9 @@
 import { PAGINATION_REGEX } from "constants/regexDefination";
 import { response } from "constants/responseHandler";
 import QuestionModel from "models/question.model";
-import { async } from "regenerator-runtime";
+import CommentModel from "../models/comment.model";
+import FollowModel from '../models/follow.model';
+
 
 export const gets = async (req, res) => {
     const { page } = req.query;
@@ -23,9 +25,13 @@ export const gets = async (req, res) => {
             let result = docs.map(x => {
                 return {
                     _id: x._id,
-                    likes: x.likes.length,
-                    dislike: x.dislike.length,
-                    comfirmAnswers: [],
+                    countLikes: x.likes.length,
+                    countDislike: x.dislike.length,
+                    countBookmarks: x.bookmarks.length,
+                    bookmarks: x.bookmarks,
+                    likes: x.likes,
+                    dislike: x.dislike,
+                    comfirmAnswers: x.comfirmAnswers,
                     tags: x.tags,
                     title: x.title,
                     content: x.content,
@@ -62,16 +68,51 @@ export const create = (req, res) => {
         return response(res, 200, [], data);
     })
 }
-export const get = (req, res) => {
+export const get = async (req, res) => {
     QuestionModel
         .findOne({ _id: req.params.questionId })
-        .populate({ path: "createBy", select: 'fullname avatar' })
+        .populate({ path: "createBy", select: 'fullname avatar username' })
         .populate({ path: "tags", select: "name" })
         .exec((err, docs) => {
             if (err) return response(res, 500, ['ERROR_SERVER', err.message]);
             if (!docs) return response(res, 400, ['EMPTY_DATA']);
-            const { type, ...data } = docs.toObject();
-            return response(res, 200, [], data);
+
+            var newCmt = [];
+            var createByUserId = docs.createBy._id;
+            var totalQuestion = 0;
+            CommentModel.find({ postOrQuestionId: req.params.questionId }, (err, resultCmt) => {
+                if (resultCmt) {
+                    newCmt = resultCmt;
+                }
+                QuestionModel.find({ createBy: createByUserId }, (err, data) => {
+                    totalQuestion = data.length;
+                    var result = {
+                        countLikes: docs.likes.length,
+                        countDislike: docs.dislike.length,
+                        countBookmarks: docs.bookmarks.length,
+                        countQuestion: totalQuestion,
+                        likes: docs.likes,
+                        dislike: docs.dislike,
+                        comfirmAnswers: docs.comfirmAnswers,
+                        tags: docs.tags,
+                        bookmarks: docs.bookmarks,
+                        _id: docs._id,
+                        title: docs.title,
+                        content: docs.content,
+                        views: docs.views,
+                        slug: docs.slug,
+                        comment: newCmt,
+                        countComment: newCmt.length,
+                        createBy: docs.createBy,
+                        createdAt: docs.createdAt,
+                        updatedAt: docs.updatedAt,
+                    }
+                    return response(res, 200, [], result);
+                })
+            })
+
+
+
         })
 }
 export const update = (req, res) => {
@@ -97,9 +138,10 @@ export const remove = (req, res) => {
 }
 
 export const addLike = (req, res) => {
+    const userId = req.userId;
+
     QuestionModel.findById(req.params.questionId, (err, doc) => {
         if (err) {
-            console.log(err);
             return false;
         }
         var check = false;
@@ -111,10 +153,12 @@ export const addLike = (req, res) => {
         if (check == false) {
             doc.likes.push(req.userId)
         }
-
+        var newDislike = doc.dislike.filter(x => {
+            return x != userId
+        })
         const postObj = {
             likes: doc.likes,
-            dislike: doc.dislike,
+            dislike: newDislike,
             comfirmAnswers: doc.comfirmAnswers,
             tags: doc.tags,
             _id: doc._id,
@@ -135,7 +179,6 @@ export const addLike = (req, res) => {
 export const removeLike = (req, res) => {
     QuestionModel.findById(req.params.questionId, (err, doc) => {
         if (err) {
-            console.log(err);
             return false;
         }
         var result = [];
@@ -165,6 +208,7 @@ export const removeLike = (req, res) => {
 }
 
 export const addDislike = (req, res) => {
+    const userId = req.userId;
     QuestionModel.findById(req.params.questionId, (err, doc) => {
         if (err) {
             console.log(err);
@@ -180,9 +224,12 @@ export const addDislike = (req, res) => {
         if (check == false) {
             doc.dislike.push(req.userId)
         }
+        var newLike = doc.likes.filter(x => {
+            return x != userId
+        })
 
         const postObj = {
-            likes: doc.likes,
+            likes: newLike,
             dislike: doc.dislike,
             comfirmAnswers: doc.comfirmAnswers,
             tags: doc.tags,
@@ -320,7 +367,7 @@ export const delBookmark = (req, res) => {
         if (err) return response(res, 500, ['ERROR_SERVER', err.message]);
         if (!docs) return response(res, 400, ['EMPTY_DATA']);
 
-        docs.bookmarks.filter(x => {
+        const newBookMark = docs.bookmarks.filter(x => {
             if (x != userId) {
                 return x
             }
@@ -331,7 +378,7 @@ export const delBookmark = (req, res) => {
             dislike: docs.dislike,
             comfirmAnswers: docs.comfirmAnswers,
             tags: docs.tags,
-            bookmarks: docs.bookmarks,
+            bookmarks: newBookMark,
             _id: docs._id,
             title: docs.title,
             content: docs.content,
@@ -341,7 +388,6 @@ export const delBookmark = (req, res) => {
             createdAt: docs.createdAt,
             updatedAt: docs.updatedAt,
         }
-        console.log(newDocs);
         QuestionModel.updateOne({ _id: questionId }, newDocs, (err, result) => {
             if (err) return response(res, 500, ['ERROR_SERVER', err.message]);
             if (!result) return response(res, 400, ['EMPTY_DATA']);
@@ -371,8 +417,8 @@ export const listBookmark = async (req, res) => {
             let result = docs.map(x => {
                 return {
                     _id: x._id,
-                    likes: x.likes.length,
-                    dislike: x.dislike.length,
+                    countLikes: x.likes.length,
+                    countDislike: x.dislike.length,
                     comfirmAnswers: [],
                     tags: x.tags,
                     title: x.title,
@@ -397,4 +443,95 @@ export const listBookmark = async (req, res) => {
                 }
             });
         })
+}
+
+export const addView = (req, res) => {
+    const questionId = req.params.questionId;
+    QuestionModel
+        .findOne({ _id: questionId })
+        .exec((err, docs) => {
+            if (err) return response(res, 500, ['ERROR_SERVER', err.message]);
+            if (!docs) return response(res, 400, ['EMPTY_DATA']);
+            var result = {
+                likes: docs.likes,
+                dislike: docs.dislike,
+                comfirmAnswers: docs.comfirmAnswers,
+                tags: docs.tags,
+                bookmarks: docs.bookmarks,
+                _id: docs._id,
+                title: docs.title,
+                content: docs.content,
+                views: docs.views + 1,
+                slug: docs.slug,
+                createBy: docs.createBy,
+                createdAt: docs.createdAt,
+                updatedAt: docs.updatedAt,
+            }
+            QuestionModel.updateOne({ _id: questionId }, result, (err, newDocs) => {
+                if (err) return response(res, 500, ['ERROR_SERVER', err.message]);
+                if (!newDocs) return response(res, 400, ['EMPTY_DATA']);
+                return response(res, 200, []);
+            })
+        })
+}
+
+export const follow = (req, res) => {
+    const userId = req.userId;
+    var listUserFollow = [];
+
+    FollowModel.find({ userId: userId }, (err, docs) => {
+        if (err) {
+            console.log(err);
+        }
+        listUserFollow = docs.map(x => {
+            return x.followingUserId
+        })
+
+        const { page } = req.query;
+        let currentPage = 1;
+        if (PAGINATION_REGEX.test(page)) currentPage = Number(page);
+        const limit = 5;
+        const skip = (currentPage - 1) * limit;
+
+        QuestionModel
+            .find({ createBy: listUserFollow.map(x => { return x }) })
+            .populate({ path: "createBy", select: 'fullname avatar' })
+            .populate({ path: "tags", select: "name" })
+            .skip(skip)
+            .limit(limit)
+            .lean()
+            .exec((err, docs) => {
+                if (err) return response(res, 500, ['ERROR_SERVER', err.message]);
+                const countDocuments = docs.length;
+                const totalPage = Math.ceil(countDocuments / limit);
+                let result = docs.map(x => {
+                    return {
+                        _id: x._id,
+                        countLikes: x.likes.length,
+                        countDislike: x.dislike.length,
+                        comfirmAnswers: x.comfirmAnswers,
+                        tags: x.tags,
+                        title: x.title,
+                        content: x.content,
+                        views: x.views,
+                        slug: x.slug,
+                        createBy: x.createBy,
+                        createdAt: x.createdAt,
+                        updatedAt: x.updatedAt,
+                        bookmarks: x.bookmarks
+                    }
+                })
+                return response(res, 200, [], {
+                    models: result,
+                    metaData: {
+                        pagination: {
+                            perPage: limit,
+                            totalPage: totalPage,
+                            currentPage: currentPage,
+                            countDocuments: docs.length
+                        }
+                    }
+                });
+            })
+    })
 }

@@ -319,18 +319,21 @@ export const following = async (req, res) => {
         .exec(async (err, docs) => {
             if (err) return response(res, 500, ['ERROR_SERVER', err.message]);
             if (docs.length == 0) return response(res, 400, ['EMPTY_DATA']);
-            docs = docs.map(doc => {
-                const currentDoc = doc.followingUserId;
-                currentDoc.isFollowing = false;
-                currentDoc.followerCounts = currentDoc.followers.length;
-                if (token && currentDoc.followers.length !== 0) {
-                    currentDoc.followers.forEach(follow => {
-                        if (follow.userId === token._id) currentDoc.isFollowing = true;
-                    })
+            // console.log(docs);
+            docs = docs.filter(doc => {
+                if(doc.followingUserId){
+                    const currentDoc = doc?.followingUserId;
+                    currentDoc.isFollowing = false;
+                    currentDoc.followerCounts = currentDoc.followers.length;
+                    if (token && currentDoc.followers.length !== 0) {
+                        currentDoc.followers.forEach(follow => {
+                            if (follow.userId === token._id) currentDoc.isFollowing = true;
+                        })
+                    }
+                    delete currentDoc._id;
+                    delete currentDoc.followers;
+                    return currentDoc;
                 }
-                delete currentDoc._id;
-                delete currentDoc.followers;
-                return currentDoc;
             })
             return response(res, 200, [],
                 {

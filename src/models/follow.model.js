@@ -16,7 +16,8 @@ FollowSchema.pre('save',async function(next){
 FollowSchema.pre('deleteOne',async function(next){
     const docs = await userModel.findOne({ username : this._conditions.followingUserId });
     if(docs) this._conditions.followingUserId = new mongoose.Types.ObjectId(docs._id);
-    else this._conditions.followingUserId = new mongoose.Types.ObjectId(this.followingUserId);
+    else this._conditions.followingUserId = new mongoose.Types.ObjectId(this._conditions.followingUserId);
+    console.log(this._conditions);
     next();
 });
 
