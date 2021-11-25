@@ -415,8 +415,8 @@ export const update = async (req, res) => {
     try {
         var data = await Promise.all(updateDefination
             .tags.map(async tag => {
-                const docs = await TagModel.findOrCreate({ slug: tag.toLowerCase() }
-                    , { name: tag, slug: tag.toLowerCase() });
+                const docs = await TagModel.findOrCreate({ slug: toSlug(tag.toLowerCase(),'-') }
+                    , { name: tag, slug: toSlug(tag.toLowerCase(),'-') });
                 return docs.doc._id;
             }))
     } catch (error) {

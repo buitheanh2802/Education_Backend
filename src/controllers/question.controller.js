@@ -3,6 +3,9 @@ import { response } from "constants/responseHandler";
 import QuestionModel from "models/question.model";
 import CommentModel from "../models/comment.model";
 import FollowModel from '../models/follow.model';
+import TagModel from "models/tag.model";
+import { toSlug } from 'helpers/slug';
+
 
 
 export const gets = async (req, res) => {
@@ -55,13 +58,29 @@ export const gets = async (req, res) => {
             });
         })
 }
-export const create = (req, res) => {
-
-    const questionDefination = {
-        ...req.body,
+export const create = async(req, res) => {
+    // define data
+    const updateDefination = {
+        title: req.body.title,
+        content: req.body.content,
+        tags: req.body.tags,
+        slug: toSlug(req.body.title, '-'),
         createBy: req.userId
     }
-    const question = new QuestionModel(questionDefination);
+     // create tag
+     try {
+        var data = await Promise.all(updateDefination
+            .tags.map(async tag => {
+                const docs = await TagModel.findOrCreate({ slug: toSlug(tag.toLowerCase(),'-') }
+                    , { name: tag, slug: toSlug(tag.toLowerCase(),'-') });
+                return docs.doc._id;
+            }))
+    } catch (error) {
+        console.log(error.message);
+    }
+    const question = new QuestionModel({
+        ...updateDefination,tags : data
+    });
     question.save((err, docs) => {
         if (err) return response(res, 500, ['ERROR_SERVER', err.message]);
         const { type, ...data } = docs.toObject();
