@@ -463,7 +463,7 @@ export const publishList = async (req, res) => {
     const skip = (currentPage - 1) * limit;
     const countDocuments = await PostModel.countDocuments({ isAccept: false, isDraft: false });
     const totalPage = Math.ceil(countDocuments / limit);
-    PostModel.find({ isDraft: false, isAccept: false }, '-_id shortId slug title content ')
+    PostModel.find({ isDraft: false, isAccept: false }, '-_id shortId createdAt slug title content ')
         .skip(skip)
         .limit(limit)
         .sort({ createdAt: -1 })
