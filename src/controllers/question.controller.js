@@ -12,12 +12,13 @@ export const gets = async (req, res) => {
     const { page } = req.query;
     let currentPage = 1;
     if (PAGINATION_REGEX.test(page)) currentPage = Number(page);
-    const limit = 5;
+    const limit = 10;
     const skip = (currentPage - 1) * limit;
     const countDocuments = await QuestionModel.countDocuments();
     const totalPage = Math.ceil(countDocuments / limit);
     QuestionModel
         .find({}, '-__v -updateAt')
+        .sort({ _id: -1 })
         .populate({ path: "createBy", select: 'fullname avatar' })
         .populate({ path: "tags", select: "name" })
         .skip(skip)
@@ -58,7 +59,7 @@ export const gets = async (req, res) => {
             });
         })
 }
-export const create = async(req, res) => {
+export const create = async (req, res) => {
     // define data
     const updateDefination = {
         title: req.body.title,
@@ -67,19 +68,19 @@ export const create = async(req, res) => {
         slug: toSlug(req.body.title, '-'),
         createBy: req.userId
     }
-     // create tag
-     try {
+    // create tag
+    try {
         var data = await Promise.all(updateDefination
             .tags.map(async tag => {
-                const docs = await TagModel.findOrCreate({ slug: toSlug(tag.toLowerCase(),'-') }
-                    , { name: tag, slug: toSlug(tag.toLowerCase(),'-') });
+                const docs = await TagModel.findOrCreate({ slug: toSlug(tag.toLowerCase(), '-') }
+                    , { name: tag, slug: toSlug(tag.toLowerCase(), '-') });
                 return docs.doc._id;
             }))
     } catch (error) {
         console.log(error.message);
     }
     const question = new QuestionModel({
-        ...updateDefination,tags : data
+        ...updateDefination, tags: data
     });
     question.save((err, docs) => {
         if (err) return response(res, 500, ['ERROR_SERVER', err.message]);
@@ -134,12 +135,30 @@ export const get = async (req, res) => {
 
         })
 }
-export const update = (req, res) => {
-    const questionDefination = {
-        ...req.body,
+export const update = async (req, res) => {
+    const updateDefination = {
+        title: req.body.title,
+        content: req.body.content,
+        tags: req.body.tags,
+        slug: toSlug(req.body.title, '-'),
         createBy: req.userId
     }
-    QuestionModel.updateOne({ _id: req.params.questionId }, questionDefination, (err, docs) => {
+    // create tag
+    try {
+        var data = await Promise.all(updateDefination
+            .tags.map(async tag => {
+                const docs = await TagModel.findOrCreate({ slug: toSlug(tag.toLowerCase(), '-') }
+                    , { name: tag, slug: toSlug(tag.toLowerCase(), '-') });
+                return docs.doc._id;
+            }))
+    } catch (error) {
+        console.log(error.message);
+    }
+
+    const questionDefination = {
+        ...updateDefination, tags: data
+    }
+    QuestionModel.updateOne({ _id: req.params.questionId, createBy: req.userId }, questionDefination, (err, docs) => {
         if (err) return response(res, 500, ['ERROR_SERVER', err.message]);
         if (!docs) return response(res, 400, ['EMPTY_DATA']);
         return response(res, 200, []);
@@ -420,12 +439,13 @@ export const listBookmark = async (req, res) => {
     const { page } = req.query;
     let currentPage = 1;
     if (PAGINATION_REGEX.test(page)) currentPage = Number(page);
-    const limit = 5;
+    const limit = 10;
     const skip = (currentPage - 1) * limit;
     const countDocuments = await QuestionModel.countDocuments();
     const totalPage = Math.ceil(countDocuments / limit);
     QuestionModel
         .find({ bookmarks: userId }, '-__v -updateAt')
+        .sort({ _id: -1 })
         .populate({ path: "createBy", select: 'fullname avatar' })
         .populate({ path: "tags", select: "name" })
         .skip(skip)
@@ -509,11 +529,12 @@ export const follow = (req, res) => {
         const { page } = req.query;
         let currentPage = 1;
         if (PAGINATION_REGEX.test(page)) currentPage = Number(page);
-        const limit = 5;
+        const limit = 10;
         const skip = (currentPage - 1) * limit;
 
         QuestionModel
             .find({ createBy: listUserFollow.map(x => { return x }) })
+            .sort({ _id: -1 })
             .populate({ path: "createBy", select: 'fullname avatar' })
             .populate({ path: "tags", select: "name" })
             .skip(skip)

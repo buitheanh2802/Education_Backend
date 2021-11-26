@@ -153,12 +153,7 @@ req = {
         "614e21071932800016a2056d"
     ],
     "comfirmAnswers": [],
-    "tags": [
-        {
-            "_id": "6159e1356c0534303c2ba360",
-            "name": "ReactJS"
-        }
-    ],
+    "tags": ["Banh","Keo"],
     "_id": "615c6f5e12837c07d0350f32",
     "title": "Cau hoi so 55",
     "content": "Day la noi dung 55",
