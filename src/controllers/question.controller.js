@@ -167,6 +167,7 @@ export const update = async (req, res) => {
 export const remove = (req, res) => {
     const conditions = {
         _id: req.params.questionId,
+        createBy: req.userId
     }
     QuestionModel.deleteOne(conditions, (err, docs) => {
         if (err) return response(res, 500, ['ERROR_SERVER', err.message]);
@@ -574,4 +575,20 @@ export const follow = (req, res) => {
                 });
             })
     })
+}
+
+export const updateSpam = (req, res) => {
+    QuestionModel
+        .findOne({ _id: req.params.questionId }, (err, docs) => {
+            if (err) return response(res, 500, ['ERROR_SERVER', err.message]);
+            if (!docs) return response(res, 400, ['EMPTY_DATA']);
+            const newObj = {
+                spam: !docs.spam,
+            }
+            QuestionModel.updateOne({ _id: req.params.questionId }, newObj, (err, docs) => {
+                if (err) return response(res, 500, ['ERROR_SERVER', err.message]);
+                if (!docs) return response(res, 400, ['EMPTY_DATA']);
+                return response(res, 200, []);
+            })
+        })
 }

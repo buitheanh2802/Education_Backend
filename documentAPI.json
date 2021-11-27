@@ -246,6 +246,13 @@ GET: "https://devstar-api.herokuapp.com/api/question/listbookmark"
 
 GET: "https://devstar-api.herokuapp.com/api/question/follow"
 
+// update status spam cho question ( token )
+
+PUT: "https://devstar-api.herokuapp.com/api/question/spam/:idQuestion" 
+res = {
+    "message": [],
+    "status": true
+}
 --------------------------------------------------------------------------------------------------------
 
 - Upload image (token)

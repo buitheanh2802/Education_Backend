@@ -11,6 +11,7 @@ const QuestionSchema = new mongoose.Schema({
     comfirmAnswers: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Users' }],
     tags: [{ type: mongoose.Schema.Types.ObjectId, ref: 'tags' }],
     bookmarks: [{ type: mongoose.Schema.Types.ObjectId, ref: "Users" }],
+    spam: { type: Boolean, default: false }
 }, { timestamps: true });
 
 export default mongoose.model('Questions', QuestionSchema);

@@ -59,7 +59,8 @@ export const path = {
         deletelike: '/:questionId/deletelike',
         dislike: '/:questionId/dislike',
         deletedislike: '/:questionId/delete-dislike',
-        follow: '/follow'
+        follow: '/follow',
+        spam: '/spam/:questionId'
     },
     tag: {
         rootRoute: '/api/tag',
