@@ -36,7 +36,7 @@ export const get = (req, res) => {
     }, '-_id views shortId title content slug tags likes dislikes createBy createdAt bookmarks')
         .populate({ path: 'tags', select: '-_id name slug' })
         .lean()
-        .populate({ path: 'comments'})
+        .populate({ path: 'comments' })
         .exec((err, docs) => {
             if (err) return response(res, 500, ['ERROR_SERVER', err.message]);
             if (!docs) return response(res, 200, [], {});
@@ -379,14 +379,14 @@ export const create = async (req, res) => {
     // create tag
     try {
         var data = await Promise.all(tags.map(async tag => {
-            const docs = await TagModel.findOrCreate({ slug: toSlug(tag.toLowerCase(),'-') }
-                , { name: tag, slug: toSlug(tag.toLowerCase(),'-') });
+            const docs = await TagModel.findOrCreate({ slug: toSlug(tag.toLowerCase(), '-') }
+                , { name: tag, slug: toSlug(tag.toLowerCase(), '-') });
             return docs.doc._id;
         }))
     } catch (error) {
         // console.log(error.message);
     }
-    console.log(data);
+    // console.log(data);
     const createPost = new PostModel({
         title: title,
         content: content,
@@ -415,8 +415,8 @@ export const update = async (req, res) => {
     try {
         var data = await Promise.all(updateDefination
             .tags.map(async tag => {
-                const docs = await TagModel.findOrCreate({ slug: toSlug(tag.toLowerCase(),'-') }
-                    , { name: tag, slug: toSlug(tag.toLowerCase(),'-') });
+                const docs = await TagModel.findOrCreate({ slug: toSlug(tag.toLowerCase(), '-') }
+                    , { name: tag, slug: toSlug(tag.toLowerCase(), '-') });
                 return docs.doc._id;
             }))
     } catch (error) {
@@ -463,11 +463,12 @@ export const publishList = async (req, res) => {
     const skip = (currentPage - 1) * limit;
     const countDocuments = await PostModel.countDocuments({ isAccept: false, isDraft: false });
     const totalPage = Math.ceil(countDocuments / limit);
-    PostModel.find({ isDraft: false, isAccept: false }, '-_id shortId createdAt slug title content ')
+    PostModel.find({ isDraft: false }, '-_id shortId createdAt slug title content publishedBy ')
         .skip(skip)
         .limit(limit)
         .sort({ createdAt: -1 })
-        .populate({ path: 'createBy', select: '-_id avatar points fullname username email' })
+        .populate({ path: 'createBy', select: '-_id fullname username' })
+        .populate({ path: 'publishedBy.user', select: '-_id fullname username' })
         .lean()
         .exec((err, docs) => {
             if (err) return response(res, 500, ['ERROR_SERVER', err.message]);
@@ -490,8 +491,11 @@ export const publishList = async (req, res) => {
 export const publish = (req, res) => {
     const dataDefination = {
         isDraft: false,
-        isAccept: true,
-        publishedBy: new mongoose.Types.ObjectId(req.userId)
+        isAccept: req.body.isConfirm,
+        publishedBy: {
+            user : new mongoose.Types.ObjectId(req.userId),
+            isConfirm : req.body.isConfirm
+        }
     }
     PostModel.updateOne({ shortId: req.params.shortId, isDraft: false, isAccept: false }
         , dataDefination, (err, docs) => {
