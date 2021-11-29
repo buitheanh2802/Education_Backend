@@ -41,6 +41,7 @@ export const gets = async (req, res) => {
                     content: x.content,
                     views: x.views,
                     slug: x.slug,
+                    spam: x.spam,
                     createBy: x.createBy,
                     createdAt: x.createdAt,
                     updatedAt: x.updatedAt
