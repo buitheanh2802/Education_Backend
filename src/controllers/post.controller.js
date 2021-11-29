@@ -452,9 +452,8 @@ export const action = (config) => {
             })
         })
     }
-    
-}
 
+}
 // publish lish 
 export const publishList = async (req, res) => {
     const { page } = req.query;
