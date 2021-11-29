@@ -83,13 +83,7 @@ router.put(
     accessRole(['admin','collaborators']),
     publish
 );
-// unpublish
-router.delete(
-    path.post.unPublishPost,
-    accessToken,
-    accessRole(['admin','collaborators']),
-    unPublish
-);
+
 // edit 
 router.get(
     path.post.edit,
