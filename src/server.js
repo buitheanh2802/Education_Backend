@@ -5,6 +5,7 @@ import { routes } from 'routes';
 import { passportConfig } from 'services/passport';
 import cookie from 'cookie-parser';
 import cors from 'cors';
+// import { sendMail } from 'services/mailer';
 
 
 const serverConfig = async () => {
@@ -31,6 +32,7 @@ const serverConfig = async () => {
     await initializeDB();
     // routes
     routes(app);
+    // sendMail('theanhbui345@gmail.com','Xác thực tài khoản của bạn','verifyEmailTemplate',{ activeUrl : "https://mail.google.com/mail/u/1/#inbox"})
     // listenning
     app.listen(PORT, () => console.log(`server is running at port : ${PORT}`))
 }
