@@ -353,7 +353,6 @@ export const searchTag = async (req, res) => {
 export const addBookmark = (req, res) => {
     const questionId = req.params.questionId;
     const userId = req.userId;
-    console.log(userId);
     QuestionModel.findById(questionId, (err, docs) => {
         if (err) return response(res, 500, ['ERROR_SERVER', err.message]);
         if (!docs) return response(res, 400, ['EMPTY_DATA']);
@@ -455,23 +454,28 @@ export const listBookmark = async (req, res) => {
         .lean()
         .exec((err, docs) => {
             if (err) return response(res, 500, ['ERROR_SERVER', err.message]);
-            let result = docs.map(x => {
-                return {
-                    _id: x._id,
-                    countLikes: x.likes.length,
-                    countDislike: x.dislike.length,
-                    comfirmAnswers: [],
-                    tags: x.tags,
-                    title: x.title,
-                    content: x.content,
-                    views: x.views,
-                    slug: x.slug,
-                    createBy: x.createBy,
-                    createdAt: x.createdAt,
-                    updatedAt: x.updatedAt,
-                    bookmarks: x.bookmarks
+            let result = docs.filter(x => {
+                if (x.spam == false) {
+                    return {
+                        _id: x._id,
+                        countLikes: x.likes.length,
+                        countDislike: x.dislike.length,
+                        comfirmAnswers: [],
+                        tags: x.tags,
+                        title: x.title,
+                        content: x.content,
+                        views: x.views,
+                        spam: x.spam,
+                        slug: x.slug,
+                        createBy: x.createBy,
+                        createdAt: x.createdAt,
+                        updatedAt: x.updatedAt,
+                        bookmarks: x.bookmarks
+                    }
                 }
+
             })
+
             return response(res, 200, [], {
                 models: result,
                 metaData: {
@@ -479,7 +483,7 @@ export const listBookmark = async (req, res) => {
                         perPage: limit,
                         totalPage: totalPage,
                         currentPage: currentPage,
-                        countDocuments: docs.length
+                        countDocuments: result.length
                     }
                 }
             });
@@ -546,22 +550,26 @@ export const follow = (req, res) => {
                 if (err) return response(res, 500, ['ERROR_SERVER', err.message]);
                 const countDocuments = docs.length;
                 const totalPage = Math.ceil(countDocuments / limit);
-                let result = docs.map(x => {
-                    return {
-                        _id: x._id,
-                        countLikes: x.likes.length,
-                        countDislike: x.dislike.length,
-                        comfirmAnswers: x.comfirmAnswers,
-                        tags: x.tags,
-                        title: x.title,
-                        content: x.content,
-                        views: x.views,
-                        slug: x.slug,
-                        createBy: x.createBy,
-                        createdAt: x.createdAt,
-                        updatedAt: x.updatedAt,
-                        bookmarks: x.bookmarks
+                let result = docs.filter(x => {
+                    if (x.spam == false) {
+                        return {
+                            _id: x._id,
+                            countLikes: x.likes.length,
+                            countDislike: x.dislike.length,
+                            comfirmAnswers: x.comfirmAnswers,
+                            tags: x.tags,
+                            title: x.title,
+                            content: x.content,
+                            spam: x.spam,
+                            views: x.views,
+                            slug: x.slug,
+                            createBy: x.createBy,
+                            createdAt: x.createdAt,
+                            updatedAt: x.updatedAt,
+                            bookmarks: x.bookmarks
+                        }
                     }
+
                 })
                 return response(res, 200, [], {
                     models: result,
@@ -570,7 +578,7 @@ export const follow = (req, res) => {
                             perPage: limit,
                             totalPage: totalPage,
                             currentPage: currentPage,
-                            countDocuments: docs.length
+                            countDocuments: result.length
                         }
                     }
                 });
