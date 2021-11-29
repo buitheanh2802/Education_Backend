@@ -419,6 +419,7 @@ export const update = async (req, res) => {
                     , { name: tag, slug: toSlug(tag.toLowerCase(), '-') });
                 return docs.doc._id;
             }))
+            ;
     } catch (error) {
         console.log(error.message);
     }
