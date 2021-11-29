@@ -378,8 +378,6 @@ export const addBookmark = (req, res) => {
         var newDocs = {
             likes: docs.likes,
             dislike: docs.dislike,
-            countLikes: docs.likes.length,
-            countDislike: docs.dislike.length,
             comfirmAnswers: docs.comfirmAnswers,
             tags: docs.tags,
             bookmarks: docs.bookmarks,
@@ -392,6 +390,7 @@ export const addBookmark = (req, res) => {
             createdAt: docs.createdAt,
             updatedAt: docs.updatedAt,
         }
+        console.log(newDocs);
         QuestionModel.updateOne({ _id: questionId }, newDocs, (err, result) => {
             if (err) return response(res, 500, ['ERROR_SERVER', err.message]);
             if (!result) return response(res, 400, ['EMPTY_DATA']);
@@ -557,8 +556,6 @@ export const follow = (req, res) => {
                             _id: x._id,
                             countLikes: x.likes.length,
                             countDislike: x.dislike.length,
-                            countLikes: docs.likes.length,
-                            countDislike: docs.dislike.length,
                             comfirmAnswers: x.comfirmAnswers,
                             tags: x.tags,
                             title: x.title,
