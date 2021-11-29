@@ -503,13 +503,7 @@ export const publish = (req, res) => {
             return response(res, 200, []);
         })
 }
-// unpublish 
-export const unPublish = (req, res) => {
-    PostModel.updateOne({ shortId: req.params.shortId, isDraft: false, isAccept: false }, (err, docs) => {
-        if (err) return response(res, 500, ['ERROR_SERVER', err.message]);
-        return response(res, 200, []);
-    })
-}
+
 // edit post
 export const edit = (req, res) => {
     // console.log(req.userId);
