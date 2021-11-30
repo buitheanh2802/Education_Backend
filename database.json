@@ -163,5 +163,17 @@
         "userId": "userId",
         "votes" : ["list user id"], 
         "challengeId" : "ref challenges"
+    },
+    "spamQuestion": {
+        "_id": "ID",
+        "title": "Ly do bi spam",
+        "idQuestion": "123123",
+        "senderID": "333444"
+    },
+    "spamComment": {
+        "_id": "ID",
+        "title": "Ly do bi spam",
+        "idComment": "123123",
+        "senderID": "333444"
     }
 }
