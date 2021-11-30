@@ -100,7 +100,8 @@ export const path = {
         followers: '/:username/follower',
         postBookmark: '/:username/bookmark/post',
         questionBookmark: '/:username/bookmark/question',
-        tag: '/:username/tag'
+        tag: '/:username/tag',
+        featuredAuthor : '/featured-author'
     },
     challenges: {
         rootRoute: '/api/challenges',

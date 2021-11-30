@@ -9,7 +9,7 @@ import TagModel from 'models/tag.model';
 import questionModel from 'models/question.model';
 
 // global data 
-const limited = 10;
+const limited = 15;
 const trendingViews = 100;
 
 export const get = (req, res) => {
@@ -86,7 +86,7 @@ export const myPostBookmark = async (req, res) => {
         })
 }
 
-export const myQuestion = async(req, res) => {
+export const myQuestion = async (req, res) => {
     const { page } = req.query;
     let currentPage = 1;
     if (PAGINATION_REGEX.test(page)) currentPage = Number(page);
@@ -206,9 +206,9 @@ export const myTag = async (req, res) => {
                         {
                             models: docs.map(doc => {
                                 doc.isFollowing = false;
-                                if(token && doc.followerCounts.length !== 0){
+                                if (token && doc.followerCounts.length !== 0) {
                                     doc.followerCounts.forEach(follow => {
-                                        if(token._id === follow.userId) doc.isFollowing = true;
+                                        if (token._id === follow.userId) doc.isFollowing = true;
                                     })
                                 }
                                 delete doc.createdAt;
@@ -321,7 +321,7 @@ export const following = async (req, res) => {
             if (docs.length == 0) return response(res, 400, ['EMPTY_DATA']);
             // console.log(docs);
             docs = docs.filter(doc => {
-                if(doc.followingUserId){
+                if (doc.followingUserId) {
                     const currentDoc = doc?.followingUserId;
                     currentDoc.isFollowing = false;
                     currentDoc.followerCounts = currentDoc.followers.length;
@@ -348,5 +348,24 @@ export const following = async (req, res) => {
                     }
                 }
             );
+        })
+}
+
+// featured author
+export const featuredAuthor = (req, res) => {
+    UserModel
+        .find({})
+        .populate({ path: 'postCounts' })
+        .populate({ path: 'questionCounts' })
+        .populate({ path: 'followers', select: '-_id userId -followingUserId' })
+        .select('-_id username email fullname points avatar ')
+        .sort({ points: -1 })
+        .limit(limited)
+        .lean()
+        .exec((err, docs) => {
+            if (err) return response(res, 500, ['ERROR_SERVER', err.message]);
+            if (docs.length == 0) return response(res, 400, ['EMPTY_DATA']);
+
+            return response(res, 200, [], docs.map(doc => ({ ...doc, followers: followers?.length || 0 })));
         })
 }

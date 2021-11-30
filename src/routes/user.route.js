@@ -1,9 +1,14 @@
 import express from 'express';
 import { path } from 'constants/routeDefination';
-import { followers,following,get,myPostBookmark,myPost,myTag,myQuestion } from 'controllers/user.controller';
+import { followers,following,get,myPostBookmark,myPost,myTag,myQuestion,featuredAuthor } from 'controllers/user.controller';
 import { accessRole, accessToken } from 'middlewares/auth.middleware';
 const router = express.Router();
 
+// featured-author
+router.get(
+    path.user.featuredAuthor,
+    featuredAuthor
+)
 // get user
 router.get(
     path.user.get,
