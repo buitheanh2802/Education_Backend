@@ -3,7 +3,7 @@ import mongoose from 'mongoose';
 const QuestionSchema = new mongoose.Schema({
     title: { type: String },
     content: { type: String },
-    views: { type: Number },
+    views: { type: Number, default: 0 },
     slug: { type: String },
     createBy: { type: mongoose.Schema.Types.ObjectId, ref: 'Users' },
     likes: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Users' }],

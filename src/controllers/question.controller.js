@@ -20,7 +20,7 @@ export const gets = async (req, res) => {
         .find({}, '-__v -updateAt')
         .sort({ _id: -1 })
         .populate({ path: "createBy", select: 'fullname avatar' })
-        .populate({ path: "tags", select: "name" })
+        .populate({ path: "tags", select: "name slug" })
         .skip(skip)
         .limit(limit)
         .lean()
@@ -93,7 +93,7 @@ export const get = async (req, res) => {
     QuestionModel
         .findOne({ _id: req.params.questionId })
         .populate({ path: "createBy", select: 'fullname avatar username' })
-        .populate({ path: "tags", select: "name" })
+        .populate({ path: "tags", select: "name slug" })
         .exec((err, docs) => {
             if (err) return response(res, 500, ['ERROR_SERVER', err.message]);
             if (!docs) return response(res, 400, ['EMPTY_DATA']);
@@ -448,7 +448,7 @@ export const listBookmark = async (req, res) => {
         .find({ bookmarks: userId }, '-__v -updateAt')
         .sort({ _id: -1 })
         .populate({ path: "createBy", select: 'fullname avatar' })
-        .populate({ path: "tags", select: "name" })
+        .populate({ path: "tags", select: "name slug" })
         .skip(skip)
         .limit(limit)
         .lean()
@@ -542,7 +542,7 @@ export const follow = (req, res) => {
             .find({ createBy: listUserFollow.map(x => { return x }) })
             .sort({ _id: -1 })
             .populate({ path: "createBy", select: 'fullname avatar' })
-            .populate({ path: "tags", select: "name" })
+            .populate({ path: "tags", select: "name slug" })
             .skip(skip)
             .limit(limit)
             .lean()
@@ -569,7 +569,6 @@ export const follow = (req, res) => {
                             bookmarks: x.bookmarks
                         }
                     }
-
                 })
                 return response(res, 200, [], {
                     models: result,
