@@ -7,6 +7,7 @@ import jwt from 'jsonwebtoken';
 import { PAGINATION_REGEX } from 'constants/regexDefination';
 import TagModel from 'models/tag.model';
 import questionModel from 'models/question.model';
+import { shuffle } from 'helpers/shuffle';
 
 // global data 
 const limited = 15;
@@ -365,7 +366,6 @@ export const featuredAuthor = (req, res) => {
         .exec((err, docs) => {
             if (err) return response(res, 500, ['ERROR_SERVER', err.message]);
             if (docs.length == 0) return response(res, 400, ['EMPTY_DATA']);
-
-            return response(res, 200, [], docs.map(doc => ({ ...doc, followers: followers?.length || 0 })));
+            return response(res, 200, [], shuffle(docs.map(doc => ({ ...doc, followers: followers?.length || 0 }))));
         })
 }
