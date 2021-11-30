@@ -69,7 +69,7 @@ export const signin = (req, res) => {
                 transform: (_, pureObject) => {
                     delete pureObject.password;
                     delete pureObject.driveId;
-                    delete pureObject._id;
+                    // delete pureObject._id;
                     return pureObject;
                 }
             });
