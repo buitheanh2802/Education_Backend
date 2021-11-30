@@ -14,4 +14,4 @@ const QuestionSchema = new mongoose.Schema({
     spam: { type: Boolean, default: false }
 }, { timestamps: true });
 
-export default mongoose.model('Questions', QuestionSchema);
+export default mongoose.model('questions', QuestionSchema);

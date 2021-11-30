@@ -164,16 +164,12 @@
         "votes" : ["list user id"], 
         "challengeId" : "ref challenges"
     },
-    "spamQuestion": {
+    "spam": {
         "_id": "ID",
-        "title": "Ly do bi spam",
-        "idQuestion": "123123",
-        "senderID": "333444"
-    },
-    "spamComment": {
-        "_id": "ID",
-        "title": "Ly do bi spam",
-        "idComment": "123123",
-        "senderID": "333444"
+        "reason" : "",
+        "content": "Mô tả chi tiết",
+        "referenceTo": "123123",
+        "sender": "333444",
+        "type" : "comment"
     }
 }

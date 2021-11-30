@@ -49,7 +49,7 @@ UserSchema.virtual('postCounts', {
 UserSchema.virtual('questionCounts', {
     localField: '_id',
     foreignField: 'createBy',
-    ref: 'Questions',
+    ref: 'questions',
     count: true
 });
 UserSchema.virtual('followers', {

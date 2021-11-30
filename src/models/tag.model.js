@@ -26,7 +26,7 @@ TagModel.virtual('postCounts',{
 TagModel.virtual('questionCounts',{
     localField : '_id',
     foreignField : 'tags',
-    ref : 'Questions',
+    ref : 'questions',
     count : true
 });
 TagModel.virtual('followerCounts',{
