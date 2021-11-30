@@ -10,4 +10,4 @@ const CommentSchema = new mongoose.Schema({
     postOrQuestionId: { type: String }
 }, { timestamps: true })
 
-module.exports = mongoose.model('Comments', CommentSchema);
+module.exports = mongoose.model('comments', CommentSchema);

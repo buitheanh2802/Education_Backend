@@ -22,7 +22,7 @@ const PostSchema = new mongoose.Schema({
 PostSchema.virtual('comments', {
     localField: 'shortId',
     foreignField: 'postOrQuestionId',
-    ref: 'Comments',
+    ref: 'comments',
     count: true
 });
 
