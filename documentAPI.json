@@ -253,6 +253,13 @@ res = {
     "message": [],
     "status": true
 }
+
+// tang view cho question
+POST: "https://devstar-api.herokuapp.com/api/question/:questionId/view"
+
+
+
+
 --------------------------------------------------------------------------------------------------------
 
 - Upload image (token)
