@@ -445,7 +445,7 @@ export const listBookmark = async (req, res) => {
     const countDocuments = await QuestionModel.countDocuments();
     const totalPage = Math.ceil(countDocuments / limit);
     QuestionModel
-        .find({ bookmarks: userId }, '-__v -updateAt')
+        .find({ bookmarks: userId, spam: false }, '-__v -updateAt')
         .sort({ _id: -1 })
         .populate({ path: "createBy", select: 'fullname avatar' })
         .populate({ path: "tags", select: "name slug" })
@@ -454,28 +454,24 @@ export const listBookmark = async (req, res) => {
         .lean()
         .exec((err, docs) => {
             if (err) return response(res, 500, ['ERROR_SERVER', err.message]);
-            let result = docs.filter(x => {
-                if (x.spam == false) {
-                    return {
-                        _id: x._id,
-                        countLikes: x.likes.length,
-                        countDislike: x.dislike.length,
-                        comfirmAnswers: [],
-                        tags: x.tags,
-                        title: x.title,
-                        content: x.content,
-                        views: x.views,
-                        spam: x.spam,
-                        slug: x.slug,
-                        createBy: x.createBy,
-                        createdAt: x.createdAt,
-                        updatedAt: x.updatedAt,
-                        bookmarks: x.bookmarks
-                    }
+            let result = docs.map(x => {
+                return {
+                    _id: x._id,
+                    countLikes: x.likes.length,
+                    countDislike: x.dislike.length,
+                    comfirmAnswers: [],
+                    tags: x.tags,
+                    title: x.title,
+                    content: x.content,
+                    views: x.views,
+                    spam: x.spam,
+                    slug: x.slug,
+                    createBy: x.createBy,
+                    createdAt: x.createdAt,
+                    updatedAt: x.updatedAt,
+                    bookmarks: x.bookmarks
                 }
-
             })
-
             return response(res, 200, [], {
                 models: result,
                 metaData: {
@@ -539,7 +535,7 @@ export const follow = (req, res) => {
         const skip = (currentPage - 1) * limit;
 
         QuestionModel
-            .find({ createBy: listUserFollow.map(x => { return x }) })
+            .find({ createBy: listUserFollow.map(x => { return x }), spam: false })
             .sort({ _id: -1 })
             .populate({ path: "createBy", select: 'fullname avatar' })
             .populate({ path: "tags", select: "name slug" })
@@ -550,24 +546,22 @@ export const follow = (req, res) => {
                 if (err) return response(res, 500, ['ERROR_SERVER', err.message]);
                 const countDocuments = docs.length;
                 const totalPage = Math.ceil(countDocuments / limit);
-                let result = docs.filter(x => {
-                    if (x.spam == false) {
-                        return {
-                            _id: x._id,
-                            countLikes: x.likes.length,
-                            countDislike: x.dislike.length,
-                            comfirmAnswers: x.comfirmAnswers,
-                            tags: x.tags,
-                            title: x.title,
-                            content: x.content,
-                            spam: x.spam,
-                            views: x.views,
-                            slug: x.slug,
-                            createBy: x.createBy,
-                            createdAt: x.createdAt,
-                            updatedAt: x.updatedAt,
-                            bookmarks: x.bookmarks
-                        }
+                let result = docs.map(x => {
+                    return {
+                        _id: x._id,
+                        countLikes: x.likes.length,
+                        countDislike: x.dislike.length,
+                        comfirmAnswers: x.comfirmAnswers,
+                        tags: x.tags,
+                        title: x.title,
+                        content: x.content,
+                        spam: x.spam,
+                        views: x.views,
+                        slug: x.slug,
+                        createBy: x.createBy,
+                        createdAt: x.createdAt,
+                        updatedAt: x.updatedAt,
+                        bookmarks: x.bookmarks
                     }
                 })
                 return response(res, 200, [], {
