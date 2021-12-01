@@ -12,7 +12,10 @@ export const path = {
         google: '/google',
         googleCallback: '/google/callback',
         github: '/github',
-        githubCallback: '/github/callback'
+        githubCallback: '/github/callback',
+        changePassword : '/profile/me/change-password',
+        resetPassword : '/reset-password',
+        changeInfo : '/profile/me/change-info'
     },
     notification: {
         rootRoute: '/api/notification',
@@ -132,5 +135,9 @@ export const path = {
         put: '/:solutionId',
         delete: '/:solutionId',
         upVote: '/:solutionId/vote'
+    },
+    spam: {
+        rootRoute : '/api/spam',
+        
     }
 }

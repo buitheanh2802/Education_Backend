@@ -1,7 +1,8 @@
 import express from 'express';
 import { APILimiter, accessToken, accessRole } from 'middlewares/auth.middleware';
-import { userValidator } from 'middlewares/validate.middleware';
-import { signup, activeAccount, signin, profile, signout, getRole, oauthLoginCallback } from 'controllers/auth.controller';
+import { userValidator,passwordValidator,resetPasswordValidator } from 'middlewares/validate.middleware';
+import { signup, activeAccount, signin, profile, signout, 
+    getRole, oauthLoginCallback,changePassword,resetPassword } from 'controllers/auth.controller';
 import passport from 'passport';
 import { path } from 'constants/routeDefination';
 const router = express.Router();
@@ -34,6 +35,19 @@ router.get(path.auth.role,
 // signout
 router.get(path.auth.signout,
     signout
+);
+// change password
+router.post(
+    path.auth.changePassword,
+    passwordValidator,
+    accessToken,
+    changePassword
+);
+// reset password 
+router.post(
+    path.auth.resetPassword,
+    resetPasswordValidator,
+    resetPassword
 );
 // login facebook
 router.get(

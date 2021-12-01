@@ -2,7 +2,8 @@ import mongoose from 'mongoose';
 
 const spamSchema = new mongoose.Schema({
     reason : {
-        type : String
+        type : String,
+        enum : ["1","2","3","4","5"]
     },
     content : {
         type : String

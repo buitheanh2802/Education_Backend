@@ -193,12 +193,12 @@ export const challengeCategoriesValidator = async (req, res, next) => {
     return next();
 }
 // solution validate
-export const solutionValidator = async(req,res,next) => {
+export const solutionValidator = async (req, res, next) => {
     await body('title').trim().notEmpty().withMessage("Không được bỏ trống tiêu đề").run(req);
     await body('descriptions').trim().notEmpty().withMessage("Không được bỏ trống mô tả").run(req);
     await body('demoUrl').trim().notEmpty().withMessage("Không được bỏ trống link mô tả sản phẩm").run(req);
     await body('repoUrl').trim().notEmpty().withMessage("Không được bỏ trống link source code").run(req);
-    await body('challengeId').trim().notEmpty().withMessage("Không được bỏ trống ID thử thách").custom((value,{ req }) => {
+    await body('challengeId').trim().notEmpty().withMessage("Không được bỏ trống ID thử thách").custom((value, { req }) => {
         const ObjectId = mongoose.Types.ObjectId;
         return ObjectId.isValid(value);
     }).withMessage("ID thử thách không hợp lệ !").run(req);
@@ -222,4 +222,36 @@ export const tagValidator = async (req, res, next) => {
     if (!check.isEmpty()) return response(res, 400, ['INVALID_DATA', ...check.array()]);
     return next();
 }
-
+// change password validate
+export const passwordValidator = async (req, res, next) => {
+    await body('currentPassword')
+        .trim()
+        .notEmpty()
+        .withMessage('Không được bỏ trống mật khẩu hiện tại')
+        .matches(pattern.PASSWORD)
+        .withMessage('Mật khẩu phải tối thiểu 8 kí tự, ít nhất một chữ cái và một số !')
+        .run(req);
+    await body('newPassword')
+        .trim()
+        .notEmpty()
+        .withMessage('Không được bỏ trống mật khẩu mới')
+        .matches(pattern.PASSWORD)
+        .withMessage('Mật khẩu mới phải tối thiểu 8 kí tự, ít nhất một chữ cái và một số !')
+        .run(req);
+    const check = validationResult(req);
+    if (!check.isEmpty()) return response(res, 400, ['INVALID_DATA', ...check.array()]);
+    return next();
+}
+// change password validate
+export const resetPasswordValidator = async (req, res, next) => {
+    await body('email')
+        .trim()
+        .notEmpty()
+        .withMessage('Không được bỏ trống email !')
+        .matches(pattern.EMAIL)
+        .withMessage('Email không hợp lệ !')
+        .run(req)
+    const check = validationResult(req);
+    if (!check.isEmpty()) return response(res, 400, ['INVALID_DATA', ...check.array()]);
+    return next();
+}

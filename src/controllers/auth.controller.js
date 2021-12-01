@@ -6,6 +6,7 @@ import { randomNumber, toSlug } from 'src/helpers/slug';
 import jwt from 'jsonwebtoken';
 import passport from 'passport';
 import _ from 'lodash';
+import { jsonDecode, jsonEncode } from 'services/system';
 
 // global variables
 const expiredToken = 60 * 60 * 10;
@@ -57,7 +58,8 @@ export const activeAccount = (req, res) => {
 export const signin = (req, res) => {
     passport.authenticate('local', (err, profile) => {
         const { email, password: passwordRequest } = profile;
-        UserModel.findOne({ email, socialType: 'system' }, '-createdAt -updatedAt -status -__v -socialType ', (err, docs) => {
+        // console.log('run');
+        UserModel.findOne({ email, socialType: 'system' }, '-createdAt -updatedAt -status -__v ', (err, docs) => {
             if (err) return response(res, 500, ['ERROR_SERVER', err.message]);
             if (!docs) return response(res, 400, ['EMAIL_NOTEXIST']);
             if (!docs.verifyPassword(passwordRequest)) return response(res, 400, ['INVALID_PASSWORD']);
@@ -88,7 +90,7 @@ export const signin = (req, res) => {
 
 export const profile = (req, res) => {
     UserModel
-        .findOne({ _id: req.userId }, '-createdAt -updatedAt -driveId -password -status -__v -socialType ')
+        .findOne({ _id: req.userId }, '-createdAt -updatedAt -driveId -password -status -__v  ')
         .lean()
         .exec((err, docs) => {
             if (err) return response(res, 500, ['ERROR_SERVER', err.message]);
@@ -151,4 +153,36 @@ export const oauthLoginCallback = (strategy) => {
                 })
         })(req, res)
     }
+}
+
+export const changePassword = (req, res) => {
+    const { currentPassword, newPassword } = req.body;
+    if (currentPassword == newPassword) return response(res, 400, ['SAME_PASSWORD']);
+    UserModel.findOne({ _id: req.userId, socialType: 'system' }, (err, docs) => {
+        if (err) return response(res, 500, ['ERROR_SERVER', err.message]);
+        if (!docs) return response(res, 400, ['USER_NOTEXIST']);
+        if (!docs.verifyPassword(currentPassword)) return response(res, 400, ['CURRENT_PASSWORD_INCORRECT']);
+        const changePassword = _.assignIn(docs, { password: newPassword });
+        changePassword.save((err, docs) => {
+            if (err) return response(res, 500, ['ERROR_SERVER', err.message]);
+            return response(res, 200, []);
+        })
+    })
+}
+
+export const resetPassword = (req, res) => {
+    const { email } = req.body;
+    UserModel
+        .findOne({ email: email, socialType: 'system' })
+        .lean()
+        .exec(async(err, docs) => {
+            if (err) return response(res, 500, ['ERROR_SERVER', err.message]);
+            if (!docs) return response(res, 400, ['EMAIL_NOTEXIST']);
+            const token = jsonEncode({ _id: docs._id, password: docs.password });
+            await sendMail(email, 'Đặt lại mật khẩu của bạn !', 'resetPasswordTempate', {
+                activeUrl: `${process.env.ACCESS_DOMAIN}/reset-password/${token}`,
+                layout : 'resetPasswordTempate'
+            });
+            return response(res, 200, []);
+        })
 }

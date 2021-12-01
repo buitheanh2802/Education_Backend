@@ -11,10 +11,10 @@ router.get(
     newest
 );
 // // following
-// router.get(
-//     path.post.following,
-//     following
-// )
+router.get(
+    path.post.following,
+    following
+)
 // trending
 router.get(
     path.post.trending,
