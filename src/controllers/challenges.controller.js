@@ -109,6 +109,7 @@ export const uploadFile = (req, res) => {
     });
     initialize.parse(req, async (err, fields, file) => {
         const { image } = file;
+        if (image.type != 'application/zip') return response(res, 400, ['ERROR_TYPE_FILE'])
         if (err) return response(res, 400, ['INVALID_SIZE', err.message])
         if (image) {
             createFileSystem(image.name, image.path);
