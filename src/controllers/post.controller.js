@@ -197,8 +197,6 @@ export const following = async (req, res) => {
     if (PAGINATION_REGEX.test(page)) currentPage = Number(page);
     const limit = postLimit;
     const skip = (currentPage - 1) * limit;
-    const countDocuments = await PostModel.countDocuments({ isAccept: true, isDraft: false });
-    const totalPage = Math.ceil(countDocuments / limit);
     FollowModel.aggregate([
         {
             $match: {
@@ -229,10 +227,16 @@ export const following = async (req, res) => {
                 tagFollowings: { $push: '$tagFollowings._id' }
             }
         },
-    ]).exec((err, docs) => {
+    ]).exec(async(err, docs) => {
+        // console.log(docs);
         if (err) return response(res, 500, ['ERROR_SERVER', err.message]);
+        const countDocuments = await PostModel.countDocuments({
+            isAccept: true, isDraft: false,
+            $or: [{ createBy: { $in: docs[0]?.postFollowings } }, { tags: { $in: docs[0]?.tagFollowings } }]
+        });
+        const totalPage = Math.ceil(countDocuments / limit);
         PostModel.find({
-            $or: [{ createBy: { $in: docs[0].postFollowings } }, { tags: { $in: docs[0].tagFollowings } }],
+            $or: [{ createBy: { $in: docs[0]?.postFollowings } }, { tags: { $in: docs[0]?.tagFollowings } }],
             isAccept: true, isDraft: false
         })
             .skip(skip)
@@ -493,8 +497,8 @@ export const publish = (req, res) => {
         isDraft: false,
         isAccept: req.body.isConfirm,
         publishedBy: {
-            user : new mongoose.Types.ObjectId(req.userId),
-            isConfirm : req.body.isConfirm
+            user: new mongoose.Types.ObjectId(req.userId),
+            isConfirm: req.body.isConfirm
         }
     }
     PostModel.updateOne({ shortId: req.params.shortId, isDraft: false, isAccept: false }
