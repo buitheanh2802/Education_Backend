@@ -13,9 +13,9 @@ export const path = {
         googleCallback: '/google/callback',
         github: '/github',
         githubCallback: '/github/callback',
-        changePassword : '/profile/me/change-password',
-        resetPassword : '/reset-password',
-        changeInfo : '/profile/me/change-info'
+        changePassword: '/profile/me/change-password',
+        resetPassword: '/reset-password',
+        changeInfo: '/profile/me/change-info'
     },
     notification: {
         rootRoute: '/api/notification',
@@ -85,7 +85,8 @@ export const path = {
         put: '/:commentId',
         delete: '/:commentId',
         like: '/:commentId/like',
-        dislike: '/:commentId/dislike'
+        dislike: '/:commentId/dislike',
+        spam: '/spam/:commentId'
     },
     picture: {
         rootRoute: '/api/picture',
@@ -104,7 +105,7 @@ export const path = {
         postBookmark: '/:username/bookmark/post',
         questionBookmark: '/:username/bookmark/question',
         tag: '/:username/tag',
-        featuredAuthor : '/featured-author'
+        featuredAuthor: '/featured-author'
     },
     challenges: {
         rootRoute: '/api/challenges',
@@ -137,7 +138,11 @@ export const path = {
         upVote: '/:solutionId/vote'
     },
     spam: {
-        rootRoute : '/api/spam',
-        
+        rootRoute: '/api/spam',
+        questionOrCmt: '/question-or-comment',
+        listQuestion: '/list-question',
+        listCmt: '/list-comment',
+        detailQuestion: '/detail-question/:spamId',
+        detailCmt: '/detail-comment/:spamId',
     }
 }

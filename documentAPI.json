@@ -768,3 +768,32 @@ res = {
 }
 
 
+/////////////////////////////////////
+- Spam ( tất cả đều cần token )
+- Khi muốn báo cáo 1 question hoặc cmt thì dùng api này
+POST: "http://localhost:4000/api/spam/question-or-comment"
+req = {
+    "reason": "3",
+    "content": "Vi pham noi dung cmt 123",
+    "referenceTo": "idQuestionOrCmt",
+    "type": "comments" // comments hoặc questions
+}
+
+- Các api dưới đây dùng trong admin
+
+- Get list spam question
+GET: "http://localhost:4000/api/spam/list-question"
+
+- Get list spam comment
+GET: "http://localhost:4000/api/spam/list-comment"
+
+- Detail spam question
+GET: "http://localhost:4000/api/spam/detail-question/:idSpam"
+
+- Detail spam cmt
+GET: "http://localhost:4000/api/spam/detail-comment/:idSpam"
+
+- Ẩn hiện tình trạng spam của cmt ( giống question ) 
+PUT: "http://localhost:4000/api/comment/spam/:idCmt"
+
+
