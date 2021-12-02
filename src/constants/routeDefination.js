@@ -15,7 +15,8 @@ export const path = {
         githubCallback: '/github/callback',
         changePassword: '/profile/me/change-password',
         resetPassword: '/reset-password',
-        changeInfo: '/profile/me/change-info'
+        resetPasswordConfirm: '/reset-password/confirm',
+        changeInfoUser: '/profile/me/change-info'
     },
     notification: {
         rootRoute: '/api/notification',

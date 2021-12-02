@@ -359,7 +359,7 @@ export const featuredAuthor = (req, res) => {
         .populate({ path: 'postCounts' })
         .populate({ path: 'questionCounts' })
         .populate({ path: 'followers', select: '-_id userId -followingUserId' })
-        .select('-_id username email fullname points avatar ')
+        .select('username email fullname points avatar ')
         .sort({ points: -1 })
         .limit(limited)
         .lean()
