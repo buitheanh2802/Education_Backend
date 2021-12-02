@@ -43,6 +43,8 @@ router.post(
     accessToken,
     changePassword
 );
+
+
 // reset password 
 router.post(
     path.auth.resetPassword,
