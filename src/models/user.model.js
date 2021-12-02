@@ -12,7 +12,15 @@ const UserSchema = new initializeSchema({
         _id: { type: String, default: "" },
         avatarUrl: { type: String, default: "" }
     },
-    birthday: { type: Date },
+    skills: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'tags'
+    }],
+    descriptions: {
+        type: String
+    },
+    hobbies: [{ type: String,enum : ["1","2","3","4","5","6","7","8","9","10"] }],
+    birthday: { type: String },
     points: { type: Number, default: 0 },
     userType: { type: String, enum: ['basic', 'premium'], default: 'basic' },
     address: { type: String, default: '' },

@@ -176,14 +176,58 @@ export const resetPassword = (req, res) => {
     UserModel
         .findOne({ email: email, socialType: 'system' })
         .lean()
-        .exec(async(err, docs) => {
+        .exec(async (err, docs) => {
             if (err) return response(res, 500, ['ERROR_SERVER', err.message]);
             if (!docs) return response(res, 400, ['EMAIL_NOTEXIST']);
             const token = jsonEncode({ _id: docs._id, password: docs.password });
             await sendMail(email, 'Đặt lại mật khẩu của bạn !', 'resetPasswordTempate', {
                 activeUrl: `${process.env.ACCESS_DOMAIN}/reset-password/${token}`,
-                layout : 'resetPasswordTempate'
+                layout: 'resetPasswordTempate'
             });
             return response(res, 200, []);
         })
+}
+
+export const resetPasswordConfirm = (req, res) => {
+    const { email, token, newPassword } = req.body;
+    try {
+        const userInfo = jsonDecode(token);
+        UserModel.findOne({
+            _id: userInfo._id,
+            socialType : 'system',
+            email
+        })
+        .exec((err,docs) => {
+            if (err) return response(res, 500, ['ERROR_SERVER', err.message]);
+            if (!docs) return response(res, 400, ['USER_NOTEXIST']);
+            if(userInfo.password == docs.password){
+                const resetPassword = _.assignIn(docs, { password: newPassword });
+                resetPassword.save((err, docs) => {
+                    if (err) return response(res, 500, ['ERROR_SERVER', err.message]);
+                    return response(res, 200, []);
+                })
+            }else return response(res, 401, ['EXPIRED_TOKEN']);
+        })
+    } catch (error) {
+        return response(res, 401, ['EXPIRED_TOKEN']);
+    }
+}
+
+export const changeInfoUser = (req,res) => {
+    const request = {
+        skill : req.body.skills,
+        descriptions : req.body.descriptions,
+        hobbies : req.body.hobbies,
+        birthday : req.body.birthday,
+        address : req.body.address,
+        avatar : {
+            _id : req.body?.avatar?._id,
+            avatarUrl : req.body?.avatar?.avatarUrl
+        }
+    }
+    UserModel.updateOne({ _id : req.userId},request,(err,docs) => {
+        if (err) return response(res, 500, ['ERROR_SERVER', err.message]);
+        if (docs.n == 0) return response(res, 400, ['ACCESS_DENIED']);
+        return response(res, 200, []);
+    })
 }

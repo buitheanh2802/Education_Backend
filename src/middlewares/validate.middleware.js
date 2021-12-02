@@ -242,7 +242,7 @@ export const passwordValidator = async (req, res, next) => {
     if (!check.isEmpty()) return response(res, 400, ['INVALID_DATA', ...check.array()]);
     return next();
 }
-// change password validate
+// reset password validate
 export const resetPasswordValidator = async (req, res, next) => {
     await body('email')
         .trim()
@@ -251,6 +251,26 @@ export const resetPasswordValidator = async (req, res, next) => {
         .matches(pattern.EMAIL)
         .withMessage('Email không hợp lệ !')
         .run(req)
+    const check = validationResult(req);
+    if (!check.isEmpty()) return response(res, 400, ['INVALID_DATA', ...check.array()]);
+    return next();
+}
+// reset password cofirm validate
+export const resetPasswordConfirmValidator = async (req, res, next) => {
+    await body('email')
+        .trim()
+        .notEmpty()
+        .withMessage('Không được bỏ trống email !')
+        .matches(pattern.EMAIL)
+        .withMessage('Email không hợp lệ !')
+        .run(req);
+    await body('newPassword')
+        .trim()
+        .notEmpty()
+        .withMessage('Không được bỏ trống mật khẩu mới')
+        .matches(pattern.PASSWORD)
+        .withMessage('Mật khẩu mới phải tối thiểu 8 kí tự, ít nhất một chữ cái và một số !')
+        .run(req);
     const check = validationResult(req);
     if (!check.isEmpty()) return response(res, 400, ['INVALID_DATA', ...check.array()]);
     return next();

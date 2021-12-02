@@ -1,8 +1,8 @@
 import express from 'express';
 import { APILimiter, accessToken, accessRole } from 'middlewares/auth.middleware';
-import { userValidator,passwordValidator,resetPasswordValidator } from 'middlewares/validate.middleware';
-import { signup, activeAccount, signin, profile, signout, 
-    getRole, oauthLoginCallback,changePassword,resetPassword } from 'controllers/auth.controller';
+import { userValidator,passwordValidator,resetPasswordValidator,resetPasswordConfirmValidator } from 'middlewares/validate.middleware';
+import { signup, activeAccount, signin, profile, signout,changeInfoUser, 
+    getRole, oauthLoginCallback,changePassword,resetPassword,resetPasswordConfirm } from 'controllers/auth.controller';
 import passport from 'passport';
 import { path } from 'constants/routeDefination';
 const router = express.Router();
@@ -44,13 +44,27 @@ router.post(
     changePassword
 );
 
-
 // reset password 
 router.post(
     path.auth.resetPassword,
     resetPasswordValidator,
     resetPassword
 );
+
+// reset password confirm 
+router.post(
+    path.auth.resetPasswordConfirm,
+    resetPasswordConfirmValidator,
+    resetPasswordConfirm
+);
+
+// change info user
+router.post(
+    path.auth.changeInfoUser,
+    accessToken,
+    changeInfoUser
+);
+
 // login facebook
 router.get(
     path.auth.facebook, 
