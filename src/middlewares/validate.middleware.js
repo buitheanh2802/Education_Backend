@@ -165,6 +165,17 @@ export const questionValidator = async (req, res, next) => {
     }
     return next();
 }
+export const spamValidator = async (req, res, next) => {
+    await body('reason').notEmpty().withMessage("Nhập reason").run(req);
+    await body('content').trim().notEmpty().withMessage("Nhập content").run(req);
+    await body('referenceTo').notEmpty().withMessage("Nhập ID question or cmt").run(req);
+    await body('type').notEmpty().withMessage("Nhập type cmt or question").run(req);
+    const check = validationResult(req);
+    if (!check.isEmpty()) {
+        return response(res, 400, ['INVALID_DATA', ...check.errors])
+    }
+    return next();
+}
 
 //challenge
 export const challengesValidator = async (req, res, next) => {

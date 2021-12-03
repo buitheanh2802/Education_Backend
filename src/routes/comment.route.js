@@ -1,7 +1,7 @@
 import express from 'express';
 import { path } from 'constants/routeDefination';
-import { create, gets, remove, update,action } from 'controllers/comment.controller';
-import { commentValidator,commentUpdateValidator } from 'middlewares/validate.middleware';
+import { create, gets, remove, update, action, updateSpam } from 'controllers/comment.controller';
+import { commentValidator, commentUpdateValidator } from 'middlewares/validate.middleware';
 import { accessToken } from 'middlewares/auth.middleware';
 
 const router = express.Router();
@@ -12,15 +12,15 @@ router.get(
     gets
 );
 // create route
-router.post(path.comment.post, 
-    commentValidator, 
+router.post(path.comment.post,
+    commentValidator,
     accessToken,
     create
 );
 // edit route
 router.put(
-    path.comment.put, 
-    commentUpdateValidator, 
+    path.comment.put,
+    commentUpdateValidator,
     accessToken,
     update
 );
@@ -34,14 +34,18 @@ router.delete(
 router.put(
     path.comment.like,
     accessToken,
-    action({ type : 'likes'})
+    action({ type: 'likes' })
 );
 // dislike route
 router.delete(
     path.comment.dislike,
     accessToken,
-    action({ type : 'dislikes'})
+    action({ type: 'dislikes' })
 );
+
+//update spam
+router.put(path.comment.spam, accessToken, updateSpam);
+
 
 
 export default router;

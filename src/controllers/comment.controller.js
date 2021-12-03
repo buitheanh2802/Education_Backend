@@ -105,7 +105,7 @@ export const gets = async (req, res) => {
         docs.forEach(doc => {
             doc.isLike = false;
             doc.isDislike = false;
-            if(token){
+            if (token) {
                 doc.likes.forEach(like => {
                     if (like == token?._id) doc.isLike = true;
                 })
@@ -207,4 +207,20 @@ export const action = (config) => {
             })
         })
     }
+}
+
+export const updateSpam = (req, res) => {
+    CommentModel
+        .findOne({ _id: req.params.commentId }, (err, docs) => {
+            if (err) return response(res, 500, ['ERROR_SERVER', err.message]);
+            if (!docs) return response(res, 400, ['EMPTY_DATA']);
+            const newObj = {
+                spam: !docs.spam,
+            }
+            CommentModel.updateOne({ _id: req.params.commentId }, newObj, (err, docs) => {
+                if (err) return response(res, 500, ['ERROR_SERVER', err.message]);
+                if (!docs) return response(res, 400, ['EMPTY_DATA']);
+                return response(res, 200, []);
+            })
+        })
 }
