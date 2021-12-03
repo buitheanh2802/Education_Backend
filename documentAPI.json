@@ -796,4 +796,42 @@ GET: "http://localhost:4000/api/spam/detail-comment/:idSpam"
 - Ẩn hiện tình trạng spam của cmt ( giống question ) 
 PUT: "http://localhost:4000/api/comment/spam/:idCmt"
 
+- api user mới cập nhật
+
+- Quên mật khẩu
+- POST : "https://devstar-api.herokuapp.com/api/auth/reset-password"
+    request cần có : {
+        "email"
+    }
+
+- Xác nhận thay đổi mật khẩu và đặt mật khẩu mới khi quên mật khẩu
+- POST : "https://devstar-api.herokuapp.com/api/auth/reset-password/confirm"
+    request cần có : {
+        "email", "token", "newPassword"
+    }
+
+- Thay đổi các thông tin cá nhân như : avatar , skill , hobbies ...v..v
+- POST : "https://devstar-api.herokuapp.com/api/auth/profile/me/change-info"
+    request cần có : {
+        "skill" : "req.body.skills",
+        "descriptions" : "req.body.descriptions",
+        "hobbies" : "req.body.hobbies",
+        "birthday" : "req.body.birthday",
+        "address" : "req.body.address",
+        "avatar" : {
+            "_id" : "req.body?.avatar?._id",
+            "avatarUrl" : "req.body?.avatar?.avatarUrl"
+        }
+        "Cần 1 trong 5 cái này"
+    }
+    header cần có : { "authorization" : "Bearer token vào đây"}   
+
+- Thay đổi mật khẩu
+- POST : "https://devstar-api.herokuapp.com/api/auth/profile/me/change-password"
+    request cần có : {
+        "currentPassword",
+        "newPassword"
+    }
+    header cần có : { "authorization" : "Bearer token vào đây"}   
+
 
