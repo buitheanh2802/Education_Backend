@@ -181,7 +181,7 @@ export const resetPassword = (req, res) => {
             if (!docs) return response(res, 400, ['EMAIL_NOTEXIST']);
             const token = jsonEncode({ _id: docs._id, password: docs.password });
             await sendMail(email, 'Đặt lại mật khẩu của bạn !', 'resetPasswordTempate', {
-                activeUrl: `${process.env.ACCESS_DOMAIN}/reset-password/${token}`,
+                activeUrl: `${process.env.ACCESS_DOMAIN}/auth/reset_password/${token}`,
                 layout: 'resetPasswordTempate'
             });
             return response(res, 200, []);
