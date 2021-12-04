@@ -594,3 +594,125 @@ export const updateSpam = (req, res) => {
             })
         })
 }
+
+export const trending = async (req, res) => {
+    const { page } = req.query;
+    let currentPage = 1;
+    if (PAGINATION_REGEX.test(page)) currentPage = Number(page);
+    const limit = 10;
+    const skip = (currentPage - 1) * limit;
+    const countDocuments = await QuestionModel.countDocuments();
+    // const totalPage = Math.ceil(countDocuments / limit);
+    QuestionModel
+        .find({}, '-__v -updateAt')
+        .sort({ _id: -1 })
+        .populate({ path: "createBy", select: 'fullname avatar username' })
+        .populate({ path: "tags", select: "name slug" })
+        .skip(skip)
+        // .limit(limit)
+        .lean()
+        .exec((err, docs) => {
+            if (err) return response(res, 500, ['ERROR_SERVER', err.message]);
+            let result = docs.filter(x => {
+                if (x.views >= 100) {
+                    return {
+                        _id: x._id,
+                        countLikes: x.likes.length,
+                        countDislike: x.dislike.length,
+                        countBookmarks: x.bookmarks.length,
+                        bookmarks: x.bookmarks,
+                        likes: x.likes,
+                        dislike: x.dislike,
+                        comfirmAnswers: x.comfirmAnswers,
+                        tags: x.tags,
+                        title: x.title,
+                        content: x.content,
+                        views: x.views,
+                        slug: x.slug,
+                        spam: x.spam,
+                        createBy: x.createBy,
+                        createdAt: x.createdAt,
+                        updatedAt: x.updatedAt
+                    }
+                }
+            })
+            var newDocs = result.map(x => {
+                return {
+                    _id: x._id,
+                    countLikes: x.likes.length,
+                    countDislike: x.dislike.length,
+                    countBookmarks: x.bookmarks.length,
+                    bookmarks: x.bookmarks,
+                    likes: x.likes,
+                    dislike: x.dislike,
+                    comfirmAnswers: x.comfirmAnswers,
+                    tags: x.tags,
+                    title: x.title,
+                    content: x.content,
+                    views: x.views,
+                    slug: x.slug,
+                    spam: x.spam,
+                    createBy: x.createBy,
+                    createdAt: x.createdAt,
+                    updatedAt: x.updatedAt
+                }
+            })
+            return response(res, 200, [], {
+                models: newDocs,
+                metaData: {
+                    pagination: {
+                        perPage: limit,
+                        totalPage: Math.ceil(result.length / limit),
+                        currentPage: currentPage,
+                        countDocuments: result.length
+                    }
+                }
+            });
+        })
+}
+
+export const search = (req, res) => {
+    const { page } = req.query;
+    let currentPage = 1;
+    if (PAGINATION_REGEX.test(page)) currentPage = Number(page);
+    const skip = (currentPage - 1) * 10;
+    QuestionModel
+        .find({ title: { $regex: req.body.title } })
+        .skip(skip)
+        .limit(10)
+        .exec((err, docs) => {
+            if (err) return response(res, 500, ['ERROR_SERVER', err.message]);
+            let result = docs.map(x => {
+                return {
+                    _id: x._id,
+                    countLikes: x.likes.length,
+                    countDislike: x.dislike.length,
+                    countBookmarks: x.bookmarks.length,
+                    bookmarks: x.bookmarks,
+                    likes: x.likes,
+                    dislike: x.dislike,
+                    comfirmAnswers: x.comfirmAnswers,
+                    tags: x.tags,
+                    title: x.title,
+                    content: x.content,
+                    views: x.views,
+                    slug: x.slug,
+                    spam: x.spam,
+                    createBy: x.createBy,
+                    createdAt: x.createdAt,
+                    updatedAt: x.updatedAt
+                }
+            })
+            return response(res, 200, [], {
+                models: result,
+                metaData: {
+                    pagination: {
+                        perPage: 10,
+                        totalPage: Math.ceil((result.length) / 10),
+                        currentPage: currentPage,
+                        countDocuments: docs.length
+                    }
+                }
+            });
+        })
+}
