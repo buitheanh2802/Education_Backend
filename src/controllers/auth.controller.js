@@ -17,7 +17,7 @@ export const signup = async (req, res) => {
     const { fullname, email, username } = req.body;
     const data = new UserModel(req.body);
     const checkEmail = await UserModel.findOne({ email: email, socialType: 'system' });
-    if (checkEmail) return response(res, 400, ['EMAIL_EXIST', err.message]);
+    if (checkEmail) return response(res, 400, ['EMAIL_EXIST']);
     data.save(async (err, docs) => {
         if (err) {
             if (err.message.indexOf('username_1') !== -1) return response(res, 400, ['USERNAME_EXIST', err.message]);
@@ -60,7 +60,7 @@ export const signin = (req, res) => {
     passport.authenticate('local', (err, profile) => {
         const { email, password: passwordRequest } = profile;
         // console.log('run');
-        UserModel.findOne({ email, socialType: 'system' }, '-hobbies -skills -address -phoneNumber -birthday -descriptions -createdAt -updatedAt -status -__v ', (err, docs) => {
+        UserModel.findOne({ email, socialType: 'system' }, '-hobbies -skills -address -phoneNumber -birthday -descriptions -createdAt -updatedAt -__v ', (err, docs) => {
             if (err) return response(res, 500, ['ERROR_SERVER', err.message]);
             if (!docs) return response(res, 400, ['EMAIL_NOTEXIST']);
             if (!docs.verifyPassword(passwordRequest)) return response(res, 400, ['INVALID_PASSWORD']);
@@ -72,7 +72,7 @@ export const signin = (req, res) => {
                 transform: (_, pureObject) => {
                     delete pureObject.password;
                     delete pureObject.driveId;
-                    // delete pureObject._id;
+                    delete pureObject.status;
                     return pureObject;
                 }
             });
