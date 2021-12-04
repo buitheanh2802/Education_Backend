@@ -17,7 +17,8 @@ const UserSchema = new initializeSchema({
         ref: 'tags'
     }],
     descriptions: {
-        type: String
+        type: String,
+        default : ""
     },
     hobbies: [{ type: String,enum : ["1","2","3","4","5","6","7","8","9","10"] }],
     birthday: { type: String },
