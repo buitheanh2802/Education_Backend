@@ -17,7 +17,7 @@ export const path = {
         resetPassword: '/reset-password',
         resetPasswordConfirm: '/reset-password/confirm',
         changeInfoUser: '/profile/me/change-info',
-        getInfoDetail : '/profile/me/info-detail'
+        getInfoDetail: '/profile/me/info-detail'
     },
     notification: {
         rootRoute: '/api/notification',
@@ -148,5 +148,8 @@ export const path = {
         listCmt: '/list-comment',
         detailQuestion: '/detail-question/:spamId',
         detailCmt: '/detail-comment/:spamId',
+    },
+    search: {
+        rootRoute: '/api/search',
     }
 }

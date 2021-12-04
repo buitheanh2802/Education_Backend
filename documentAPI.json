@@ -267,9 +267,6 @@ req = {
     "title": "Noi dung can search"
 }
 
-
-
-
 --------------------------------------------------------------------------------------------------------
 
 - Upload image (token)
@@ -846,5 +843,13 @@ PUT: "http://localhost:4000/api/comment/spam/:idCmt"
         "newPassword"
     }
     header cần có : { "authorization" : "Bearer token vào đây"}   
+
+///////////////////////////////////////
+- Tim kiem post, question
+POST: "https://devstar-api.herokuapp.com/api/search"
+
+req = {
+    "title": "Noi dung search"
+}
 
 
