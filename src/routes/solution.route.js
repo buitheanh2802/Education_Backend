@@ -34,11 +34,13 @@ router.post(
 // update
 router.put(
     path.solution.put,
+    accessToken,
     update
 )
 // remove
 router.delete(
     path.solution.delete,
+    accessToken,
     remove
 )
 export default router;

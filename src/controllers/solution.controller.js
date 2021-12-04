@@ -9,12 +9,6 @@ import jwt from 'jsonwebtoken';
 const solutionLimited = 15;
 
 export const gets = async (req, res) => {
-    try {
-        var token = jwt.verify(req.headers?.authorization?.split(" ")[1], process.env.SECRET_KEY);
-        // console.log(token);
-    } catch (error) {
-        // console.log('error', error.message);
-    }
     const { page } = req.query;
     let currentPage = 1;
     if (PAGINATION_REGEX.test(page)) currentPage = Number(page);
@@ -22,24 +16,17 @@ export const gets = async (req, res) => {
     const skip = (currentPage - 1) * limit;
     const countDocuments = await SolutionModel.countDocuments();
     const totalPage = Math.ceil(countDocuments / limit);
-    SolutionModel.find({},'-__v -updatedAt -demoUrl -repoUrl')
+    SolutionModel.find({}, '-__v -updatedAt -demoUrl -repoUrl')
         .sort({ createdAt: -1 })
         .skip(skip)
         .limit(limit)
         .populate([
-                { path : 'challengeId',select : '-_id avatar'},
-                { path : 'createBy',select : '-_id username email fullname'}]
+            { path: 'challengeId', select: '-_id avatar' },
+            { path: 'createBy', select: '_id username email fullname' }]
         )
         .lean()
         .exec((err, docs) => {
             if (err) return response(res, 500, ['ERROR_SERVER', err.message]);
-            if(docs && token){
-                docs = docs.map(doc => {
-                    doc.isVoted = doc.votes.includes(token._id);
-                    delete doc.votes;
-                    return doc;
-                });
-            }
             return response(res, 200, [],
                 {
                     models: docs,
@@ -55,13 +42,42 @@ export const gets = async (req, res) => {
         })
 }
 export const get = (req, res) => {
+    if (!mongoose.Types.ObjectId.isValid(req.params.solutionId)) {
+        return response(res, 405, ['INVALID_SYNTAX']);
+    }
+    const { solutionId } = req.params;
+    SolutionModel.findOne({
+        _id: solutionId
+    })
+        .select('-__v -updatedAt')
+        .populate([
+            { path: 'challengeId', select: '-_id avatar' },
+            { path: 'createBy', select: '_id username email fullname' }]
+        )
+        .lean()
+        .exec((err, docs) => {
+            if (err) return response(res, 500, ['ERROR_SERVER', err.message]);
+            if (!docs) return response(res, 400, ['EMPTY_DATA']);
+            return response(res, 200, [], docs)
+        })
 
 }
 export const update = (req, res) => {
-
+    const { _id, createBy, votes, challengeId, ...rest } = req.body;
+    const { solutionId } = req.params;
+    SolutionModel.updateOne({ _id: solutionId, createBy: req.userId }, rest, (err, docs) => {
+        if (err) return response(res, 500, ['ERROR_SERVER', err.message]);
+        if (docs.n == 0) return response(res, 400, ['ACCESS_DENIED']);
+        return response(res, 200, []);
+    })
 }
 export const remove = (req, res) => {
-
+    const { solutionId } = req.params;
+    SolutionModel.deleteOne({ _id: solutionId, createBy: req.userId },(err, docs) => {
+        if (err) return response(res, 500, ['ERROR_SERVER', err.message]);
+        if (docs.n == 0) return response(res, 400, ['ACCESS_DENIED']);
+        return response(res, 200, []);
+    })
 }
 export const create = (req, res) => {
     const request = {
