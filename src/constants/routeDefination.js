@@ -16,7 +16,8 @@ export const path = {
         changePassword: '/profile/me/change-password',
         resetPassword: '/reset-password',
         resetPasswordConfirm: '/reset-password/confirm',
-        changeInfoUser: '/profile/me/change-info'
+        changeInfoUser: '/profile/me/change-info',
+        getInfoDetail : '/profile/me/info-detail'
     },
     notification: {
         rootRoute: '/api/notification',

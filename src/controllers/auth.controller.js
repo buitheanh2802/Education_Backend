@@ -59,7 +59,7 @@ export const signin = (req, res) => {
     passport.authenticate('local', (err, profile) => {
         const { email, password: passwordRequest } = profile;
         // console.log('run');
-        UserModel.findOne({ email, socialType: 'system' }, '-createdAt -updatedAt -status -__v ', (err, docs) => {
+        UserModel.findOne({ email, socialType: 'system' }, '-hobbies -skills -address -phoneNumber -birthday -descriptions -createdAt -updatedAt -status -__v ', (err, docs) => {
             if (err) return response(res, 500, ['ERROR_SERVER', err.message]);
             if (!docs) return response(res, 400, ['EMAIL_NOTEXIST']);
             if (!docs.verifyPassword(passwordRequest)) return response(res, 400, ['INVALID_PASSWORD']);
@@ -91,7 +91,23 @@ export const signin = (req, res) => {
 
 export const profile = (req, res) => {
     UserModel
-        .findOne({ _id: req.userId }, '-createdAt -updatedAt -driveId -password -status -__v  ')
+        .findOne({ _id: req.userId }, `-hobbies -skills -address -phoneNumber -birthday -descriptions -createdAt -updatedAt -driveId -password -status -__v `)
+        .lean()
+        .exec((err, docs) => {
+            if (err) return response(res, 500, ['ERROR_SERVER', err.message]);
+            if (!docs) return response(res, 400, ['USER_NOTEXIST']);
+            return response(res, 200, [],
+                {
+                    ...docs,
+                    role: docs.role !== 'user' ? docs.role : undefined,
+                    userType: docs.userType !== 'basic' ? docs.userType : undefined
+                })
+        })
+}
+
+export const profileDetail = (req, res) => {
+    UserModel
+        .findOne({ _id: req.userId }, `-createdAt -updatedAt -driveId -password -status -__v `)
         .lean()
         .exec((err, docs) => {
             if (err) return response(res, 500, ['ERROR_SERVER', err.message]);
@@ -194,38 +210,38 @@ export const resetPasswordConfirm = (req, res) => {
         const userInfo = jsonDecode(token);
         UserModel.findOne({
             _id: userInfo._id,
-            socialType : 'system',
+            socialType: 'system',
             email
         })
-        .exec((err,docs) => {
-            if (err) return response(res, 500, ['ERROR_SERVER', err.message]);
-            if (!docs) return response(res, 400, ['USER_NOTEXIST']);
-            if(userInfo.password == docs.password){
-                const resetPassword = _.assignIn(docs, { password: newPassword });
-                resetPassword.save((err, docs) => {
-                    if (err) return response(res, 500, ['ERROR_SERVER', err.message]);
-                    return response(res, 200, []);
-                })
-            }else return response(res, 401, ['EXPIRED_TOKEN']);
-        })
+            .exec((err, docs) => {
+                if (err) return response(res, 500, ['ERROR_SERVER', err.message]);
+                if (!docs) return response(res, 400, ['USER_NOTEXIST']);
+                if (userInfo.password == docs.password) {
+                    const resetPassword = _.assignIn(docs, { password: newPassword });
+                    resetPassword.save((err, docs) => {
+                        if (err) return response(res, 500, ['ERROR_SERVER', err.message]);
+                        return response(res, 200, []);
+                    })
+                } else return response(res, 401, ['EXPIRED_TOKEN']);
+            })
     } catch (error) {
         return response(res, 401, ['EXPIRED_TOKEN']);
     }
 }
 
-export const changeInfoUser = (req,res) => {
+export const changeInfoUser = (req, res) => {
     const request = {
-        skill : req.body.skills,
-        descriptions : req.body.descriptions,
-        hobbies : req.body.hobbies,
-        birthday : req.body.birthday,
-        address : req.body.address,
-        avatar : {
-            _id : req.body?.avatar?._id,
-            avatarUrl : req.body?.avatar?.avatarUrl
+        skill: req.body.skills,
+        descriptions: req.body.descriptions,
+        hobbies: req.body.hobbies,
+        birthday: req.body.birthday,
+        address: req.body.address,
+        avatar: {
+            _id: req.body?.avatar?._id,
+            avatarUrl: req.body?.avatar?.avatarUrl
         }
     }
-    UserModel.updateOne({ _id : req.userId},request,(err,docs) => {
+    UserModel.updateOne({ _id: req.userId }, request, (err, docs) => {
         if (err) return response(res, 500, ['ERROR_SERVER', err.message]);
         if (docs.n == 0) return response(res, 400, ['ACCESS_DENIED']);
         return response(res, 200, []);

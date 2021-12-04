@@ -1,7 +1,7 @@
 import express from 'express';
 import { APILimiter, accessToken, accessRole } from 'middlewares/auth.middleware';
 import { userValidator,passwordValidator,resetPasswordValidator,resetPasswordConfirmValidator } from 'middlewares/validate.middleware';
-import { signup, activeAccount, signin, profile, signout,changeInfoUser, 
+import { signup, activeAccount, signin, profile, signout,changeInfoUser, profileDetail,
     getRole, oauthLoginCallback,changePassword,resetPassword,resetPasswordConfirm } from 'controllers/auth.controller';
 import passport from 'passport';
 import { path } from 'constants/routeDefination';
@@ -26,6 +26,11 @@ router.post(path.auth.signin,
 router.get(path.auth.profile,
     accessToken,
     profile
+);
+// profile 
+router.get(path.auth.getInfoDetail,
+    accessToken,
+    profileDetail
 );
 // get role
 router.get(path.auth.role,
