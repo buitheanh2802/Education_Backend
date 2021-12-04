@@ -257,6 +257,16 @@ res = {
 // tang view cho question
 POST: "https://devstar-api.herokuapp.com/api/question/:questionId/view"
 
+- Lấy list trending câu hỏi
+GET: "https://devstar-api.herokuapp.com/api/question/trending"
+
+- Search câu hỏi
+POST: "https://devstar-api.herokuapp.com/api/question/search"
+
+req = {
+    "title": "Noi dung can search"
+}
+
 
 
 
@@ -795,6 +805,9 @@ GET: "http://localhost:4000/api/spam/detail-comment/:idSpam"
 
 - Ẩn hiện tình trạng spam của cmt ( giống question ) 
 PUT: "http://localhost:4000/api/comment/spam/:idCmt"
+
+
+////////////////////////////////////////////////////////////////////////
 
 - api user mới cập nhật
 
