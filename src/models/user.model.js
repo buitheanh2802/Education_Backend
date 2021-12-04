@@ -21,7 +21,7 @@ const UserSchema = new initializeSchema({
         default : ""
     },
     hobbies: [{ type: String,enum : ["1","2","3","4","5","6","7","8","9","10"] }],
-    birthday: { type: String },
+    birthday: { type: String,default : "" },
     points: { type: Number, default: 0 },
     userType: { type: String, enum: ['basic', 'premium'], default: 'basic' },
     address: { type: String, default: '' },
