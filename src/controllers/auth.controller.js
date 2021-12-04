@@ -230,18 +230,8 @@ export const resetPasswordConfirm = (req, res) => {
 }
 
 export const changeInfoUser = (req, res) => {
-    const request = {
-        skill: req.body.skills,
-        descriptions: req.body.descriptions,
-        hobbies: req.body.hobbies,
-        birthday: req.body.birthday,
-        address: req.body.address,
-        avatar: {
-            _id: req.body?.avatar?._id,
-            avatarUrl: req.body?.avatar?.avatarUrl
-        }
-    }
-    UserModel.updateOne({ _id: req.userId }, request, (err, docs) => {
+    const { fullname,username,email,password,points,role,status,driveId,socialType,...rest } = req.body;
+    UserModel.updateOne({ _id: req.userId }, rest, (err, docs) => {
         if (err) return response(res, 500, ['ERROR_SERVER', err.message]);
         if (docs.n == 0) return response(res, 400, ['ACCESS_DENIED']);
         return response(res, 200, []);
