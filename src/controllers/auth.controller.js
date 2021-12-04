@@ -7,6 +7,7 @@ import jwt from 'jsonwebtoken';
 import passport from 'passport';
 import _ from 'lodash';
 import { jsonDecode, jsonEncode } from 'services/system';
+import FollowModel from 'models/follow.model';
 
 // global variables
 const expiredToken = 60 * 60 * 10;
@@ -108,13 +109,21 @@ export const profile = (req, res) => {
 export const profileDetail = (req, res) => {
     UserModel
         .findOne({ _id: req.userId }, `-createdAt -updatedAt -driveId -password -status -__v `)
+        .populate([
+            { path: 'questionCounts' },
+            { path: 'postCounts' },
+            { path: 'followers' }
+        ])
         .lean()
-        .exec((err, docs) => {
+        .exec(async(err, docs) => {
             if (err) return response(res, 500, ['ERROR_SERVER', err.message]);
             if (!docs) return response(res, 400, ['USER_NOTEXIST']);
+            const followingCounts = await FollowModel.countDocuments({ userId: req.userId })
             return response(res, 200, [],
                 {
                     ...docs,
+                    followers: docs.followers?.length || 0,
+                    followingCounts : followingCounts,
                     role: docs.role !== 'user' ? docs.role : undefined,
                     userType: docs.userType !== 'basic' ? docs.userType : undefined
                 })
@@ -230,7 +239,7 @@ export const resetPasswordConfirm = (req, res) => {
 }
 
 export const changeInfoUser = (req, res) => {
-    const { fullname,username,email,password,points,role,status,driveId,socialType,...rest } = req.body;
+    const { fullname, username, email, password, points, role, status, driveId, socialType, ...rest } = req.body;
     UserModel.updateOne({ _id: req.userId }, rest, (err, docs) => {
         if (err) return response(res, 500, ['ERROR_SERVER', err.message]);
         if (docs.n == 0) return response(res, 400, ['ACCESS_DENIED']);
