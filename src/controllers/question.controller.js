@@ -19,7 +19,7 @@ export const gets = async (req, res) => {
     QuestionModel
         .find({}, '-__v -updateAt')
         .sort({ _id: -1 })
-        .populate({ path: "createBy", select: 'fullname avatar' })
+        .populate({ path: "createBy", select: 'fullname username avatar' })
         .populate({ path: "tags", select: "name slug" })
         .skip(skip)
         .limit(limit)
