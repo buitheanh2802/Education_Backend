@@ -151,5 +151,9 @@ export const path = {
     },
     search: {
         rootRoute: '/api/search',
-    }
+    },
+    contact: {
+        rootRoute: '/api/contact',
+        create: '/create'
+    },
 }

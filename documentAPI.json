@@ -852,4 +852,21 @@ req = {
     "title": "Noi dung search"
 }
 
+////////////////////////////////////////////
+- Contact - Lien He
+- Lấy list contact trong admin (token)
+GET: "http://localhost:4000/api/contact"
+
+- Xem chi tiết contact trong admin (token)
+GET: "http://localhost:4000/api/contact/:contactId"
+
+- Tạo contact
+POST: "http://localhost:4000/api/contact"
+req = {
+    "name": "Nguyen Van Duc",
+    "email": "levanduc@gmail.com",
+    "phone": "0989999888",
+    "title": "Cập nhật thêm tính năng mới",
+    "content": "Hỗ trợ thêm các tính năng cho user"
+}
 

@@ -13,6 +13,7 @@ import challengeCategoriesRoute from './challenge-categories.route';
 import solutionRoute from './solution.route';
 import spamRoute from './spam.route';
 import searchRoute from './search.route';
+import contactRoute from './contact.route';
 
 export const routes = (app) => {
     app.use(path.auth.rootRoute, authRoute);
@@ -29,4 +30,5 @@ export const routes = (app) => {
     app.use(path.solution.rootRoute, solutionRoute);
     app.use(path.spam.rootRoute, spamRoute);
     app.use(path.search.rootRoute, searchRoute);
+    app.use(path.contact.rootRoute, contactRoute);
 }

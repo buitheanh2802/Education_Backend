@@ -177,6 +177,15 @@ export const spamValidator = async (req, res, next) => {
     return next();
 }
 
+export const contactValidator = async (req, res, next) => {
+    await body('email').notEmpty().withMessage("Nhập email").run(req);
+    const check = validationResult(req);
+    if (!check.isEmpty()) {
+        return response(res, 400, ['INVALID_DATA', ...check.errors])
+    }
+    return next();
+}
+
 //challenge
 export const challengesValidator = async (req, res, next) => {
     await body('title').trim().notEmpty().withMessage("Nhập title").run(req);
