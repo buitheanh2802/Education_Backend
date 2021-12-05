@@ -5,7 +5,9 @@ import { routes } from 'routes';
 import { passportConfig } from 'services/passport';
 import cookie from 'cookie-parser';
 import cors from 'cors';
-// import { sendMail } from 'services/mailer';
+import http from 'http';
+import socket from 'socket.io';
+import { socketConfig } from 'services/socket';
 
 
 const serverConfig = async () => {
@@ -19,9 +21,9 @@ const serverConfig = async () => {
     app.disable('x-powered-by');
     // initial parse data from client;
     app.use(cors({
-        methods : 'GET,POST,PUT,DELETE',
-        credentials : true,
-        origin : ['http://localhost:3000','http://172.20.10.2:3000','http://127.0.0.1:5500']
+        methods: 'GET,POST,PUT,DELETE',
+        credentials: true,
+        origin: ['http://localhost:3000', 'http://172.20.10.2:3000', 'http://127.0.0.1:5500']
     }))
     app.use(express.json());
     app.use(express.urlencoded({ extended: true }));
@@ -30,11 +32,18 @@ const serverConfig = async () => {
     passportConfig(app);
     // connect to mongoDB
     await initializeDB();
+    // sendMail('theanhbui345@gmail.com','Xác thực tài khoản của bạn','verifyEmailTemplate',{ activeUrl : "https://mail.google.com/mail/u/1/#inbox"})
+    // initial server 
+    const server = http.createServer(app)
+    // initial socket server 
+    const io = new socket.Server(server,{
+        cors : 'http://localhost:3000'
+    });
     // routes
     routes(app);
-    // sendMail('theanhbui345@gmail.com','Xác thực tài khoản của bạn','verifyEmailTemplate',{ activeUrl : "https://mail.google.com/mail/u/1/#inbox"})
+    socketConfig(io)
     // listenning
-    app.listen(PORT, () => console.log(`server is running at port : ${PORT}`))
+    server.listen(PORT, () => console.log(`server is running at port : ${PORT}`))
 }
 // running server !
 serverConfig();
