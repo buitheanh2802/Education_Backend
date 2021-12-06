@@ -6,6 +6,8 @@ const ContactSchema = new mongoose.Schema({
     phone: { type: String },
     title: { type: String },
     content: { type: String },
+    feedback: { type: Boolean, default: false },
+    submittedBy: { type: mongoose.Schema.Types.ObjectId, default: null, ref: 'Users' }
 }, { timestamps: true });
 
 export default mongoose.model('Contact', ContactSchema);
