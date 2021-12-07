@@ -14,6 +14,7 @@ export const gets = async (req, res) => {
         .find({})
         .skip(skip)
         .limit(limit)
+        .sort({ _id: -1 })
         .populate({ path: "submittedBy", select: 'fullname avatar username' })
         .lean()
         .exec((err, docs) => {
