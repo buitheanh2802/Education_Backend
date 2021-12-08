@@ -1,7 +1,7 @@
 import express from 'express';
 import { APILimiter, accessToken, accessRole } from 'middlewares/auth.middleware';
 import { userValidator,passwordValidator,resetPasswordValidator,resetPasswordConfirmValidator } from 'middlewares/validate.middleware';
-import { signup, activeAccount, signin, profile, signout,changeInfoUser, profileDetail,
+import { signup, activeAccount, signin, profile, signout,changeInfoUser, profileDetail,refreshToken,
     getRole, oauthLoginCallback,changePassword,resetPassword,resetPasswordConfirm } from 'controllers/auth.controller';
 import passport from 'passport';
 import { path } from 'constants/routeDefination';
@@ -92,4 +92,9 @@ router.get(
     path.auth.githubCallback, 
     oauthLoginCallback('github'));
 
+// refresh token 
+router.get(
+    path.auth.refreshToken,
+    refreshToken
+);
 export default router;

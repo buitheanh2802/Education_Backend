@@ -10,7 +10,7 @@ import { jsonDecode, jsonEncode } from 'services/system';
 import FollowModel from 'models/follow.model';
 
 // global variables
-const expiredToken = 60 * 60 * 10;
+const expiredToken = 60;
 // end
 
 export const signup = async (req, res) => {
@@ -76,7 +76,8 @@ export const signin = (req, res) => {
                     return pureObject;
                 }
             });
-            // res.cookie('auth_tk', token, { maxAge: 1000 * expiredToken,sameSite : 'None',secure : true})
+            const tokenRefresh = jwt.sign({ _id: docs._id, driveId: docs.driveId }, process.env.SECRET_KEY, { expiresIn: 60 * 60 * 24 * 7 });
+            res.cookie('ft', tokenRefresh, { maxAge: 1000 * 60 * 60 * 24 * 7 ,sameSite : 'None',secure : true})
             return response(res, 200, [], {
                 profile: {
                     ...documentReponse,
@@ -97,6 +98,7 @@ export const profile = (req, res) => {
         .exec((err, docs) => {
             if (err) return response(res, 500, ['ERROR_SERVER', err.message]);
             if (!docs) return response(res, 400, ['USER_NOTEXIST']);
+            if(req?.oauthPicture) docs.avatar.avatarUrl = req.oauthPicture;
             return response(res, 200, [],
                 {
                     ...docs,
@@ -143,7 +145,7 @@ export const getRole = (req, res) => {
 }
 
 export const signout = (req, res) => {
-    res.clearCookie('auth_tk');
+    res.clearCookie('ft');
     return response(res, 200, []);
 }
 
@@ -175,6 +177,12 @@ export const oauthLoginCallback = (strategy) => {
                         driveId: currentUser.driveId,
                         oauthPicture: profile.photos[0].value
                     }, process.env.SECRET_KEY, { expiresIn: expiredToken });
+                    const tokenRefresh = jwt.sign({
+                        _id: currentUser._id,
+                        driveId: currentUser.driveId,
+                        oauthPicture: profile.photos[0].value
+                    }, process.env.SECRET_KEY, { expiresIn: 60 * 60 * 24 * 7 });
+                    res.cookie('ft', tokenRefresh, { maxAge: 1000 * 60 * 60 * 24 * 7 ,sameSite : 'None',secure : true})
                     return res.redirect(`${process.env.ACCESS_DOMAIN}/auth/login?authenticate=true&token=${token}`);
                 })
         })(req, res)
@@ -245,4 +253,23 @@ export const changeInfoUser = (req, res) => {
         if (docs.n == 0) return response(res, 400, ['ACCESS_DENIED']);
         return response(res, 200, []);
     })
+}
+
+// refresh token 
+export const refreshToken = (req, res) => {
+    const getToken = req.cookies['ft'];
+    if (!getToken) {
+        res.clearCookie('ft');
+        return response(res, 400, ['EMPTY_TOKEN']);
+    }
+    try {
+        const { iat,exp,...allData } = jwt.verify(getToken, process.env.SECRET_KEY);
+        // console.log(allData);
+        const token = jwt.sign(allData, process.env.SECRET_KEY, { expiresIn: expiredToken });
+        return response(res, 200, [], token );
+    } catch (error) {
+        res.clearCookie('ft');
+        // console.log(error.message);
+        return response(res, 400, ['EXPIRED_TOKEN']);
+    }
 }

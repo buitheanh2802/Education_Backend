@@ -30,7 +30,7 @@ export const accessToken = (req, res, next) => {
         req.oauthPicture = oauthPicture;
         return next();
     } catch (error) {
-        return response(res, 401, ['EXPIRED_TOKEN']);
+        return response(res, 401, ['EXPIRED_TOKEN','RETRY_TOKEN']);
     }
 }
 

@@ -11,7 +11,7 @@ import mongoose from 'mongoose';
 
 // global variables
 const trendingViews = 200;
-const postLimit = 15;
+const postLimit = 10;
 // end
 
 export const get = (req, res) => {
