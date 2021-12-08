@@ -44,7 +44,7 @@ export const notificationValidator = async (req, res, next) => {
         .trim()
         .notEmpty()
         .withMessage('Không được bỏ trống tiêu đề...')
-        .isLength({ max: 50 })
+        .isLength({ max: 200 })
         .withMessage('Tiêu đề không được dài hơn 50 kí tự')
         .run(req);
     await body('url')
