@@ -329,7 +329,6 @@ export const follower = (req, res) => {
         .lean()
         .exec(async (err, docs) => {
             if (err) return response(res, 500, ['ERROR_SERVER', err.message]);
-            if (!docs) return response(res, 200, ['EMPTY_DATA'])
             const skip = (currentPage - 1) * limited;
             const countDocuments = await FollowModel.countDocuments({ followingUserId: docs._id });
             const totalPage = Math.ceil(countDocuments / limited);
