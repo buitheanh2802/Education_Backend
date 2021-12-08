@@ -1,6 +1,7 @@
 import { PAGINATION_REGEX } from "constants/regexDefination";
 import { response } from "constants/responseHandler";
 import ContactModel from "models/contact.model";
+import { sendMail } from "services/mailer";
 
 export const gets = async (req, res) => {
     const { page } = req.query;
@@ -32,7 +33,8 @@ export const gets = async (req, res) => {
             });
         })
 }
-export const create = (req, res) => {
+export const create = async (req, res) => {
+    const { email } = req.body;
     const contactDefination = {
         ...req.body,
     }
@@ -40,6 +42,15 @@ export const create = (req, res) => {
     contact.save((err, docs) => {
         if (err) return response(res, 500, ['ERROR_SERVER', err.message]);
         const { type, ...data } = docs.toObject();
+        try {
+            sendMail(email, 'DevStar', 'verifyContactTemplate', {
+                activeContact: ``,
+                layout: 'verifyContactTemplate'
+            });
+        } catch (error) {
+            console.log(error);
+        }
+
         return response(res, 200, [], data);
     })
 }
