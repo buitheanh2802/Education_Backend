@@ -192,7 +192,7 @@ export const myTag = async (req, res) => {
         .lean()
         .exec((err, docs) => {
             if (err) return response(res, 500, ['ERROR_SERVER', err.message]);
-            if (!docs || docs.length == 0) return response(res, 400, ['EMPTY_DATA']);
+            if (!docs || docs.length == 0) return response(res, 200, ['EMPTY_DATA']);
             const filterDocs = docs.map(doc => new mongoose.Types.ObjectId(doc.followingUserId));
             TagModel.find({ _id: { $in: filterDocs } })
                 .skip(skip)
@@ -319,7 +319,7 @@ export const following = async (req, res) => {
         .lean()
         .exec(async (err, docs) => {
             if (err) return response(res, 500, ['ERROR_SERVER', err.message]);
-            if (docs.length == 0) return response(res, 400, ['EMPTY_DATA']);
+            if (docs.length == 0) return response(res, 200, []);
             // console.log(docs);
             docs = docs.filter(doc => {
                 if (doc.followingUserId) {
