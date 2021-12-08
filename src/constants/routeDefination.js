@@ -156,4 +156,9 @@ export const path = {
         rootRoute: '/api/contact',
         create: '/create'
     },
+    statistic: {
+        rootRoute: '/api/statistic',
+        question: '/question',
+        post: '/post',
+    }
 }

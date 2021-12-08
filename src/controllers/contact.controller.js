@@ -14,6 +14,8 @@ export const gets = async (req, res) => {
         .find({})
         .skip(skip)
         .limit(limit)
+        .sort({ _id: -1 })
+        .populate({ path: "submittedBy", select: 'fullname avatar username' })
         .lean()
         .exec((err, docs) => {
             if (err) return response(res, 500, ['ERROR_SERVER', err.message]);
@@ -44,6 +46,7 @@ export const create = (req, res) => {
 export const get = (req, res) => {
     ContactModel
         .findOne({ _id: req.params.contactId })
+        .populate({ path: "submittedBy", select: 'fullname avatar username' })
         .exec((err, docs) => {
             if (err) return response(res, 500, ['ERROR_SERVER', err.message]);
             if (!docs) return response(res, 400, ['EMPTY_DATA']);
@@ -60,4 +63,20 @@ export const remove = (req, res) => {
         if (!docs) return response(res, 400, ['EMPTY_DATA']);
         return response(res, 200, []);
     })
+}
+export const updateFeedback = (req, res) => {
+    ContactModel
+        .findOne({ _id: req.params.contactId }, (err, docs) => {
+            if (err) return response(res, 500, ['ERROR_SERVER', err.message]);
+            if (!docs) return response(res, 400, ['EMPTY_DATA']);
+            const newObj = {
+                submittedBy: req.userId,
+                feedback: !docs.feedback,
+            }
+            ContactModel.updateOne({ _id: req.params.contactId }, newObj, (err, docs) => {
+                if (err) return response(res, 500, ['ERROR_SERVER', err.message]);
+                if (!docs) return response(res, 400, ['EMPTY_DATA']);
+                return response(res, 200, []);
+            })
+        })
 }
