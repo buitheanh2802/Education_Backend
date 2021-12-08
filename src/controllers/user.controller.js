@@ -192,6 +192,7 @@ export const myTag = async (req, res) => {
         .lean()
         .exec((err, docs) => {
             if (err) return response(res, 500, ['ERROR_SERVER', err.message]);
+            if(!docs) return response(res, 400, ['EMPTY_DATA']); 
             const filterDocs = docs.map(doc => new mongoose.Types.ObjectId(doc.followingUserId));
             TagModel.find({ _id: { $in: filterDocs } })
                 .skip(skip)
@@ -250,6 +251,7 @@ export const followers = async (req, res) => {
         .lean()
         .exec(async (err, docs) => {
             if (err) return response(res, 500, ['ERROR_SERVER', err.message]);
+            if(!docs) return response(res, 400, ['EMPTY_DATA']); 
             if (docs.length !== 0) {
                 docs = docs.map(doc => new mongoose.Types.ObjectId(doc.userId));
                 let data = await UserModel.find({ _id: { $in: docs } },
@@ -318,6 +320,7 @@ export const following = async (req, res) => {
         .lean()
         .exec(async (err, docs) => {
             if (err) return response(res, 500, ['ERROR_SERVER', err.message]);
+            if(!docs) return response(res, 400, ['EMPTY_DATA']); 
             docs = docs.filter(doc => {
                 if (doc.followingUserId) {
                     const currentDoc = doc?.followingUserId;
