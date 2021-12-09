@@ -147,7 +147,7 @@ export const create = (req, res) => {
         });
         createNewTag.save((err, docs) => {
             if (err) return response(res, 500, ['ERROR_SERVER',err.message]);
-            return response(res, 200, [])
+            return response(res, 200, [],docs)
         })
     })
 }
@@ -167,7 +167,7 @@ export const update = (req, res) => {
             if (!docs) return response(res, 400, ['TAG_NOTEXIST']);
             const currentData = assignIn(docs, fields);
             currentData.save(async (err, docs) => {
-                if (err) return response(res, 500, ['ERROR_SERVER']);
+                if (err) return response(res, 500, ['ERROR_SERVER',err.message]);
                 if (photo) {
                     await cropper({
                         width: 200,
@@ -175,6 +175,7 @@ export const update = (req, res) => {
                         path: photo.path,
                         filename: photo.name
                     });
+                    if(docs.driveId == "") docs.driveId = await createFolder(docs.name,'1Ux1_gYhjz4vQGnInOlGdkDtQ69H4AVs1').id;
                     var driveFileResponse = await createFile(photo.name, docs.driveId);
                     fields.avatar = {
                         _id: driveFileResponse.id,
@@ -182,8 +183,8 @@ export const update = (req, res) => {
                     }
                     const currentData = assignIn(docs, fields);
                     currentData.save((err,docs) => {
-                        if (err) return response(res, 500, ['ERROR_SERVER']);
-                        return response(res, 200, [])
+                        if (err) return response(res, 500, ['ERROR_SERVER',err.message]);
+                        return response(res, 200, [],docs)
                     })
                 }
             });
