@@ -23,6 +23,7 @@ export const accessToken = (req, res, next) => {
     const payload = authorization?.split(" ");
     if (!payload || payload[0] !== 'Bearer' || !payload[1]) return response(res, 400, ['EMPTY_TOKEN'])
     const token = payload[1];
+    // console.log('day',token);
     try {
         const { _id, driveId, oauthPicture } = jwt.verify(token, process.env.SECRET_KEY);
         req.userId = _id;
@@ -30,6 +31,7 @@ export const accessToken = (req, res, next) => {
         req.oauthPicture = oauthPicture;
         return next();
     } catch (error) {
+        // console.log(error.message);
         return response(res, 401, ['EXPIRED_TOKEN','RETRY_TOKEN']);
     }
 }

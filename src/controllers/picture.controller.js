@@ -25,12 +25,11 @@ export const create = (req, res) => {
             },
             createBy: req.userId
         })
+        removeFileSystem(image.name);
         createNewImage.save((err, docs) => {
             if (err) return response(res, 500, ['ERROR_SERVER']);
             return response(res, 200, [], docs)
         })
-        removeFileSystem(image.name);
-
     })
 }
 // gets

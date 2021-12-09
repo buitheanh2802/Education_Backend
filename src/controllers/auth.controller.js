@@ -266,6 +266,7 @@ export const refreshToken = (req, res) => {
         const { iat,exp,...allData } = jwt.verify(getToken, process.env.SECRET_KEY);
         // console.log(allData);
         const token = jwt.sign(allData, process.env.SECRET_KEY, { expiresIn: expiredToken });
+        console.log('reset',token);
         return response(res, 200, [], token );
     } catch (error) {
         res.clearCookie('ft');
