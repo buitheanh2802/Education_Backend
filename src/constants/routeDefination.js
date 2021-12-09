@@ -18,7 +18,7 @@ export const path = {
         resetPasswordConfirm: '/reset-password/confirm',
         changeInfoUser: '/profile/me/change-info',
         getInfoDetail: '/profile/me/info-detail',
-        refreshToken : '/profile/me/refreshtoken'
+        refreshToken : '/profile/me/refreshtoken',
     },
     notification: {
         rootRoute: '/api/notification',
@@ -44,7 +44,8 @@ export const path = {
         unPublishPost: '/unpublish/:shortId',
         publishList: '/publish/list',
         edit: '/edit/:shortId',
-        myBookmark: '/bookmark'
+        myBookmark: '/bookmark',
+        upViews : '/upviews'
     },
     follow: {
         rootRoute: '/api/follow',
@@ -110,7 +111,8 @@ export const path = {
         postBookmark: '/:username/bookmark/post',
         questionBookmark: '/:username/bookmark/question',
         tag: '/:username/tag',
-        featuredAuthor: '/featured-author'
+        featuredAuthor: '/featured-author',
+        points : '/:username/point'
     },
     challenges: {
         rootRoute: '/api/challenges',

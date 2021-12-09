@@ -227,7 +227,7 @@ export const following = async (req, res) => {
                 tagFollowings: { $push: '$tagFollowings._id' }
             }
         },
-    ]).exec(async(err, docs) => {
+    ]).exec(async (err, docs) => {
         // console.log(docs);
         if (err) return response(res, 500, ['ERROR_SERVER', err.message]);
         const countDocuments = await PostModel.countDocuments({
@@ -557,4 +557,18 @@ export const myBookmark = async (req, res) => {
                     }
                 });
         })
+}
+
+// up views 
+export const upViews = (req, res) => {
+    const { shortId } = req.body;
+    PostModel.findOne({ shortId: shortId }, (err, docs) => {
+        if (err) return response(res, 500, ['ERROR_SERVER', err.message]);
+        if (!docs) return response(res, 400, ['EMPTY_DATA']);
+        docs.views += 1;
+        docs.save((err,docs) => {
+            if (err) return response(res, 500, ['ERROR_SERVER', err.message]);
+            return response(res, 200, []);
+        })
+    });
 }

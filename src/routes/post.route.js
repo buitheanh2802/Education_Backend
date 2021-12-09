@@ -1,5 +1,6 @@
 import express from 'express';
-import { newest,following,create,get,action,trending,update,remove,publish,publishList,unPublish,edit,myBookmark } from '../controllers/post.controller';
+import { newest,following,create,get,action,trending,update
+    ,remove,publish,publishList,unPublish,edit,myBookmark,upViews } from '../controllers/post.controller';
 import { path } from "constants/routeDefination";
 import { postValidator } from 'middlewares/validate.middleware';
 import { accessToken,accessRole } from 'middlewares/auth.middleware';
@@ -90,5 +91,11 @@ router.get(
     accessToken,
     edit
 );
+
+// up views
+router.post(
+    path.post.upViews,
+    upViews
+)
 
 export default router;

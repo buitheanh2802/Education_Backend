@@ -1,13 +1,15 @@
 import UserModel from 'models/user.model';
 import { sendMail } from 'services/mailer';
 import { response } from 'constants/responseHandler';
-import { createFolder } from 'services/drive';
+import { createFolder,createFile } from 'services/drive';
 import { randomNumber, toSlug } from 'src/helpers/slug';
 import jwt from 'jsonwebtoken';
 import passport from 'passport';
+import { cropper } from 'helpers/imageCropper';
 import _ from 'lodash';
 import { jsonDecode, jsonEncode } from 'services/system';
 import FollowModel from 'models/follow.model';
+import formidable from 'formidable';
 
 // global variables
 const expiredToken = 60 * 30;
@@ -247,11 +249,33 @@ export const resetPasswordConfirm = (req, res) => {
 }
 
 export const changeInfoUser = (req, res) => {
-    const { fullname, username, email, password, points, role, status, driveId, socialType, ...rest } = req.body;
-    UserModel.updateOne({ _id: req.userId }, rest, (err, docs) => {
-        if (err) return response(res, 500, ['ERROR_SERVER', err.message]);
-        if (docs.n == 0) return response(res, 400, ['ACCESS_DENIED']);
-        return response(res, 200, []);
+    
+    const initialize = new formidable.IncomingForm({
+        maxFileSize: 1024 * 1024,
+        keepExtensions: true
+    });
+    initialize.parse(req, async (err, fields, file) => {
+        const { fullname, username, email, password, 
+        points, role, status, driveId, socialType, ...rest } = fields;
+        const { photo } = file;
+        if(photo){
+            await cropper({
+                width: 200,
+                height: 200,
+                path: photo.path,
+                filename: photo.name
+            });
+            var driveFileResponse = await createFile(photo.name, req.driveId);
+            rest.avatar = {
+                _id: driveFileResponse.id,
+                avatarUrl: driveFileResponse.webContentLink
+            }
+        }
+        UserModel.updateOne({ _id: req.userId }, rest, (err, docs) => {
+            if (err) return response(res, 500, ['ERROR_SERVER', err.message]);
+            if (docs.n == 0) return response(res, 400, ['ACCESS_DENIED']);
+            return response(res, 200, []);
+        })
     })
 }
 

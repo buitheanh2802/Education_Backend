@@ -1,6 +1,7 @@
 import express from 'express';
 import { path } from 'constants/routeDefination';
-import { followers,following,get,myPostBookmark,myPost,myTag,myQuestion,featuredAuthor } from 'controllers/user.controller';
+import { followers,following,get,myPostBookmark,myPost,points,
+    myTag,myQuestion,featuredAuthor } from 'controllers/user.controller';
 import { accessRole, accessToken } from 'middlewares/auth.middleware';
 const router = express.Router();
 
@@ -43,6 +44,11 @@ router.get(
 router.get(
     path.user.following,
     following
+)
+// up and down point
+router.post(
+    path.user.points,
+    points
 )
 
 export default router;

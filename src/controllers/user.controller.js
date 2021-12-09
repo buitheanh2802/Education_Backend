@@ -12,6 +12,7 @@ import { shuffle } from 'helpers/shuffle';
 // global data 
 const limited = 15;
 const trendingViews = 100;
+const rewardPoints = 8;
 
 export const get = (req, res) => {
     try {
@@ -192,7 +193,7 @@ export const myTag = async (req, res) => {
         .lean()
         .exec((err, docs) => {
             if (err) return response(res, 500, ['ERROR_SERVER', err.message]);
-            if(!docs) return response(res, 400, ['EMPTY_DATA']); 
+            if (!docs) return response(res, 400, ['EMPTY_DATA']);
             const filterDocs = docs.map(doc => new mongoose.Types.ObjectId(doc.followingUserId));
             TagModel.find({ _id: { $in: filterDocs } })
                 .skip(skip)
@@ -251,7 +252,7 @@ export const followers = async (req, res) => {
         .lean()
         .exec(async (err, docs) => {
             if (err) return response(res, 500, ['ERROR_SERVER', err.message]);
-            if(!docs) return response(res, 400, ['EMPTY_DATA']); 
+            if (!docs) return response(res, 400, ['EMPTY_DATA']);
             if (docs.length !== 0) {
                 docs = docs.map(doc => new mongoose.Types.ObjectId(doc.userId));
                 let data = await UserModel.find({ _id: { $in: docs } },
@@ -320,7 +321,7 @@ export const following = async (req, res) => {
         .lean()
         .exec(async (err, docs) => {
             if (err) return response(res, 500, ['ERROR_SERVER', err.message]);
-            if(!docs) return response(res, 400, ['EMPTY_DATA']); 
+            if (!docs) return response(res, 400, ['EMPTY_DATA']);
             docs = docs.filter(doc => {
                 if (doc.followingUserId) {
                     const currentDoc = doc?.followingUserId;
@@ -368,4 +369,23 @@ export const featuredAuthor = (req, res) => {
             if (docs.length == 0) return response(res, 400, ['EMPTY_DATA']);
             return response(res, 200, [], shuffle(docs.map(doc => ({ ...doc, followers: followers?.length || 0 }))));
         })
+}
+
+// up and down point 
+export const points = (req, res) => {
+    const { username } = req.params;
+    const { type } = req.body;
+    UserModel.findOne({ username }, (err, docs) => {
+        if (err) return response(res, 500, ['ERROR_SERVER', err.message]);
+        if (!docs) return response(res, 400, ['EMPTY_DATA']);
+        if(type == "up") docs.points += rewardPoints;
+        if(type == "down"){
+            if(docs.points <= 0) return response(res, 200, []);
+            docs.points -= rewardPoints;
+        }
+        docs.save((err,docs) => {
+            if (err) return response(res, 500, ['ERROR_SERVER', err.message]);
+            return response(res, 200, []);
+        })
+    })
 }

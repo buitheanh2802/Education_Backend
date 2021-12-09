@@ -892,3 +892,9 @@ req = {
     "type": 30 ///// Nhập số ngày
 }
 
+- tăng views cho bài viết 
+- POST : "http://localhost:4000/api/post/upviews",
+req = {
+    "shortId" : "shortId của bài viết"
+}
+
