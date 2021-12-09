@@ -181,12 +181,12 @@ export const update = (req, res) => {
                         _id: driveFileResponse.id,
                         avatarUrl: driveFileResponse.webContentLink
                     }
-                    const currentData = assignIn(docs, fields);
-                    currentData.save((err,docs) => {
-                        if (err) return response(res, 500, ['ERROR_SERVER',err.message]);
-                        return response(res, 200, [],docs)
-                    })
                 }
+                const currentData = assignIn(docs, fields);
+                currentData.save((err,docs) => {
+                    if (err) return response(res, 500, ['ERROR_SERVER',err.message]);
+                    return response(res, 200, [],docs)
+                })
             });
         })
     })

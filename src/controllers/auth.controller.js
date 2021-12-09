@@ -10,7 +10,7 @@ import { jsonDecode, jsonEncode } from 'services/system';
 import FollowModel from 'models/follow.model';
 
 // global variables
-const expiredToken = 60 * 60 * 24;
+const expiredToken = 60;
 // end
 
 export const signup = async (req, res) => {
