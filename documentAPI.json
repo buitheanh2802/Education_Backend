@@ -876,3 +876,19 @@ DELETE: "https://devstar-api.herokuapp.com/api/contact/:contactId"
 - Api xác nhận đã phản hồi cho khách hàng. (token)
 POST: "https://devstar-api.herokuapp.com/api/contact/:contactId"
 
+//////////////////////////////////////////////
+
+- Thong ke cho admin (token)
+
+- Lấy list thống kê cho question
+POST: "http://localhost:4000/api/statistic/question"
+req = {
+    "type": 30 ///// Nhập số ngày
+}
+
+- Lấy list thống kê cho post
+POST: "http://localhost:4000/api/statistic/post"
+req = {
+    "type": 30 ///// Nhập số ngày
+}
+
