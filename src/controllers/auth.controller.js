@@ -10,7 +10,7 @@ import { jsonDecode, jsonEncode } from 'services/system';
 import FollowModel from 'models/follow.model';
 
 // global variables
-const expiredToken = 60 * 60 * 24;
+const expiredToken = 60 * 30;
 // end
 
 export const signup = async (req, res) => {
@@ -266,7 +266,6 @@ export const refreshToken = (req, res) => {
         const { iat,exp,...allData } = jwt.verify(getToken, process.env.SECRET_KEY);
         // console.log(allData);
         const token = jwt.sign(allData, process.env.SECRET_KEY, { expiresIn: expiredToken });
-        console.log('reset',token);
         return response(res, 200, [], token );
     } catch (error) {
         res.clearCookie('ft');
