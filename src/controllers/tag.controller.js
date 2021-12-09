@@ -3,7 +3,7 @@ import formidable from "formidable";
 import { response } from "constants/responseHandler";
 import { TAGNAME, PAGINATION_REGEX } from 'constants/regexDefination';
 import { cropper } from 'helpers/imageCropper';
-import { createFile, createFolder,deleteFolder } from 'services/drive';
+import { createFile, createFolder, deleteFolder } from 'services/drive';
 import { toSlug } from 'helpers/slug';
 import { assignIn } from 'lodash';
 import jwt from "jsonwebtoken";
@@ -124,8 +124,8 @@ export const create = (req, res) => {
         const { photo } = file;
         if (err) return response(res, 400, ['INVALID_SIZE', err.message]);
         if (!fields.name) return response(res, 400, ['INVALID_DATA']);
-        const hasExist = await TagModel.findOne({ slug : toSlug(name.toLowerCase(), '-') });
-        if(hasExist) return response(res, 400, ['DATA_EXIST']);
+        const hasExist = await TagModel.findOne({ slug: toSlug(name.toLowerCase(), '-') });
+        if (hasExist) return response(res, 400, ['DATA_EXIST']);
         if (photo) {
             await cropper({
                 width: 200,
@@ -146,8 +146,8 @@ export const create = (req, res) => {
             driveId: driveFolderResponse?.id
         });
         createNewTag.save((err, docs) => {
-            if (err) return response(res, 500, ['ERROR_SERVER',err.message]);
-            return response(res, 200, [],docs)
+            if (err) return response(res, 500, ['ERROR_SERVER', err.message]);
+            return response(res, 200, [], docs)
         })
     })
 }
@@ -167,7 +167,7 @@ export const update = (req, res) => {
             if (!docs) return response(res, 400, ['TAG_NOTEXIST']);
             const currentData = assignIn(docs, fields);
             currentData.save(async (err, docs) => {
-                if (err) return response(res, 500, ['ERROR_SERVER',err.message]);
+                if (err) return response(res, 500, ['ERROR_SERVER', err.message]);
                 if (photo) {
                     await cropper({
                         width: 200,
@@ -175,7 +175,9 @@ export const update = (req, res) => {
                         path: photo.path,
                         filename: photo.name
                     });
-                    if(docs.driveId == "") docs.driveId = await createFolder(docs.name,'1Ux1_gYhjz4vQGnInOlGdkDtQ69H4AVs1').id;
+                    if (docs.driveId == "") {
+                        docs.driveId = await (await createFolder(docs.name, '1Ux1_gYhjz4vQGnInOlGdkDtQ69H4AVs1')).id;
+                    }
                     var driveFileResponse = await createFile(photo.name, docs.driveId);
                     fields.avatar = {
                         _id: driveFileResponse.id,
@@ -183,9 +185,9 @@ export const update = (req, res) => {
                     }
                 }
                 const currentData = assignIn(docs, fields);
-                currentData.save((err,docs) => {
-                    if (err) return response(res, 500, ['ERROR_SERVER',err.message]);
-                    return response(res, 200, [],docs)
+                currentData.save((err, docs) => {
+                    if (err) return response(res, 500, ['ERROR_SERVER', err.message]);
+                    return response(res, 200, [], docs)
                 })
             });
         })
@@ -335,7 +337,7 @@ export const follower = (req, res) => {
         .lean()
         .exec(async (err, docs) => {
             if (err) return response(res, 500, ['ERROR_SERVER', err.message]);
-            if(!docs) return response(res, 400, ['EMPTY_DATA']); 
+            if (!docs) return response(res, 400, ['EMPTY_DATA']);
             const skip = (currentPage - 1) * limited;
             const countDocuments = await FollowModel.countDocuments({ followingUserId: docs._id });
             const totalPage = Math.ceil(countDocuments / limited);
@@ -392,12 +394,12 @@ export const follower = (req, res) => {
 // remove tag
 export const remove = (req, res) => {
     const { tagname } = req.params;
-    TagModel.findOne({ slug: toSlug(tagname, '-') },async (err,docs) => {
-        if(err) return response(res, 500, ['ERROR_SERVER', err.message]); 
-        if(!docs) return response(res, 400, ['EMPTY_DATA']); 
-        if(docs.driveId !== "") await deleteFolder(docs.driveId);
-        docs.remove((err,docs) => {
-            if(err) return response(res, 500, ['ERROR_SERVER', err.message]); 
+    TagModel.findOne({ slug: toSlug(tagname, '-') }, async (err, docs) => {
+        if (err) return response(res, 500, ['ERROR_SERVER', err.message]);
+        if (!docs) return response(res, 400, ['EMPTY_DATA']);
+        if (docs.driveId !== "") await deleteFolder(docs.driveId);
+        docs.remove((err, docs) => {
+            if (err) return response(res, 500, ['ERROR_SERVER', err.message]);
             response(res, 200, [],)
         })
     })
