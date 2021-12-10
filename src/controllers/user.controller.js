@@ -40,7 +40,6 @@ export const get = (req, res) => {
                     }
                 })
             }
-            delete docs._id;
             docs.followers = docs.followers.length;
             return response(res, 200, [], { ...docs, followingCounts });
         })

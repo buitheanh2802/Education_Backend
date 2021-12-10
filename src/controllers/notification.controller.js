@@ -44,6 +44,9 @@ export const create = (req, res) => {
     }
     const notification = new NotificationModel(notificationDefination);
     notification.save((err, docs) => {
+        delete docs.__v;
+        delete docs.updatedAt;
+        delete docs.sendTo;
         if (err) return response(res, 500, ['ERROR_SERVER', err.message]);
         return response(res, 200, [], docs);
     })
