@@ -13,14 +13,14 @@ const UserSchema = new initializeSchema({
         avatarUrl: { type: String, default: "" }
     },
     skills: [{
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'tags'
+        type: String,
+        default : ""
     }],
     descriptions: {
         type: String,
         default : ""
     },
-    hobbies: [{ type: String,enum : ["1","2","3","4","5","6","7","8","9","10"] }],
+    hobbies: [{ type: String,default : "" }],
     birthday: { type: String,default : "" },
     points: { type: Number, default: 0 },
     userType: { type: String, enum: ['basic', 'premium'], default: 'basic' },
