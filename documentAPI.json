@@ -662,6 +662,12 @@ res = {
     }
 }
 
+- Lọc theo level: ( Không truyền lên gì tức là lấy về tất cả )
+GET: "https://devstar-api.herokuapp.com/api/challenges/:cateId/challenge-categories"
+req = {
+    "level": 2   // Nhập số level muốn lọc (number)
+}
+
 - detail
 GET: "https://devstar-api.herokuapp.com/api/challenges/:challengeId"
 res = {

@@ -7,6 +7,7 @@ import { createFile } from "services/drive";
 import { createFileSystem, removeFileSystem } from "services/system";
 
 export const gets = async (req, res) => {
+    // console.log(req.body.level);
     const cateId = req.params.cateId;
     const { page } = req.query;
     let currentPage = 1;
@@ -15,26 +16,50 @@ export const gets = async (req, res) => {
     const skip = (currentPage - 1) * limit;
     const countDocuments = await ChallengeModel.countDocuments();
     const totalPage = Math.ceil(countDocuments / limit);
-    ChallengeModel
-        .find({ challengeCategoryId: cateId }, '-__v -updateAt')
-        .populate({ path: "createBy", select: 'fullname avatar' })
-        .skip(skip)
-        .limit(limit)
-        .lean()
-        .exec((err, docs) => {
-            if (err) return response(res, 500, ['ERROR_SERVER', err.message]);
-            return response(res, 200, [], {
-                models: docs,
-                metaData: {
-                    pagination: {
-                        perPage: limit,
-                        totalPage: totalPage,
-                        currentPage: currentPage,
-                        countDocuments: docs.length
+    if (req.body.level == undefined) {
+        ChallengeModel
+            .find({ challengeCategoryId: cateId }, '-__v -updateAt')
+            .populate({ path: "createBy", select: 'fullname avatar' })
+            .skip(skip)
+            .limit(limit)
+            .lean()
+            .exec((err, docs) => {
+                if (err) return response(res, 500, ['ERROR_SERVER', err.message]);
+                return response(res, 200, [], {
+                    models: docs,
+                    metaData: {
+                        pagination: {
+                            perPage: limit,
+                            totalPage: totalPage,
+                            currentPage: currentPage,
+                            countDocuments: docs.length
+                        }
                     }
-                }
-            });
-        })
+                });
+            })
+    } else {
+        ChallengeModel
+            .find({ challengeCategoryId: cateId, level: req.body.level }, '-__v -updateAt')
+            .populate({ path: "createBy", select: 'fullname avatar' })
+            .skip(skip)
+            .limit(limit)
+            .lean()
+            .exec((err, docs) => {
+                if (err) return response(res, 500, ['ERROR_SERVER', err.message]);
+                return response(res, 200, [], {
+                    models: docs,
+                    metaData: {
+                        pagination: {
+                            perPage: limit,
+                            totalPage: totalPage,
+                            currentPage: currentPage,
+                            countDocuments: docs.length
+                        }
+                    }
+                });
+            })
+    }
+
 }
 export const create = (req, res) => {
     const challengesDefination = {

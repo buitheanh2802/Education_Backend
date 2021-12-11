@@ -17,6 +17,9 @@ export const search = async (req, res) => {
     const skip = (currentPage - 1) * 10;
     var questionData = await QuestionModel
         .find({ title: { $regex: req.body.title } })
+        .sort({ _id: -1 })
+        .populate({ path: "createBy", select: 'fullname username avatar' })
+        .populate({ path: "tags", select: "name slug" })
         .skip(skip)
         .limit(10)
     let result1 = questionData.map(x => {
@@ -50,6 +53,9 @@ export const search = async (req, res) => {
 
     var postData = await PostModel
         .find({ title: { $regex: req.body.title } })
+        .sort({ _id: -1 })
+        .populate({ path: "createBy", select: 'fullname username avatar' })
+        .populate({ path: "tags", select: "name slug" })
         .skip(skip)
         .limit(10)
     let result2 = postData.map(x => {
