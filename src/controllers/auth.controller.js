@@ -271,6 +271,8 @@ export const changeInfoUser = (req, res) => {
                 avatarUrl: driveFileResponse.webContentLink
             }
         }
+        if(rest.skills) rest.skills = rest.skills.split(',');
+        if(rest.hobbies) rest.hobbies = rest.hobbies.split(',');
         UserModel.updateOne({ _id: req.userId }, rest, (err, docs) => {
             if (err) return response(res, 500, ['ERROR_SERVER', err.message]);
             if (docs.n == 0) return response(res, 400, ['ACCESS_DENIED']);
