@@ -1,6 +1,7 @@
 import express from 'express';
 import { path } from 'constants/routeDefination';
-import { followers,following,get,myPostBookmark,myPost,points,
+import { followers,following,get,myPostBookmark,myPost,points,userManagerList,
+    userManagerEdit,userManagerFilter,
     myTag,myQuestion,featuredAuthor } from 'controllers/user.controller';
 import { accessRole, accessToken } from 'middlewares/auth.middleware';
 const router = express.Router();
@@ -50,6 +51,24 @@ router.post(
     path.user.points,
     points
 )
+// manager list
+router.get(
+    path.user.managerList,
+    userManagerList
+)
+// manager edit
+router.put(
+    path.user.managerEdit,
+    accessToken,
+    accessRole(['admin']),
+    userManagerEdit
+);
+// manager filter
+router.post(
+    path.user.managerFilter,
+    userManagerFilter
+);
+
 
 export default router;
 

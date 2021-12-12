@@ -112,7 +112,10 @@ export const path = {
         questionBookmark: '/:username/bookmark/question',
         tag: '/:username/tag',
         featuredAuthor: '/featured-author',
-        points : '/:username/point'
+        points : '/:username/point',
+        managerList : '/manager/list',
+        managerEdit : '/manager/edit/:username',
+        managerFilter : '/manager/filter'
     },
     challenges: {
         rootRoute: '/api/challenges',

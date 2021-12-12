@@ -11,6 +11,7 @@ import { shuffle } from 'helpers/shuffle';
 
 // global data 
 const limited = 15;
+const managerLimited = 10;
 const trendingViews = 100;
 const rewardPoints = 8;
 
@@ -361,7 +362,7 @@ export const featuredAuthor = (req, res) => {
         .populate({ path: 'followers', select: '-_id userId -followingUserId' })
         .select('username email fullname points avatar ')
         .sort({ points: -1 })
-        .limit(limited)
+        .limit(5)
         .lean()
         .exec((err, docs) => {
             if (err) return response(res, 500, ['ERROR_SERVER', err.message]);
@@ -377,14 +378,74 @@ export const points = (req, res) => {
     UserModel.findOne({ username }, (err, docs) => {
         if (err) return response(res, 500, ['ERROR_SERVER', err.message]);
         if (!docs) return response(res, 400, ['EMPTY_DATA']);
-        if(type == "up") docs.points += rewardPoints;
-        if(type == "down"){
-            if(docs.points <= 0) return response(res, 200, []);
+        if (type == "up") docs.points += rewardPoints;
+        if (type == "down") {
+            if (docs.points <= 0) return response(res, 200, []);
             docs.points -= rewardPoints;
         }
-        docs.save((err,docs) => {
+        docs.save((err, docs) => {
             if (err) return response(res, 500, ['ERROR_SERVER', err.message]);
             return response(res, 200, []);
         })
     })
+}
+
+// manager list
+export const userManagerList = async (req, res) => {
+    const { page } = req.query;
+    let currentPage = 1;
+    if (PAGINATION_REGEX.test(page)) currentPage = Number(page);
+    const skip = (currentPage - 1) * managerLimited;
+    const countDocuments = await UserModel.countDocuments({ status: { $in: ['active', 'block'] } });
+    const totalPage = Math.ceil(countDocuments / managerLimited);
+    UserModel.find({ status: { $in: ['active', 'block'] } })
+        .skip(skip)
+        .limit(managerLimited)
+        .sort({ createdAt: -1 })
+        .select('_id username email status role fullname socialType')
+        .lean()
+        .exec(async (err, docs) => {
+            if (err) return response(res, 500, ['ERROR_SERVER', err.message]);
+            return response(res, 200, [],
+                {
+                    models: docs,
+                    metaData: {
+                        pagination: {
+                            perPage: managerLimited,
+                            totalPage: totalPage,
+                            currentPage: currentPage,
+                            countDocuments: docs.length
+                        }
+                    }
+                });
+        })
+}
+// manager edit
+export const userManagerEdit = (req, res) => {
+    const { username } = req.params;
+    const { status, role } = req.body;
+    const dataUpdate = {};
+    if (status) dataUpdate.status = status;
+    if (role) dataUpdate.role = role;
+    UserModel.updateOne({ username }, dataUpdate, (err, docs) => {
+        if (err) return response(res, 500, ['ERROR_SERVER', err.message]);
+        return response(res, 200, []);
+    })
+}
+// manager filter
+export const userManagerFilter = (req, res) => {
+    const { keyword } = req.query;
+    UserModel.find({
+        $or: [{ fullname: { $regex: keyword, $options: 'i' } },
+        { username: { $regex: keyword, $options: 'i' } }],
+        status: { $in: ['active', 'block'] }
+    })
+        .limit(managerLimited)
+        .sort({ createdAt: -1 })
+        .select('_id username email status role fullname socialType')
+        .lean()
+        .exec(async (err, docs) => {
+            if (err) return response(res, 500, ['ERROR_SERVER', err.message]);
+            return response(res, 200, [],docs);
+        })
 }
