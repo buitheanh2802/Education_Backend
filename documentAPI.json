@@ -887,16 +887,41 @@ POST: "https://devstar-api.herokuapp.com/api/contact/:contactId"
 - Thong ke cho admin (token)
 
 - Lấy list thống kê cho question
-POST: "http://localhost:4000/api/statistic/question"
+POST: "https://devstar-api.herokuapp.com/api/statistic/question"
 req = {
     "type": 30 ///// Nhập số ngày
 }
 
 - Lấy list thống kê cho post
-POST: "http://localhost:4000/api/statistic/post"
+POST: "https://devstar-api.herokuapp.com/api/statistic/post"
 req = {
     "type": 30 ///// Nhập số ngày
 }
+
+- Lấy list thống kê cho solutions
+POST: "https://devstar-api.herokuapp.com/api/statistic/solutions"
+req = {
+    "type": 30 ///// Nhập số ngày
+}
+
+- Api lấy về tổng số người đã download và upload phần bài tập
+POST: "https://devstar-api.herokuapp.com/api/statistic/total-upload-download-challenge"
+res = {
+    "message": [],
+    "status": true,
+    "data": {
+        "countDownload": 12,
+        "countUpload": 6
+    }
+}
+
+- Api thống kê lượng user được đăng ký hàng ngày
+POST: "https://devstar-api.herokuapp.com/api/statistic/users"
+
+- Api lấy ra số lượng user, admin, cộng tác viên
+POST: "https://devstar-api.herokuapp.com/api/statistic/total-user"
+
+//////////////////////////////////////////////////////////////
 
 - tăng views cho bài viết 
 - POST : "http://localhost:4000/api/post/upviews",

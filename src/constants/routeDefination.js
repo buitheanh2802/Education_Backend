@@ -18,7 +18,7 @@ export const path = {
         resetPasswordConfirm: '/reset-password/confirm',
         changeInfoUser: '/profile/me/change-info',
         getInfoDetail: '/profile/me/info-detail',
-        refreshToken : '/profile/me/refreshtoken',
+        refreshToken: '/profile/me/refreshtoken',
     },
     notification: {
         rootRoute: '/api/notification',
@@ -45,7 +45,7 @@ export const path = {
         publishList: '/publish/list',
         edit: '/edit/:shortId',
         myBookmark: '/bookmark',
-        upViews : '/upviews'
+        upViews: '/upviews'
     },
     follow: {
         rootRoute: '/api/follow',
@@ -112,12 +112,12 @@ export const path = {
         questionBookmark: '/:username/bookmark/question',
         tag: '/:username/tag',
         featuredAuthor: '/featured-author',
-        points : '/:username/point',
-        managerList : '/manager/list',
-        managerEdit : '/manager/edit/:username',
-        managerFilter : '/manager/filter',
-        featuredAuthorList : '/featured-author/list',
-        otherPostSameAuthor : '/other-post/same-author/:userId'
+        points: '/:username/point',
+        managerList: '/manager/list',
+        managerEdit: '/manager/edit/:username',
+        managerFilter: '/manager/filter',
+        featuredAuthorList: '/featured-author/list',
+        otherPostSameAuthor: '/other-post/same-author/:userId'
     },
     challenges: {
         rootRoute: '/api/challenges',
@@ -168,5 +168,9 @@ export const path = {
         rootRoute: '/api/statistic',
         question: '/question',
         post: '/post',
+        solutions: '/solutions',
+        users: '/users',
+        totalUser: '/total-user',
+        totalUploadDownloadChallenge: '/total-upload-download-challenge'
     }
 }
