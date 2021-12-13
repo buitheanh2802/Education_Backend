@@ -98,6 +98,7 @@ export const myQuestion = async (req, res) => {
     const countDocuments = await questionModel.countDocuments({ createBy: userData._id });
     const totalPage = Math.ceil(countDocuments / limited);
     // console.log(countDocuments);
+    
     questionModel.find({ createBy: userData._id })
         .skip(skip)
         .limit(limited)
