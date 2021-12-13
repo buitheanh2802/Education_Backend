@@ -117,7 +117,7 @@ export const path = {
         managerEdit : '/manager/edit/:username',
         managerFilter : '/manager/filter',
         featuredAuthorList : '/featured-author/list',
-        otherPostSameAuthor : '/other-post/same-author'
+        otherPostSameAuthor : '/other-post/same-author/:userId'
     },
     challenges: {
         rootRoute: '/api/challenges',
