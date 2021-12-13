@@ -40,7 +40,8 @@ export const create = (req, res) => {
         title: req.body.title,
         url: req.body.url,
         sender: req.userId,
-        sendTo: req.params.sendTo
+        sendTo: req.params.sendTo,
+        type : req.params.type
     }
     const notification = new NotificationModel(notificationDefination);
     notification.save((err, docs) => {
