@@ -1,6 +1,7 @@
 import { PAGINATION_REGEX } from "constants/regexDefination";
 import { response } from "constants/responseHandler";
 import PostModel from "models/post.model";
+import QuestionModel from "models/question.model";
 import moment from "moment";
 
 export const getsQuestion = async (req, res) => {
