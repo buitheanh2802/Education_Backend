@@ -1,15 +1,25 @@
 import express from 'express';
 import { path } from 'constants/routeDefination';
 import { followers,following,get,myPostBookmark,myPost,points,userManagerList,
-    userManagerEdit,userManagerFilter,
+    userManagerEdit,userManagerFilter,featuredAuthorList,otherPostSameAuthor,
     myTag,myQuestion,featuredAuthor } from 'controllers/user.controller';
 import { accessRole, accessToken } from 'middlewares/auth.middleware';
 const router = express.Router();
 
+// featured author list
+router.get(
+    path.user.featuredAuthorList,
+    featuredAuthorList
+);
 // featured-author
 router.get(
     path.user.featuredAuthor,
     featuredAuthor
+)
+// other post same author
+router.get(
+    path.user.otherPostSameAuthor,
+    otherPostSameAuthor
 )
 // get user
 router.get(

@@ -362,7 +362,7 @@ export const featuredAuthor = (req, res) => {
         .populate({ path: 'followers', select: '-_id userId -followingUserId' })
         .select('username email fullname points avatar ')
         .sort({ points: -1 })
-        .limit(5)
+        .limit(10)
         .lean()
         .exec((err, docs) => {
             if (err) return response(res, 500, ['ERROR_SERVER', err.message]);
@@ -446,6 +446,26 @@ export const userManagerFilter = (req, res) => {
         .lean()
         .exec(async (err, docs) => {
             if (err) return response(res, 500, ['ERROR_SERVER', err.message]);
-            return response(res, 200, [],docs);
+            return response(res, 200, [], docs);
         })
+}
+
+// featured author list
+export const featuredAuthorList = (req, res) => {
+    try {
+        var token = jwt.verify(req.headers?.authorization?.split(" ")[1], process.env.SECRET_KEY);
+    } catch (error) {
+        // console.log('error', error.message);
+    }
+    // const filterList = ['point', 'follower', 'post']
+    // const currentFilter = 'point';
+    // UserModel.find({})
+    //     .populate({ path: 'postCounts' })
+    //     .populate({ path: 'followers', select: '-_id userId -followingUserId' })
+    //     .select('username email fullname points avatar ')
+    //     .sort({ })
+}
+// other post same author
+export const otherPostSameAuthor = (req, res) => {
+
 }

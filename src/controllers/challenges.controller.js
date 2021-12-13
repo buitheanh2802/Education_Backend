@@ -103,7 +103,7 @@ export const remove = (req, res) => {
         if (err) return response(res, 500, ['ERROR_SERVER', err.message]);
         if (!docs) return response(res, 400, ['EMPTY_DATA']);
         return response(res, 200, []);
-    })
+    });
 }
 export const uploadImage = (req, res) => {
     const initialize = new formidable.IncomingForm({
