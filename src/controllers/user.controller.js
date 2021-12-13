@@ -323,7 +323,8 @@ export const following = async (req, res) => {
         .exec(async (err, docs) => {
             if (err) return response(res, 500, ['ERROR_SERVER', err.message]);
             if (!docs) return response(res, 400, ['EMPTY_DATA']);
-            docs = docs.filter(doc => {
+            const newData = [];
+            docs.forEach(doc => {
                 if (doc.followingUserId) {
                     const currentDoc = doc?.followingUserId;
                     currentDoc.isFollowing = false;
@@ -335,12 +336,12 @@ export const following = async (req, res) => {
                     }
                     delete currentDoc._id;
                     delete currentDoc.followers;
-                    return currentDoc;
+                    newData.push(doc.followingUserId)
                 }
-            })
+            });
             return response(res, 200, [],
                 {
-                    models: docs,
+                    models: newData,
                     metaData: {
                         pagination: {
                             perPage: limited,
