@@ -70,6 +70,9 @@ export const signin = (req, res) => {
             if (docs.status == 'verify') {
                 return response(res, 400, ['NOT_VERIFY'])
             }
+            if(docs.status == 'block'){
+                return response(res, 400, ['ACCOUNT_BLOCKED'])
+            }
             const documentReponse = docs.toObject({
                 transform: (_, pureObject) => {
                     delete pureObject.password;
@@ -100,7 +103,12 @@ export const profile = (req, res) => {
         .exec((err, docs) => {
             if (err) return response(res, 500, ['ERROR_SERVER', err.message]);
             if (!docs) return response(res, 400, ['USER_NOTEXIST']);
-            if(req?.oauthPicture) docs.avatar.avatarUrl = req.oauthPicture;
+            if(docs.status == 'block'){
+                return response(res, 400, ['ACCOUNT_BLOCKED']);
+            }
+            if(docs.avatar.avatarUrl == ""){
+                if(req?.oauthPicture) docs.avatar.avatarUrl = req.oauthPicture;
+            }
             return response(res, 200, [],
                 {
                     ...docs,
@@ -271,6 +279,8 @@ export const changeInfoUser = (req, res) => {
                 avatarUrl: driveFileResponse.webContentLink
             }
         }
+        if(rest.skills) rest.skills = rest.skills.split(',');
+        if(rest.hobbies) rest.hobbies = rest.hobbies.split(',');
         UserModel.updateOne({ _id: req.userId }, rest, (err, docs) => {
             if (err) return response(res, 500, ['ERROR_SERVER', err.message]);
             if (docs.n == 0) return response(res, 400, ['ACCESS_DENIED']);

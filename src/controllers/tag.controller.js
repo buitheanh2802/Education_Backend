@@ -26,7 +26,7 @@ export const gets = async (req, res) => {
     const { page } = req.query;
     let currentPage = 1;
     if (PAGINATION_REGEX.test(page)) currentPage = Number(page);
-    const limit = 10;
+    const limit = limited;
     const skip = (currentPage - 1) * limit;
     const countDocuments = await TagModel.countDocuments();
     const totalPage = Math.ceil(countDocuments / limit);

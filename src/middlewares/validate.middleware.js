@@ -47,15 +47,6 @@ export const notificationValidator = async (req, res, next) => {
         .isLength({ max: 200 })
         .withMessage('Tiêu đề không được dài hơn 50 kí tự')
         .run(req);
-    await body('url')
-        .trim()
-        .notEmpty()
-        .withMessage('Không được bỏ trống URL...')
-        .isLength({ max: 50 })
-        .withMessage('URL không được dài hơn 50 kí tự')
-        .matches(pattern.URL_REGEX)
-        .withMessage('URL không hợp lệ')
-        .run(req);
     const validatorResult = validationResult(req);
     // điều kiện tồn tại lỗi =>
     if (!validatorResult.isEmpty()) return response(res, 400, ['INVALID_DATA', ...validatorResult.errors])
