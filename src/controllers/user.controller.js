@@ -507,7 +507,8 @@ export const featuredAuthorList = (req, res) => {
                         fullname : { $first : '$fullname'},
                         email : { $first : '$email'},
                         followers : { $push : '$followers.userId'},
-                        followerCounts : { $first : '$followerCounts'}
+                        followerCounts : { $first : '$followerCounts'},
+                        avatar : { $first : '$avatar'}
                     }
                 },
                 {
@@ -525,7 +526,8 @@ export const featuredAuthorList = (req, res) => {
                         username : 1,
                         fullname : 1,
                         email : 1,
-                        points : 1
+                        points : 1,
+                        avatar : 1
                     }
                 }
             ]
