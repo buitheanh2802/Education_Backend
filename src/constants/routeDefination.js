@@ -70,6 +70,8 @@ export const path = {
         deletedislike: '/:questionId/delete-dislike',
         follow: '/follow',
         spam: '/spam/:questionId',
+        filterQuestion : '/manager/filter',
+        otherPostSameAuthor : '/other-post/same-author'
     },
     tag: {
         rootRoute: '/api/tag',

@@ -326,8 +326,8 @@ export const following = async (req, res) => {
                 if (doc.followingUserId) {
                     const currentDoc = doc?.followingUserId;
                     currentDoc.isFollowing = false;
-                    currentDoc.followerCounts = currentDoc.followers.length;
-                    if (token && currentDoc.followers.length !== 0) {
+                    currentDoc.followerCounts = currentDoc.followers?.length || 0;
+                    if (token && currentDoc.followers &&currentDoc.followers?.length !== 0) {
                         currentDoc.followers.forEach(follow => {
                             if (follow.userId === token._id) currentDoc.isFollowing = true;
                         })

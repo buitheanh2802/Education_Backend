@@ -8,14 +8,15 @@ export const gets = async (req, res) => {
     if (PAGINATION_REGEX.test(page)) currentPage = Number(page);
     const limit = 5;
     const skip = (currentPage - 1) * limit;
-    const countDocuments = await NotificationModel.countDocuments({ sendTo : req.userId});
+    const countDocuments = await NotificationModel.countDocuments({ sendTo: req.userId });
+    const unRead = await NotificationModel.countDocuments({ sendTo: req.userId, isRead: false });
     const totalPage = Math.ceil(countDocuments / limit);
     NotificationModel
         .find({ sendTo: req.userId }, '-__v -updatedAt -sendTo')
         .skip(skip)
         .limit(limit)
-        .populate({ path : 'sender',select : '-_id username email avatar fullname'})
-        .sort({ createdAt : -1 })
+        .populate({ path: 'sender', select: '-_id username email avatar fullname' })
+        .sort({ createdAt: -1 })
         .lean()
         .exec((err, docs) => {
             if (err) return response(res, 500, ['ERROR_SERVER', err.message]);
@@ -27,7 +28,8 @@ export const gets = async (req, res) => {
                             perPage: limit,
                             totalPage: totalPage,
                             currentPage: currentPage,
-                            countDocuments: docs.length
+                            countDocuments: docs.length,
+                            unRead: unRead,
                         }
                     }
                 });
@@ -41,7 +43,7 @@ export const create = (req, res) => {
         url: req.body.url,
         sender: req.userId,
         sendTo: req.params.sendTo,
-        type : req.body.type
+        type: req.body.type
     }
     const notification = new NotificationModel(notificationDefination);
     notification.save((err, docs) => {
