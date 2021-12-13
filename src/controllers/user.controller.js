@@ -98,7 +98,7 @@ export const myQuestion = async (req, res) => {
     const countDocuments = await questionModel.countDocuments({ createBy: userData._id });
     const totalPage = Math.ceil(countDocuments / limited);
     // console.log(countDocuments);
-    
+
     questionModel.find({ createBy: userData._id })
         .skip(skip)
         .limit(limited)
@@ -138,10 +138,10 @@ export const myPost = async (req, res) => {
     const userData = await UserModel.findOne({ username: req.params.username });
     if (!userData) return response(res, 400, ['EMPTY_DATA']);
     const skip = (currentPage - 1) * limited;
-    const countDocuments = await PostModel.countDocuments({ createBy: userData._id });
+    const countDocuments = await PostModel.countDocuments({ createBy: userData._id,isDraft: false,isAccept : true });
     const totalPage = Math.ceil(countDocuments / limited);
     // console.log(countDocuments);
-    PostModel.find({ createBy: userData._id })
+    PostModel.find({ createBy: userData._id, isDraft: false,isAccept : true })
         .skip(skip)
         .limit(limited)
         .select('-_id views shortId title slug tags likes dislikes createBy createdAt bookmarks')
@@ -328,7 +328,7 @@ export const following = async (req, res) => {
                     const currentDoc = doc?.followingUserId;
                     currentDoc.isFollowing = false;
                     currentDoc.followerCounts = currentDoc.followers?.length || 0;
-                    if (token && currentDoc.followers &&currentDoc.followers?.length !== 0) {
+                    if (token && currentDoc.followers && currentDoc.followers?.length !== 0) {
                         currentDoc.followers.forEach(follow => {
                             if (follow.userId === token._id) currentDoc.isFollowing = true;
                         })
@@ -465,70 +465,70 @@ export const featuredAuthorList = (req, res) => {
     if (filter) {
         if (filterList.includes(filter)) currentFilter = filter;
     }
-    switch(currentFilter){
-        case 'followers' : {
-            break;   
-        }
-        case 'posts' : {
+    switch (currentFilter) {
+        case 'followers': {
             break;
         }
-        default : {
+        case 'posts': {
+            break;
+        }
+        default: {
             aggregate = [
                 {
-                    $lookup : {
-                        from : 'follows',
-                        localField : '_id',
-                        foreignField : 'followingUserId',
-                        as : 'followers'
+                    $lookup: {
+                        from: 'follows',
+                        localField: '_id',
+                        foreignField: 'followingUserId',
+                        as: 'followers'
                     }
                 },
                 {
-                    $lookup : {
-                        from : 'posts',
-                        localField : '_id',
-                        foreignField : 'createBy',
-                        as : 'postCounts'
+                    $lookup: {
+                        from: 'posts',
+                        localField: '_id',
+                        foreignField: 'createBy',
+                        as: 'postCounts'
                     }
                 },
                 {
-                    $addFields : {
-                        followerCounts : { $size : '$followers'},
-                        postCounts : { $size : '$postCounts'}
+                    $addFields: {
+                        followerCounts: { $size: '$followers' },
+                        postCounts: { $size: '$postCounts' }
                     }
                 },
                 {
                     $unwind: { path: '$followers', preserveNullAndEmptyArrays: true }
                 },
                 {
-                    $group : {
-                        _id : '$_id',
-                        postCounts : { $first : '$postCounts'},
-                        username : { $first : '$username'},
-                        points : { $first : '$points'},
-                        fullname : { $first : '$fullname'},
-                        email : { $first : '$email'},
-                        followers : { $push : '$followers.userId'},
-                        followerCounts : { $first : '$followerCounts'},
-                        avatar : { $first : '$avatar'}
+                    $group: {
+                        _id: '$_id',
+                        postCounts: { $first: '$postCounts' },
+                        username: { $first: '$username' },
+                        points: { $first: '$points' },
+                        fullname: { $first: '$fullname' },
+                        email: { $first: '$email' },
+                        followers: { $push: '$followers.userId' },
+                        followerCounts: { $first: '$followerCounts' },
+                        avatar: { $first: '$avatar' }
                     }
                 },
                 {
-                    $sort : { points : -1  }
+                    $sort: { points: -1 }
                 }
                 ,
                 {
-                    $limit : 60
+                    $limit: 60
                 },
                 {
-                    $project : {
-                        followerCounts : 1,
-                        followers : 1,
-                        postCounts : 1,
-                        username : 1,
-                        fullname : 1,
-                        email : 1,
-                        points : 1,
-                        avatar : 1
+                    $project: {
+                        followerCounts: 1,
+                        followers: 1,
+                        postCounts: 1,
+                        username: 1,
+                        fullname: 1,
+                        email: 1,
+                        points: 1,
+                        avatar: 1
                     }
                 }
             ]
@@ -539,7 +539,7 @@ export const featuredAuthorList = (req, res) => {
             if (err) return response(res, 500, ['ERROR_SERVER', err.message]);
             return response(res, 200, [], docs.map(item => {
                 item.isFollowing = false;
-                if(item.followers.length > 0 && token){
+                if (item.followers.length > 0 && token) {
                     item.isFollowing = item.followers.includes(token._id);
                 }
                 delete item.followers;
@@ -550,18 +550,18 @@ export const featuredAuthorList = (req, res) => {
 // other post same author
 export const otherPostSameAuthor = (req, res) => {
     PostModel
-        .find({ createBy : req.params.userId },'-_id title bookmarks createdAt slug views shortId createBy')
+        .find({ createBy: req.params.userId }, '-_id title bookmarks createdAt slug views shortId createBy')
         .populate({ path: 'comments' })
         .populate({ path: 'createBy', select: '-_id email username fullname avatar' })
         .lean()
-        .sort({ createdAt : -1})
+        .sort({ createdAt: -1 })
         .limit(10)
-        .exec((err,docs) => {
+        .exec((err, docs) => {
             if (err) return response(res, 500, ['ERROR_SERVER', err.message]);
             return response(res, 200, [], docs.map((item) => {
                 item.bookmarks = item.bookmarks.length;
                 return item
             }));
-    })
+        })
 
 }
