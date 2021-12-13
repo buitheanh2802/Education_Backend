@@ -71,7 +71,6 @@ export const get = (req, res) => {
                     mergeData.dislikes = mergeData.dislikes.length;
                     mergeData.bookmarks = mergeData.bookmarks.length;
                     delete mergeData.createBy.followers;
-                    delete mergeData.createBy._id
                     return response(res, 200, [], mergeData);
                 })
         })

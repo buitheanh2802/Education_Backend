@@ -362,7 +362,7 @@ export const featuredAuthor = (req, res) => {
         .populate({ path: 'followers', select: '-_id userId -followingUserId' })
         .select('username email fullname points avatar ')
         .sort({ points: -1 })
-        .limit(5)
+        .limit(10)
         .lean()
         .exec((err, docs) => {
             if (err) return response(res, 500, ['ERROR_SERVER', err.message]);
