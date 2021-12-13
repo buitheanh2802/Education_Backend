@@ -547,7 +547,7 @@ export const featuredAuthorList = (req, res) => {
 // other post same author
 export const otherPostSameAuthor = (req, res) => {
     PostModel
-        .find({ createBy : req.params.userId })
+        .find({ createBy : req.params.userId },'-_id title bookmarks createdAt slug views shortId createBy')
         .populate({ path: 'comments' })
         .populate({ path: 'createBy', select: '-_id email username fullname avatar' })
         .lean()
