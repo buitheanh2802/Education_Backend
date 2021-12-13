@@ -14,4 +14,11 @@ const QuestionSchema = new mongoose.Schema({
     spam: { type: Boolean, default: false }
 }, { timestamps: true });
 
+QuestionSchema.virtual('comments',{
+    localField : '_id',
+    foreignField : 'postOrQuestionId',
+    count : true,
+    ref: 'comments',
+})
+
 export default mongoose.model('questions', QuestionSchema);

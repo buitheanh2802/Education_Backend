@@ -716,3 +716,25 @@ export const search = (req, res) => {
             });
         })
 }
+
+// filter question for admin
+export const filterQuestion = (req,res) => {
+
+}
+// other question for same author
+export const otherQuestionSameAuthor = (req,res) => {
+    QuestionModel
+    .find({ createBy : req.params.userId },'-_id title bookmarks createdAt slug views shortId createBy')
+    .populate({ path: 'comments' })
+    .populate({ path: 'createBy', select: '-_id email username fullname avatar' })
+    .lean()
+    .sort({ createdAt : -1})
+    .limit(10)
+    .exec((err,docs) => {
+        if (err) return response(res, 500, ['ERROR_SERVER', err.message]);
+        return response(res, 200, [], docs.map((item) => {
+            item.bookmarks = item.bookmarks.length;
+            return item
+        }));
+})
+}

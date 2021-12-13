@@ -71,7 +71,7 @@ export const path = {
         follow: '/follow',
         spam: '/spam/:questionId',
         filterQuestion : '/manager/filter',
-        otherPostSameAuthor : '/other-post/same-author'
+        otherQuestionSameAuthor : '/other-question/same-author/:userId'
     },
     tag: {
         rootRoute: '/api/tag',
