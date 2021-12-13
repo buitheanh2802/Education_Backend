@@ -555,7 +555,10 @@ export const otherPostSameAuthor = (req, res) => {
         .limit(10)
         .exec((err,docs) => {
             if (err) return response(res, 500, ['ERROR_SERVER', err.message]);
-            return response(res, 200, [], docs);
+            return response(res, 200, [], docs.map((item) => {
+                item.bookmarks = item.bookmarks.length;
+                return item
+            }));
     })
 
 }
