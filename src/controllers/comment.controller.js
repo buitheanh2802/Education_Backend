@@ -16,7 +16,8 @@ export const gets = async (req, res) => {
     if (PAGINATION_REGEX.test(page)) currentPage = Number(page);
     const limit = 5;
     const skip = (currentPage - 1) * limit;
-    const countDocuments = await CommentModel.countDocuments({ postOrQuestionId: req.params.postOrQuestionId, parentId: null })
+    const countDocuments = await CommentModel.countDocuments({ postOrQuestionId: req.params.postOrQuestionId, parentId: null });
+    const totalCounts = await CommentModel.countDocuments({ postOrQuestionId: req.params.postOrQuestionId })
     const totalPage = Math.ceil(countDocuments / limit);
     CommentModel.aggregate([
         {
@@ -137,6 +138,7 @@ export const gets = async (req, res) => {
                 models: docs,
                 metaData: {
                     pagination: {
+                        totalCounts,
                         perPage: limit,
                         totalPage: totalPage,
                         currentPage: currentPage,
