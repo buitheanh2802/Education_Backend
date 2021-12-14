@@ -564,5 +564,4 @@ export const otherPostSameAuthor = (req, res) => {
                 return item
             }));
         })
-
 }
