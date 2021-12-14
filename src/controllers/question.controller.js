@@ -736,7 +736,7 @@ export const filterQuestion = (req, res) => {
 // other question for same author
 export const otherQuestionSameAuthor = (req, res) => {
     QuestionModel
-        .find({ createBy: req.params.userId }, '_id title bookmarks createdAt slug views shortId createBy')
+        .find({ createBy: req.params.userId,spam : false }, '_id title bookmarks createdAt slug views shortId createBy')
         .populate({ path: 'comments' })
         .populate({ path: 'createBy', select: '-_id email username fullname avatar' })
         .lean()
