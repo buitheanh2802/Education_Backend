@@ -99,7 +99,7 @@ export const myQuestion = async (req, res) => {
     const totalPage = Math.ceil(countDocuments / limited);
     // console.log(countDocuments);
 
-    questionModel.find({ createBy: userData._id })
+    questionModel.find({ createBy: userData._id, spam: false })
         .skip(skip)
         .limit(limited)
         .select('_id views shortId title slug tags likes dislike createBy createdAt bookmarks')
@@ -138,10 +138,10 @@ export const myPost = async (req, res) => {
     const userData = await UserModel.findOne({ username: req.params.username });
     if (!userData) return response(res, 400, ['EMPTY_DATA']);
     const skip = (currentPage - 1) * limited;
-    const countDocuments = await PostModel.countDocuments({ createBy: userData._id,isDraft: false,isAccept : true });
+    const countDocuments = await PostModel.countDocuments({ createBy: userData._id, isDraft: false, isAccept: true });
     const totalPage = Math.ceil(countDocuments / limited);
     // console.log(countDocuments);
-    PostModel.find({ createBy: userData._id, isDraft: false,isAccept : true })
+    PostModel.find({ createBy: userData._id, isDraft: false, isAccept: true })
         .skip(skip)
         .limit(limited)
         .select('-_id views shortId title slug tags likes dislikes createBy createdAt bookmarks')
