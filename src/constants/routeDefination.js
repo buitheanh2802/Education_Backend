@@ -161,6 +161,7 @@ export const path = {
     },
     search: {
         rootRoute: '/api/search',
+        searchMultiple : '/multiple'
     },
     contact: {
         rootRoute: '/api/contact',

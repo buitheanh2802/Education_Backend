@@ -8,7 +8,7 @@ const TagModel = new mongoose.Schema({
         _id: { type: String, default: '' },
         avatarUrl: { type: String, default: '' }
     },
-    driveId: { type: String,default : '' }
+    driveId: { type: String, default: '' }
 },
     {
         timestamps: true
@@ -17,31 +17,32 @@ const TagModel = new mongoose.Schema({
 
 TagModel.plugin(findOrCreate);
 
-TagModel.virtual('postCounts',{
-    localField : '_id',
-    foreignField : 'tags',
-    ref : 'posts',
-    count : true
+TagModel.virtual('postCounts', {
+    localField: '_id',
+    foreignField: 'tags',
+    ref: 'posts',
+    count: true,
+    match: { isDraft: false, isAccept: true }
 })
-TagModel.virtual('questionCounts',{
-    localField : '_id',
-    foreignField : 'tags',
-    ref : 'questions',
-    count : true
+TagModel.virtual('questionCounts', {
+    localField: '_id',
+    foreignField: 'tags',
+    ref: 'questions',
+    count: true
 });
-TagModel.virtual('followerCounts',{
-    localField : '_id',
-    foreignField : 'followingUserId',
-    ref : 'Follows',
+TagModel.virtual('followerCounts', {
+    localField: '_id',
+    foreignField: 'followingUserId',
+    ref: 'Follows',
     // count : true
 });
-TagModel.virtual('followers',{
-    localField : '_id',
-    foreignField : 'followingUserId',
-    ref : 'Follows',
-    count : true,
-    options : {
-        sort : { followers : -1 }
+TagModel.virtual('followers', {
+    localField: '_id',
+    foreignField: 'followingUserId',
+    ref: 'Follows',
+    count: true,
+    options: {
+        sort: { followers: -1 }
     }
 });
 
