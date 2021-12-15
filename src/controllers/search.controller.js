@@ -23,7 +23,7 @@ export const searchMultiple = async (req, res) => {
             { username: { $regex: keyword, $options: 'i' } },
             { email: { $regex: keyword, $options: 'i' } }
             ]
-        }).select('-_id username fullname avatar').lean()
+        }).populate(['followerCounts','postCounts','questionCounts']).select('-_id username fullname avatar').lean()
     ]);
     dataQuery = dataQuery.map((content, index) => {
         if (index == 0) return { title: 'Câu hỏi', searchResults : content }
@@ -35,7 +35,8 @@ export const searchMultiple = async (req, res) => {
 }
 // search question
 export const searchQuestion = async (req, res) => {
-
+    const { keyword } = req.query;
+    if (!keyword) return response(res, 405, ['ERROR_SYNTAX']);
 }
 // search tag
 export const searchTag = async (req, res) => {
