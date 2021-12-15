@@ -28,7 +28,8 @@ TagModel.virtual('questionCounts', {
     localField: '_id',
     foreignField: 'tags',
     ref: 'questions',
-    count: true
+    count: true,
+    match: { spam: false }
 });
 TagModel.virtual('followerCounts', {
     localField: '_id',
