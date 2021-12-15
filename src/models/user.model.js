@@ -66,6 +66,12 @@ UserSchema.virtual('followers', {
     foreignField: 'followingUserId',
     ref: 'Follows'
 });
+UserSchema.virtual('followerCounts', {
+    localField: '_id',
+    foreignField: 'followingUserId',
+    ref: 'Follows',
+    count : true
+});
 
 
 export default mongoose.model('Users', UserSchema)

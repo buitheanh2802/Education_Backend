@@ -95,7 +95,7 @@ export const myQuestion = async (req, res) => {
     const userData = await UserModel.findOne({ username: req.params.username });
     if (!userData) return response(res, 400, ['EMPTY_DATA']);
     const skip = (currentPage - 1) * limited;
-    const countDocuments = await questionModel.countDocuments({ createBy: userData._id });
+    const countDocuments = await questionModel.countDocuments({ createBy: userData._id,spam : false });
     const totalPage = Math.ceil(countDocuments / limited);
     // console.log(countDocuments);
 
