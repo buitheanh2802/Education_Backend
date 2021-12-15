@@ -7,7 +7,8 @@ import UserModel from "models/user.model";
 
 // search multiple
 export const searchMultiple = async (req, res) => {
-
+    console.log('running !');
+    
 }
 // search question
 export const searchQuestion = async (req, res) => {
