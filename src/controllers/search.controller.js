@@ -4,19 +4,20 @@ import QuestionModel from "models/question.model";
 import PostModel from "models/post.model";
 import TagModel from "models/tag.model";
 import UserModel from "models/user.model";
-
-const limited = 10;
-const trendingViews = 100;
+import {
+    trendingViews, postPerPage
+    , questionPerpage, tagPerPage
+} from "constants/globalVariables";
 
 // search multiple
 export const searchMultiple = async (req, res) => {
     const { keyword } = req.query;
     if (!keyword) return response(res, 405, ['ERROR_SYNTAX']);
     let dataQuery = await Promise.all([
-        QuestionModel.find({ title: { $regex: keyword, $options: 'i' },spam : false })
+        QuestionModel.find({ title: { $regex: keyword, $options: 'i' }, spam: false })
             .populate({ path: 'createBy', select: '-_id username fullname avatar' })
             .select('title createdAt createBy').lean(),
-        PostModel.find({ title: { $regex: keyword, $options: 'i' },isDaft : false,isAccept : true })
+        PostModel.find({ title: { $regex: keyword, $options: 'i' }, isDaft: false, isAccept: true })
             .populate({ path: 'createBy', select: '-_id username fullname avatar' })
             .select('-_id title shortId createdAt createBy').lean(),
         TagModel.find({ name: { $regex: keyword, $options: 'i' } })
@@ -26,13 +27,13 @@ export const searchMultiple = async (req, res) => {
             { username: { $regex: keyword, $options: 'i' } },
             { email: { $regex: keyword, $options: 'i' } }
             ]
-        }).populate(['followerCounts','postCounts','questionCounts']).select('-_id username fullname avatar').lean()
+        }).populate(['followerCounts', 'postCounts', 'questionCounts']).select('-_id username fullname avatar').lean()
     ]);
     dataQuery = dataQuery.map((content, index) => {
-        if (index == 0) return { title: 'Câu hỏi', searchResults : content }
-        if (index == 1) return { title: 'Bài viết', searchResults : content }
-        if (index == 2) return { title: 'Thẻ', searchResults : content }
-        if (index == 3) return { title: 'Tác giả', searchResults : content }
+        if (index == 0) return { title: 'Câu hỏi', searchResults: content }
+        if (index == 1) return { title: 'Bài viết', searchResults: content }
+        if (index == 2) return { title: 'Thẻ', searchResults: content }
+        if (index == 3) return { title: 'Tác giả', searchResults: content }
     })
     return response(res, 200, [], dataQuery);
 }
@@ -43,13 +44,12 @@ export const searchQuestion = async (req, res) => {
     const { page } = req.query;
     let currentPage = 1;
     if (PAGINATION_REGEX.test(page)) currentPage = Number(page);
-    const skip = (currentPage - 1) * limited;
-    const countDocuments = await QuestionModel.countDocuments({ title: { $regex: keyword, $options: 'i' },spam : false });
-    const totalPage = Math.ceil(countDocuments / limited);
-
+    const skip = (currentPage - 1) * questionPerpage;
+    const countDocuments = await QuestionModel.countDocuments({ title: { $regex: keyword, $options: 'i' }, spam: false });
+    const totalPage = Math.ceil(countDocuments / questionPerpage);
     QuestionModel.find({ title: { $regex: keyword, $options: 'i' }, spam: false })
         .skip(skip)
-        .limit(limited)
+        .limit(questionPerpage)
         .select('_id views shortId title slug tags createBy createdAt bookmarks')
         .sort({ createdAt: -1 })
         .populate({ path: 'comments' })
@@ -69,7 +69,7 @@ export const searchQuestion = async (req, res) => {
                     })),
                     metaData: {
                         pagination: {
-                            perPage: limited,
+                            perPage: questionPerpage,
                             totalPage: totalPage,
                             currentPage: currentPage,
                             countDocuments: docs.length
@@ -80,7 +80,53 @@ export const searchQuestion = async (req, res) => {
 }
 // search tag
 export const searchTag = async (req, res) => {
-
+    try {
+        var token = jwt.verify(req.headers?.authorization?.split(" ")[1], process.env.SECRET_KEY);
+    } catch (error) {
+        // console.log('error', error.message);
+    }
+    const { keyword } = req.query;
+    if (!keyword) return response(res, 405, ['ERROR_SYNTAX']);
+    const { page } = req.query;
+    let currentPage = 1;
+    if (PAGINATION_REGEX.test(page)) currentPage = Number(page);
+    const countDocuments = await TagModel.countDocuments({ name: { $regex: keyword, $options: 'i' } });
+    const totalPage = Math.ceil(countDocuments / tagPerPage);
+    const skip = (currentPage - 1) * tagPerPage;
+    TagModel.find({ name: { $regex: keyword, $options: 'i' } })
+        .skip(skip)
+        .limit(tagPerPage)
+        .sort({ createdAt: -1 })
+        .populate([{ path: 'postCounts' }, 
+        { path: 'questionCounts' }, 
+        { path: 'followerCounts', select: '-_id -followingUserId userId' }])
+        .select('-__v -updatedAt')
+        .lean()
+        .exec((err, docs) => {
+            if (err) return response(res, 500, ['ERROR_SERVER', err.message]);
+            return response(res, 200, [],
+                {
+                    models: docs.map(doc => {
+                        doc.isFollowing = false;
+                        if (token && doc.followerCounts.length !== 0) {
+                            doc.followerCounts.forEach(follow => {
+                                if (token._id === follow.userId) doc.isFollowing = true;
+                            })
+                        }
+                        delete doc.createdAt;
+                        doc.followerCounts = doc.followerCounts.length;
+                        return doc;
+                    }),
+                    metaData: {
+                        pagination: {
+                            perPage: tagPerPage,
+                            totalPage: totalPage,
+                            currentPage: currentPage,
+                            countDocuments: docs.length
+                        }
+                    }
+                });
+        })
 }
 // search author
 export const searchAuthor = async (req, res) => {

@@ -6,7 +6,6 @@ import { createFile, deleteFile } from "services/drive";
 import { createFileSystem, removeFileSystem } from 'services/system.js'
 
 export const create = (req, res) => {
-    console.log('running !');
     const initialize = new formidable.IncomingForm({
         maxFileSize: 1024 * 1024,
         keepExtensions: true
