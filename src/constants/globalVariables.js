@@ -6,6 +6,7 @@ export const questionPerpage = 10;
 export const tagPerPage = 12;
 // Số author trên một trang
 export const authorPerpage = 30;
+export const authorSearchPerPage = 10;
 // số view để lên thịnh hành
 export const trendingViews = 100;
 // số ảnh trên một trang
