@@ -406,5 +406,6 @@ export const remove = (req, res) => {
 }
 // manager filter
 export const managerFilter = (req,res) => {
-    
+    const { keyword } = req.query;
+    if (!keyword) return response(res, 405, ['ERROR_SYNTAX']);
 }

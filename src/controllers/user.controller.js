@@ -437,6 +437,7 @@ export const userManagerEdit = (req, res) => {
 // manager filter
 export const userManagerFilter = (req, res) => {
     const { keyword } = req.query;
+    if (!keyword) return response(res, 405, ['ERROR_SYNTAX']);
     UserModel.find({
         $or: [{ fullname: { $regex: keyword, $options: 'i' } },
         { username: { $regex: keyword, $options: 'i' } }],

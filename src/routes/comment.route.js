@@ -53,7 +53,7 @@ router.get(
     managerList
 );
 // manager comment delete
-router.get(
+router.delete(
     path.comment.managerDelete,
     managerDelete
 );
