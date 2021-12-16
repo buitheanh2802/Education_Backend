@@ -1,6 +1,7 @@
 import express from 'express';
 import { path } from 'constants/routeDefination';
-import { gets, create,update,get,post,question,popular,follower,remove } from 'controllers/tag.controller';
+import { gets, create,update,get,post,managerFilter,
+    question,popular,follower,remove } from 'controllers/tag.controller';
 import { accessRole, accessToken } from 'middlewares/auth.middleware';
 
 const router = express.Router();
@@ -50,13 +51,17 @@ router.put(
     accessRole(['admin', 'collaborators']),
     update
 );
-
+// delete tag
 router.delete(
     path.tag.delete,
     accessToken,
     accessRole(['admin']),
     remove
 )
-
+// filter tag
+router.get(
+    path.tag.managerFilter,
+    managerFilter
+)
 
 export default router;

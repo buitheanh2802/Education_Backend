@@ -84,7 +84,8 @@ export const path = {
         popular: '/popular',
         post: '/:tagname/post',
         question: '/:tagname/question',
-        follower: '/:tagname/follower'
+        follower: '/:tagname/follower',
+        managerFilter : '/manager/filter'
     },
     comment: {
         rootRoute: '/api/comment',
