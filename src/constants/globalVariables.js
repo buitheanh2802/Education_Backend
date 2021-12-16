@@ -13,6 +13,7 @@ export const trendingViews = 100;
 export const picturePerPage = 10;
 // số bình luận trên một trang
 export const commentPerPage = 5;
+export const commentManager = 10;
 // số notification trên một trang
 export const notificationPerPage = 5;
 // số danh mục bài tập trên một trang;

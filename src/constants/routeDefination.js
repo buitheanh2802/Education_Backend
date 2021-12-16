@@ -94,7 +94,9 @@ export const path = {
         delete: '/:commentId',
         like: '/:commentId/like',
         dislike: '/:commentId/dislike',
-        spam: '/spam/:commentId'
+        spam: '/spam/:commentId',
+        managerList : '/manager/list',
+        managerDelete : '/manager/delete/:commentId',
     },
     picture: {
         rootRoute: '/api/picture',

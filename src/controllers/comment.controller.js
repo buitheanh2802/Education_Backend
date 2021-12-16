@@ -1,8 +1,9 @@
 import { response } from 'constants/responseHandler';
-import _, { find } from 'lodash';
+import _ from 'lodash';
 import CommentModel from './../models/comment.model';
 import { PAGINATION_REGEX } from 'constants/regexDefination';
 import jwt from 'jsonwebtoken';
+import { commentManager } from 'constants/globalVariables';
 
 // gets
 export const gets = async (req, res) => {
@@ -17,7 +18,6 @@ export const gets = async (req, res) => {
     const limit = 5;
     const skip = (currentPage - 1) * limit;
     const countDocuments = await CommentModel.countDocuments({ postOrQuestionId: req.params.postOrQuestionId, parentId: null });
-    const totalCounts = await CommentModel.countDocuments({ postOrQuestionId: req.params.postOrQuestionId })
     const totalPage = Math.ceil(countDocuments / limit);
     CommentModel.aggregate([
         {
@@ -138,7 +138,7 @@ export const gets = async (req, res) => {
                 models: docs,
                 metaData: {
                     pagination: {
-                        totalCounts,
+                        totalCounts: countDocuments,
                         perPage: limit,
                         totalPage: totalPage,
                         currentPage: currentPage,
@@ -225,4 +225,39 @@ export const updateSpam = (req, res) => {
                 return response(res, 200, []);
             })
         })
+}
+
+// manager list
+export const managerList = async(req, res) => {
+    const { page } = req.query;
+    let currentPage = 1;
+    if (PAGINATION_REGEX.test(page)) currentPage = Number(page);
+    const limit = commentManager;
+    const skip = (currentPage - 1) * limit;
+    const countDocuments = await CommentModel.countDocuments({});
+    const totalPage = Math.ceil(countDocuments / limit);
+    CommentModel.find({},'parentId spam content createBy createdAt')
+        .skip(skip)
+        .limit(limit)
+        .lean()
+        .exec((err, docs) => {
+            if (err) return response(res, 500, ['ERROR_SERVER', err.message]);
+            return response(res, 200, [],
+                {
+                    models: docs,
+                    metaData: {
+                        pagination: {
+                            totalCounts: countDocuments,
+                            perPage: limit,
+                            totalPage: totalPage,
+                            currentPage: currentPage,
+                            countDocuments: docs.length
+                        }
+                    }
+                });
+        })
+}
+// manager delete
+export const managerDelete = (req, res) => {
+
 }

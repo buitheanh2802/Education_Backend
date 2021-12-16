@@ -1,6 +1,7 @@
 import express from 'express';
 import { path } from 'constants/routeDefination';
-import { create, gets, remove, update, action, updateSpam } from 'controllers/comment.controller';
+import { create, gets, remove,managerList,managerDelete,
+     update, action, updateSpam } from 'controllers/comment.controller';
 import { commentValidator, commentUpdateValidator } from 'middlewares/validate.middleware';
 import { accessToken } from 'middlewares/auth.middleware';
 
@@ -43,8 +44,19 @@ router.delete(
     action({ type: 'dislikes' })
 );
 
-//update spam
+// update spam
 router.put(path.comment.spam, accessToken, updateSpam);
+
+// manager comment list
+router.get(
+    path.comment.managerList,
+    managerList
+);
+// manager comment delete
+router.get(
+    path.comment.managerDelete,
+    managerDelete
+);
 
 
 
