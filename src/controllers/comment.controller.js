@@ -259,5 +259,9 @@ export const managerList = async(req, res) => {
 }
 // manager delete
 export const managerDelete = (req, res) => {
-
+    // remove
+    CommentModel.deleteOne({ _id: req.params.commentId }, (err, docs) => {
+        if (err) return response(res, 500, ['ERROR_SERVER', err.message]);
+        return response(res, 200, []);
+    })
 }
