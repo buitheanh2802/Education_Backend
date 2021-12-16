@@ -404,3 +404,7 @@ export const remove = (req, res) => {
         })
     })
 }
+// manager filter
+export const managerFilter = (req,res) => {
+    
+}

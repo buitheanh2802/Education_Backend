@@ -239,6 +239,7 @@ export const managerList = async(req, res) => {
     CommentModel.find({},'parentId spam content createBy createdAt')
         .skip(skip)
         .limit(limit)
+        .populate({ path : 'createBy',select : 'username email fullname avatar '})
         .lean()
         .exec((err, docs) => {
             if (err) return response(res, 500, ['ERROR_SERVER', err.message]);
