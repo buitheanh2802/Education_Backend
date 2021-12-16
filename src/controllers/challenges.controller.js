@@ -12,7 +12,7 @@ export const gets = async (req, res) => {
     const { page } = req.query;
     let currentPage = 1;
     if (PAGINATION_REGEX.test(page)) currentPage = Number(page);
-    const limit = 5;
+    const limit = 10;
     const skip = (currentPage - 1) * limit;
     const countDocuments = await ChallengeModel.countDocuments();
     const totalPage = Math.ceil(countDocuments / limit);
@@ -38,26 +38,73 @@ export const gets = async (req, res) => {
                 });
             })
     } else {
-        ChallengeModel
-            .find({ challengeCategoryId: cateId, level: req.body.level }, '-__v -updateAt')
-            .populate({ path: "createBy", select: 'fullname avatar' })
-            .skip(skip)
-            .limit(limit)
-            .lean()
-            .exec((err, docs) => {
-                if (err) return response(res, 500, ['ERROR_SERVER', err.message]);
-                return response(res, 200, [], {
-                    models: docs,
-                    metaData: {
-                        pagination: {
-                            perPage: limit,
-                            totalPage: totalPage,
-                            currentPage: currentPage,
-                            countDocuments: docs.length
+        if (req.body.level == 1) {
+            ChallengeModel
+                .find({ challengeCategoryId: cateId, $or: [{ level: 1 }, { level: 2 }] }, '-__v -updateAt')
+                .populate({ path: "createBy", select: 'fullname avatar' })
+                .skip(skip)
+                .limit(limit)
+                .lean()
+                .exec((err, docs) => {
+                    if (err) return response(res, 500, ['ERROR_SERVER', err.message]);
+                    return response(res, 200, [], {
+                        models: docs,
+                        metaData: {
+                            pagination: {
+                                perPage: limit,
+                                totalPage: totalPage,
+                                currentPage: currentPage,
+                                countDocuments: docs.length
+                            }
                         }
-                    }
-                });
-            })
+                    });
+                })
+        }
+        if (req.body.level == 2) {
+            ChallengeModel
+                .find({ challengeCategoryId: cateId, $or: [{ level: 3 }, { level: 4 }] }, '-__v -updateAt')
+                .populate({ path: "createBy", select: 'fullname avatar' })
+                .skip(skip)
+                .limit(limit)
+                .lean()
+                .exec((err, docs) => {
+                    if (err) return response(res, 500, ['ERROR_SERVER', err.message]);
+                    return response(res, 200, [], {
+                        models: docs,
+                        metaData: {
+                            pagination: {
+                                perPage: limit,
+                                totalPage: totalPage,
+                                currentPage: currentPage,
+                                countDocuments: docs.length
+                            }
+                        }
+                    });
+                })
+        }
+        if (req.body.level == 3) {
+            ChallengeModel
+                .find({ challengeCategoryId: cateId, $or: [{ level: 5 }] }, '-__v -updateAt')
+                .populate({ path: "createBy", select: 'fullname avatar' })
+                .skip(skip)
+                .limit(limit)
+                .lean()
+                .exec((err, docs) => {
+                    if (err) return response(res, 500, ['ERROR_SERVER', err.message]);
+                    return response(res, 200, [], {
+                        models: docs,
+                        metaData: {
+                            pagination: {
+                                perPage: limit,
+                                totalPage: totalPage,
+                                currentPage: currentPage,
+                                countDocuments: docs.length
+                            }
+                        }
+                    });
+                })
+        }
+
     }
 
 }
