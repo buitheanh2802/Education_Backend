@@ -469,9 +469,11 @@ export const featuredAuthorList = (req, res) => {
     }
     switch (currentFilter) {
         case 'followers': {
+         
             break;
         }
         case 'posts': {
+
             break;
         }
         default: {
