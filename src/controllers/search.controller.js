@@ -18,7 +18,7 @@ export const searchMultiple = async (req, res) => {
         QuestionModel.find({ title: { $regex: keyword, $options: 'i' }, spam: false })
             .populate({ path: 'createBy', select: '-_id username fullname avatar' })
             .select('title createdAt createBy').lean(),
-        PostModel.find({ title: { $regex: keyword, $options: 'i' }, isDaft: false, isAccept: true })
+        PostModel.find({ title: { $regex: keyword, $options: 'i' }, isDraft: false, isAccept: true })
             .populate({ path: 'createBy', select: '-_id username fullname avatar' })
             .select('-_id title shortId createdAt createBy').lean(),
         TagModel.find({ name: { $regex: keyword, $options: 'i' } })
