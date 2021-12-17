@@ -17,12 +17,12 @@ export const gets = async (req, res) => {
     const countDocuments = await QuestionModel.countDocuments();
     const totalPage = Math.ceil(countDocuments / limit);
     QuestionModel
-        .find({}, '-__v -updateAt')
+        .find({ spam: false }, '-__v -updateAt')
         .sort({ _id: -1 })
         .populate({ path: "createBy", select: 'fullname username avatar' })
         .populate({ path: "tags", select: "name slug" })
         .skip(skip)
-        .limit(limit)
+        // .limit(limit)
         .lean()
         .exec((err, docs) => {
             if (err) return response(res, 500, ['ERROR_SERVER', err.message]);
@@ -52,9 +52,9 @@ export const gets = async (req, res) => {
                 metaData: {
                     pagination: {
                         perPage: limit,
-                        totalPage: totalPage,
+                        totalPage: Math.ceil(result.length / 10),
                         currentPage: currentPage,
-                        countDocuments: docs.length
+                        countDocuments: result.length
                     }
                 }
             });
@@ -359,19 +359,15 @@ export const addBookmark = (req, res) => {
 
         if (docs.bookmarks.length == 0) {
             docs.bookmarks.push(userId);
-            console.log("TH1");
         } else {
-            console.log("TH2");
             var check = false;
             for (let i = 0; i < docs.bookmarks.length; i++) {
                 if (docs.bookmarks[i] == userId) {
                     check = true;
-                    console.log('Da ton tai');
                 }
             }
             if (check == false) {
                 docs.bookmarks.push(userId);
-                console.log('Chua ton tai');
             }
         }
 
@@ -390,7 +386,6 @@ export const addBookmark = (req, res) => {
             createdAt: docs.createdAt,
             updatedAt: docs.updatedAt,
         }
-        console.log(newDocs);
         QuestionModel.updateOne({ _id: questionId }, newDocs, (err, result) => {
             if (err) return response(res, 500, ['ERROR_SERVER', err.message]);
             if (!result) return response(res, 400, ['EMPTY_DATA']);
@@ -540,7 +535,7 @@ export const follow = (req, res) => {
             .populate({ path: "createBy", select: 'fullname avatar' })
             .populate({ path: "tags", select: "name slug" })
             .skip(skip)
-            .limit(limit)
+            // .limit(limit)
             .lean()
             .exec((err, docs) => {
                 if (err) return response(res, 500, ['ERROR_SERVER', err.message]);
@@ -569,7 +564,7 @@ export const follow = (req, res) => {
                     metaData: {
                         pagination: {
                             perPage: limit,
-                            totalPage: totalPage,
+                            totalPage: Math.ceil(result.length / 10),
                             currentPage: currentPage,
                             countDocuments: result.length
                         }
