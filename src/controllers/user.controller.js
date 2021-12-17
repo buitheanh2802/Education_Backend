@@ -376,15 +376,12 @@ export const featuredAuthor = (req, res) => {
 // up and down point 
 export const points = (req, res) => {
     const { username } = req.params;
-    const { type } = req.body;
+    const { type,points } = req.body;
     UserModel.findOne({ username }, (err, docs) => {
         if (err) return response(res, 500, ['ERROR_SERVER', err.message]);
         if (!docs) return response(res, 400, ['EMPTY_DATA']);
-        if (type == "up") docs.points += rewardPoints;
-        if (type == "down") {
-            if (docs.points <= 0) return response(res, 200, []);
-            docs.points -= rewardPoints;
-        }
+        if (type == "up") docs.points += points;
+        if (type == "down") docs.points -= points;
         docs.save((err, docs) => {
             if (err) return response(res, 500, ['ERROR_SERVER', err.message]);
             return response(res, 200, []);
@@ -479,6 +476,9 @@ export const featuredAuthorList = (req, res) => {
         default: {
             aggregate = [
                 {
+                    $sort: { points: -1 }
+                },
+                {
                     $lookup: {
                         from: 'follows',
                         localField: '_id',
@@ -515,9 +515,6 @@ export const featuredAuthorList = (req, res) => {
                         followerCounts: { $first: '$followerCounts' },
                         avatar: { $first: '$avatar' }
                     }
-                },
-                {
-                    $sort: { points: -1 }
                 }
                 ,
                 {
