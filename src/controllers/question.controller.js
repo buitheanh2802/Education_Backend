@@ -14,7 +14,7 @@ export const gets = async (req, res) => {
     if (PAGINATION_REGEX.test(page)) currentPage = Number(page);
     const limit = 10;
     const skip = (currentPage - 1) * limit;
-    const countDocuments = await QuestionModel.countDocuments();
+    const countDocuments = await QuestionModel.countDocuments({ spam: false });
     const totalPage = Math.ceil(countDocuments / limit);
     QuestionModel
         .find({ spam: false }, '-__v -updateAt')
@@ -22,7 +22,7 @@ export const gets = async (req, res) => {
         .populate({ path: "createBy", select: 'fullname username avatar' })
         .populate({ path: "tags", select: "name slug" })
         .skip(skip)
-        // .limit(limit)
+        .limit(limit)
         .lean()
         .exec((err, docs) => {
             if (err) return response(res, 500, ['ERROR_SERVER', err.message]);
@@ -52,7 +52,7 @@ export const gets = async (req, res) => {
                 metaData: {
                     pagination: {
                         perPage: limit,
-                        totalPage: Math.ceil(result.length / 10),
+                        totalPage: totalPage,
                         currentPage: currentPage,
                         countDocuments: result.length
                     }
@@ -437,7 +437,7 @@ export const listBookmark = async (req, res) => {
     if (PAGINATION_REGEX.test(page)) currentPage = Number(page);
     const limit = 10;
     const skip = (currentPage - 1) * limit;
-    const countDocuments = await QuestionModel.countDocuments();
+    const countDocuments = await QuestionModel.countDocuments({ spam: false });
     const totalPage = Math.ceil(countDocuments / limit);
     QuestionModel
         .find({ bookmarks: userId, spam: false }, '-__v -updateAt')
@@ -472,7 +472,7 @@ export const listBookmark = async (req, res) => {
                 metaData: {
                     pagination: {
                         perPage: limit,
-                        totalPage: Math.ceil(result.length / limit),
+                        totalPage: totalPage,
                         currentPage: currentPage,
                         countDocuments: result.length
                     }
@@ -535,7 +535,7 @@ export const follow = (req, res) => {
             .populate({ path: "createBy", select: 'fullname avatar' })
             .populate({ path: "tags", select: "name slug" })
             .skip(skip)
-            // .limit(limit)
+            .limit(limit)
             .lean()
             .exec((err, docs) => {
                 if (err) return response(res, 500, ['ERROR_SERVER', err.message]);
