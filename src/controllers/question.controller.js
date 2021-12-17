@@ -436,7 +436,6 @@ export const delBookmark = (req, res) => {
 }
 
 export const listBookmark = async (req, res) => {
-    console.log(123);
     const userId = req.userId;
     const { page } = req.query;
     let currentPage = 1;
@@ -473,7 +472,6 @@ export const listBookmark = async (req, res) => {
                     bookmarks: x.bookmarks
                 }
             })
-            console.log(result);
             return response(res, 200, [], {
                 models: result,
                 metaData: {
