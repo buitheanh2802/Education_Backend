@@ -5,7 +5,7 @@ import { accessToken } from 'middlewares/auth.middleware';
 import { challengesValidator } from 'middlewares/validate.middleware';
 const router = express.Router();
 
-router.get(path.challenges.gets, gets);
+router.post(path.challenges.gets, gets);
 router.get(path.challenges.get, get);
 router.post(path.challenges.post, challengesValidator, accessToken, create);
 router.put(path.challenges.put, challengesValidator, accessToken, update);

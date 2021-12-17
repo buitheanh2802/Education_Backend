@@ -14,10 +14,10 @@ export const gets = async (req, res) => {
     if (PAGINATION_REGEX.test(page)) currentPage = Number(page);
     const limit = 10;
     const skip = (currentPage - 1) * limit;
-    const countDocuments = await QuestionModel.countDocuments();
+    const countDocuments = await QuestionModel.countDocuments({ spam: false });
     const totalPage = Math.ceil(countDocuments / limit);
     QuestionModel
-        .find({}, '-__v -updateAt')
+        .find({ spam: false }, '-__v -updateAt')
         .sort({ _id: -1 })
         .populate({ path: "createBy", select: 'fullname username avatar' })
         .populate({ path: "tags", select: "name slug" })
@@ -54,7 +54,7 @@ export const gets = async (req, res) => {
                         perPage: limit,
                         totalPage: totalPage,
                         currentPage: currentPage,
-                        countDocuments: docs.length
+                        countDocuments: result.length
                     }
                 }
             });
@@ -359,19 +359,15 @@ export const addBookmark = (req, res) => {
 
         if (docs.bookmarks.length == 0) {
             docs.bookmarks.push(userId);
-            console.log("TH1");
         } else {
-            console.log("TH2");
             var check = false;
             for (let i = 0; i < docs.bookmarks.length; i++) {
                 if (docs.bookmarks[i] == userId) {
                     check = true;
-                    console.log('Da ton tai');
                 }
             }
             if (check == false) {
                 docs.bookmarks.push(userId);
-                console.log('Chua ton tai');
             }
         }
 
@@ -390,7 +386,6 @@ export const addBookmark = (req, res) => {
             createdAt: docs.createdAt,
             updatedAt: docs.updatedAt,
         }
-        console.log(newDocs);
         QuestionModel.updateOne({ _id: questionId }, newDocs, (err, result) => {
             if (err) return response(res, 500, ['ERROR_SERVER', err.message]);
             if (!result) return response(res, 400, ['EMPTY_DATA']);
@@ -442,7 +437,7 @@ export const listBookmark = async (req, res) => {
     if (PAGINATION_REGEX.test(page)) currentPage = Number(page);
     const limit = 10;
     const skip = (currentPage - 1) * limit;
-    const countDocuments = await QuestionModel.countDocuments();
+    const countDocuments = await QuestionModel.countDocuments({ spam: false });
     const totalPage = Math.ceil(countDocuments / limit);
     QuestionModel
         .find({ bookmarks: userId, spam: false }, '-__v -updateAt')
@@ -569,7 +564,7 @@ export const follow = (req, res) => {
                     metaData: {
                         pagination: {
                             perPage: limit,
-                            totalPage: totalPage,
+                            totalPage: Math.ceil(result.length / 10),
                             currentPage: currentPage,
                             countDocuments: result.length
                         }
@@ -736,7 +731,7 @@ export const filterQuestion = (req, res) => {
 // other question for same author
 export const otherQuestionSameAuthor = (req, res) => {
     QuestionModel
-        .find({ createBy: req.params.userId,spam : false }, '_id title bookmarks createdAt slug views shortId createBy')
+        .find({ createBy: req.params.userId, spam: false }, '_id title bookmarks createdAt slug views shortId createBy')
         .populate({ path: 'comments' })
         .populate({ path: 'createBy', select: '-_id email username fullname avatar' })
         .lean()
