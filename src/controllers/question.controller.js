@@ -436,6 +436,7 @@ export const delBookmark = (req, res) => {
 }
 
 export const listBookmark = async (req, res) => {
+    console.log(123);
     const userId = req.userId;
     const { page } = req.query;
     let currentPage = 1;
@@ -472,12 +473,13 @@ export const listBookmark = async (req, res) => {
                     bookmarks: x.bookmarks
                 }
             })
+            console.log(result);
             return response(res, 200, [], {
                 models: result,
                 metaData: {
                     pagination: {
                         perPage: limit,
-                        totalPage: totalPage,
+                        totalPage: Math.ceil(result.length / limit),
                         currentPage: currentPage,
                         countDocuments: result.length
                     }
@@ -736,7 +738,7 @@ export const filterQuestion = (req, res) => {
 // other question for same author
 export const otherQuestionSameAuthor = (req, res) => {
     QuestionModel
-        .find({ createBy: req.params.userId,spam : false }, '_id title bookmarks createdAt slug views shortId createBy')
+        .find({ createBy: req.params.userId, spam: false }, '_id title bookmarks createdAt slug views shortId createBy')
         .populate({ path: 'comments' })
         .populate({ path: 'createBy', select: '-_id email username fullname avatar' })
         .lean()
