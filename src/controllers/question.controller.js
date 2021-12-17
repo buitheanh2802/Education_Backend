@@ -131,9 +131,6 @@ export const get = async (req, res) => {
                     return response(res, 200, [], result);
                 })
             })
-
-
-
         })
 }
 export const update = async (req, res) => {
@@ -437,7 +434,7 @@ export const listBookmark = async (req, res) => {
     if (PAGINATION_REGEX.test(page)) currentPage = Number(page);
     const limit = 10;
     const skip = (currentPage - 1) * limit;
-    const countDocuments = await QuestionModel.countDocuments({ spam: false });
+    const countDocuments = await QuestionModel.countDocuments({ bookmarks: userId, spam: false });
     const totalPage = Math.ceil(countDocuments / limit);
     QuestionModel
         .find({ bookmarks: userId, spam: false }, '-__v -updateAt')
@@ -511,11 +508,11 @@ export const addView = (req, res) => {
         })
 }
 
-export const follow = (req, res) => {
+export const follow = async (req, res) => {
     const userId = req.userId;
     var listUserFollow = [];
 
-    FollowModel.find({ userId: userId }, (err, docs) => {
+    FollowModel.find({ userId: userId }, async (err, docs) => {
         if (err) {
             console.log(err);
         }
@@ -528,9 +525,10 @@ export const follow = (req, res) => {
         if (PAGINATION_REGEX.test(page)) currentPage = Number(page);
         const limit = 10;
         const skip = (currentPage - 1) * limit;
-
+        const countDocuments = await QuestionModel.countDocuments({ createBy: { $in: listUserFollow }, spam: false });
+        const totalPage = Math.ceil(countDocuments / limit);
         QuestionModel
-            .find({ createBy: listUserFollow.map(x => { return x }), spam: false })
+            .find({ createBy: { $in: listUserFollow }, spam: false })
             .sort({ _id: -1 })
             .populate({ path: "createBy", select: 'fullname avatar' })
             .populate({ path: "tags", select: "name slug" })
@@ -539,8 +537,6 @@ export const follow = (req, res) => {
             .lean()
             .exec((err, docs) => {
                 if (err) return response(res, 500, ['ERROR_SERVER', err.message]);
-                const countDocuments = docs.length;
-                const totalPage = Math.ceil(countDocuments / limit);
                 let result = docs.map(x => {
                     return {
                         _id: x._id,
@@ -564,7 +560,7 @@ export const follow = (req, res) => {
                     metaData: {
                         pagination: {
                             perPage: limit,
-                            totalPage: Math.ceil(result.length / 10),
+                            totalPage: totalPage,
                             currentPage: currentPage,
                             countDocuments: result.length
                         }
@@ -573,7 +569,6 @@ export const follow = (req, res) => {
             })
     })
 }
-
 export const updateSpam = (req, res) => {
     QuestionModel
         .findOne({ _id: req.params.questionId }, (err, docs) => {
@@ -589,49 +584,25 @@ export const updateSpam = (req, res) => {
             })
         })
 }
-
 export const trending = async (req, res) => {
     const { page } = req.query;
     let currentPage = 1;
     if (PAGINATION_REGEX.test(page)) currentPage = Number(page);
     const limit = 10;
     const skip = (currentPage - 1) * limit;
-    const countDocuments = await QuestionModel.countDocuments();
-    // const totalPage = Math.ceil(countDocuments / limit);
+    const countDocuments = await QuestionModel.countDocuments({ views: { $gte: 100 }, spam: false });
+    const totalPage = Math.ceil(countDocuments / limit);
     QuestionModel
-        .find({}, '-__v -updateAt')
+        .find({ views: { $gte: 100 }, spam: false }, '-__v -updateAt')
         .sort({ _id: -1 })
         .populate({ path: "createBy", select: 'fullname avatar username' })
         .populate({ path: "tags", select: "name slug" })
         .skip(skip)
-        // .limit(limit)
+        .limit(limit)
         .lean()
         .exec((err, docs) => {
             if (err) return response(res, 500, ['ERROR_SERVER', err.message]);
-            let result = docs.filter(x => {
-                if (x.views >= 100) {
-                    return {
-                        _id: x._id,
-                        countLikes: x.likes.length,
-                        countDislike: x.dislike.length,
-                        countBookmarks: x.bookmarks.length,
-                        bookmarks: x.bookmarks,
-                        likes: x.likes,
-                        dislike: x.dislike,
-                        comfirmAnswers: x.comfirmAnswers,
-                        tags: x.tags,
-                        title: x.title,
-                        content: x.content,
-                        views: x.views,
-                        slug: x.slug,
-                        spam: x.spam,
-                        createBy: x.createBy,
-                        createdAt: x.createdAt,
-                        updatedAt: x.updatedAt
-                    }
-                }
-            })
-            var newDocs = result.map(x => {
+            var newDocs = docs.map(x => {
                 return {
                     _id: x._id,
                     countLikes: x.likes.length,
@@ -657,15 +628,14 @@ export const trending = async (req, res) => {
                 metaData: {
                     pagination: {
                         perPage: limit,
-                        totalPage: Math.ceil(result.length / limit),
+                        totalPage: totalPage,
                         currentPage: currentPage,
-                        countDocuments: result.length
+                        countDocuments: newDocs.length
                     }
                 }
             });
         })
 }
-
 export const search = (req, res) => {
     const { page } = req.query;
     let currentPage = 1;
