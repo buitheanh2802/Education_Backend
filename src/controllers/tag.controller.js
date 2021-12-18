@@ -14,7 +14,7 @@ import UserModel from 'models/user.model';
 import mongoose from 'mongoose';
 
 // global data 
-const limited = 9;
+const limited = 15;
 const trendingViews = 100;
 
 export const gets = async (req, res) => {
