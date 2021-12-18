@@ -14,14 +14,14 @@ const UserSchema = new initializeSchema({
     },
     skills: [{
         type: String,
-        default : ""
+        default: ""
     }],
     descriptions: {
         type: String,
-        default : ""
+        default: ""
     },
-    hobbies: [{ type: String,default : "" }],
-    birthday: { type: String,default : "" },
+    hobbies: [{ type: String, default: "" }],
+    birthday: { type: String, default: "" },
     points: { type: Number, default: 0 },
     userType: { type: String, enum: ['basic', 'premium'], default: 'basic' },
     address: { type: String, default: '' },
@@ -53,13 +53,15 @@ UserSchema.virtual('postCounts', {
     localField: '_id',
     foreignField: 'createBy',
     ref: 'posts',
-    count: true
+    count: true,
+    match: { isDraft: false, isAccept: true }
 });
 UserSchema.virtual('questionCounts', {
     localField: '_id',
     foreignField: 'createBy',
     ref: 'questions',
-    count: true
+    count: true,
+    match: { spam: false }
 });
 UserSchema.virtual('followers', {
     localField: '_id',
@@ -70,7 +72,7 @@ UserSchema.virtual('followerCounts', {
     localField: '_id',
     foreignField: 'followingUserId',
     ref: 'Follows',
-    count : true
+    count: true
 });
 
 
