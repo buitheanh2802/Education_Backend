@@ -16,11 +16,11 @@ export const searchMultiple = async (req, res) => {
     if (!keyword) return response(res, 405, ['ERROR_SYNTAX']);
     let dataQuery = await Promise.all([
         QuestionModel.find({ title: { $regex: keyword, $options: 'i' }, spam: false })
-            .populate({ path: 'createBy', select: '-_id username fullname avatar' })
+            .populate({ path: 'createBy', select: '-_id username slug fullname avatar' })
             .select('title createdAt createBy').lean(),
         PostModel.find({ title: { $regex: keyword, $options: 'i' }, isDraft: false, isAccept: true })
             .populate({ path: 'createBy', select: '-_id username fullname avatar' })
-            .select('-_id title shortId createdAt createBy').lean(),
+            .select('-_id title slug shortId createdAt createBy').lean(),
         TagModel.find({ name: { $regex: keyword, $options: 'i' } })
             .select('-_id name slug avatar').lean(),
         UserModel.find({
