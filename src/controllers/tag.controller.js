@@ -85,7 +85,6 @@ export const gets = async (req, res) => {
                 // _id: 0,
                 updatedAt: 0,
                 __v: 0,
-                createdAt: 0,
                 driveId: 0,
                 questions: 0,
                 posts: 0,
