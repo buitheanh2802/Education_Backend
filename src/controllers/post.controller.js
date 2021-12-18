@@ -396,7 +396,7 @@ export const create = async (req, res) => {
         isDraft: isDraft,
         createBy: req.userId,
         tags: data,
-        shortId: shortid.customAlphabet('1234567890',5),
+        shortId: shortid.customAlphabet('1234567890',5)(),
         slug: toSlug(title, '-')
     });
     createPost.save((err, docs) => {

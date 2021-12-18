@@ -26,7 +26,6 @@ export const searchMultiple = async (req, res) => {
         UserModel.find({
             $or: [{ fullname: { $regex: keyword, $options: 'i' } },
             { username: { $regex: keyword, $options: 'i' } },
-            { email: { $regex: keyword, $options: 'i' } }
             ]
         }).populate(['followerCounts', 'postCounts', 'questionCounts']).select('-_id username fullname avatar').lean()
     ]);
