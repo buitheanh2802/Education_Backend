@@ -577,9 +577,10 @@ export const managerFilter = (req,res) => {
     const { keyword } = req.query;
     if (!keyword) return response(res, 405, ['ERROR_SYNTAX']);
     PostModel.find({ isDraft: false,$or: [{ title: { $regex: keyword, $options: 'i' }}]}
-          , '-_id shortId createdAt slug title publishedBy ')
+          , '-_id shortId createdAt createBy slug title publishedBy ')
         .sort({ createdAt: -1 })
-        .select('_id username email status role fullname socialType')
+        .populate({ path: 'createBy', select: '-_id fullname username' })
+        .populate({ path: 'publishedBy.user', select: '-_id fullname username' })
         .lean()
         .exec(async (err, docs) => {
             if (err) return response(res, 500, ['ERROR_SERVER', err.message]);
