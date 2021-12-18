@@ -60,6 +60,59 @@ export const gets = async (req, res) => {
             });
         })
 }
+
+export const getsAdmin = async (req, res) => {
+    const { page } = req.query;
+    let currentPage = 1;
+    if (PAGINATION_REGEX.test(page)) currentPage = Number(page);
+    const limit = 10;
+    const skip = (currentPage - 1) * limit;
+    const countDocuments = await QuestionModel.countDocuments();
+    const totalPage = Math.ceil(countDocuments / limit);
+    QuestionModel
+        .find({}, '-__v -updateAt')
+        .sort({ _id: -1 })
+        .populate({ path: "createBy", select: 'fullname username avatar' })
+        .populate({ path: "tags", select: "name slug" })
+        .skip(skip)
+        .limit(limit)
+        .lean()
+        .exec((err, docs) => {
+            if (err) return response(res, 500, ['ERROR_SERVER', err.message]);
+            let result = docs.map(x => {
+                return {
+                    _id: x._id,
+                    countLikes: x.likes.length,
+                    countDislike: x.dislike.length,
+                    countBookmarks: x.bookmarks.length,
+                    bookmarks: x.bookmarks,
+                    likes: x.likes,
+                    dislike: x.dislike,
+                    comfirmAnswers: x.comfirmAnswers,
+                    tags: x.tags,
+                    title: x.title,
+                    content: x.content,
+                    views: x.views,
+                    slug: x.slug,
+                    spam: x.spam,
+                    createBy: x.createBy,
+                    createdAt: x.createdAt,
+                    updatedAt: x.updatedAt
+                }
+            })
+            return response(res, 200, [], {
+                models: result,
+                metaData: {
+                    pagination: {
+                        perPage: limit,
+                        totalPage: totalPage,
+                        currentPage: currentPage,
+                        countDocuments: result.length
+                    }
+                }
+            });
+        })
+}
 export const create = async (req, res) => {
     // define data
     const updateDefination = {

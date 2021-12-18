@@ -46,7 +46,7 @@ export const path = {
         edit: '/edit/:shortId',
         myBookmark: '/bookmark',
         upViews: '/upviews',
-        managerFilter : '/manager/filter'
+        managerFilter: '/manager/filter'
     },
     follow: {
         rootRoute: '/api/follow',
@@ -56,6 +56,7 @@ export const path = {
     question: {
         rootRoute: '/api/question',
         gets: '/',
+        getsAdmin: '/admin',
         post: '/',
         get: '/:questionId',
         trending: '/trending',
@@ -71,8 +72,8 @@ export const path = {
         deletedislike: '/:questionId/delete-dislike',
         follow: '/follow',
         spam: '/spam/:questionId',
-        filterQuestion : '/manager/filter',
-        otherQuestionSameAuthor : '/other-question/same-author/:userId'
+        filterQuestion: '/manager/filter',
+        otherQuestionSameAuthor: '/other-question/same-author/:userId'
     },
     tag: {
         rootRoute: '/api/tag',
@@ -86,7 +87,7 @@ export const path = {
         post: '/:tagname/post',
         question: '/:tagname/question',
         follower: '/:tagname/follower',
-        managerFilter : '/manager/filter'
+        managerFilter: '/manager/filter'
     },
     comment: {
         rootRoute: '/api/comment',
@@ -97,8 +98,8 @@ export const path = {
         like: '/:commentId/like',
         dislike: '/:commentId/dislike',
         spam: '/spam/:commentId',
-        managerList : '/manager/list',
-        managerDelete : '/manager/delete/:commentId',
+        managerList: '/manager/list',
+        managerDelete: '/manager/delete/:commentId',
     },
     picture: {
         rootRoute: '/api/picture',
@@ -165,20 +166,20 @@ export const path = {
     },
     search: {
         rootRoute: '/api/search',
-        searchMultiple : '/multiple',
-        searchQuestion : '/questions',
-        searchAuthor : '/authors',
-        searchPost : '/posts',
-        searchTag : '/tags'
+        searchMultiple: '/multiple',
+        searchQuestion: '/questions',
+        searchAuthor: '/authors',
+        searchPost: '/posts',
+        searchTag: '/tags'
     },
     contact: {
         rootRoute: '/api/contact',
         create: '/create',
-        managerFilter : '/manager/filter',
-        gets : '/',
-        post : '/',
-        get : '/:contactId',
-        delete : '/:contactId',
+        managerFilter: '/manager/filter',
+        gets: '/',
+        post: '/',
+        get: '/:contactId',
+        delete: '/:contactId',
     },
     statistic: {
         rootRoute: '/api/statistic',
