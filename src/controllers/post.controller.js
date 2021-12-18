@@ -558,7 +558,8 @@ export const myBookmark = async (req, res) => {
         })
 }
 
-// up views 
+// up views
+ 
 export const upViews = (req, res) => {
     const { shortId } = req.body;
     PostModel.findOne({ shortId: shortId }, (err, docs) => {
