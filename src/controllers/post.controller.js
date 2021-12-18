@@ -466,7 +466,7 @@ export const publishList = async (req, res) => {
     const skip = (currentPage - 1) * limit;
     const countDocuments = await PostModel.countDocuments({ isAccept: false, isDraft: false });
     const totalPage = Math.ceil(countDocuments / limit);
-    PostModel.find({ isDraft: false }, '-_id shortId createdAt slug title content publishedBy ')
+    PostModel.find({ isDraft: false }, '-_id shortId createdAt slug title publishedBy ')
         .skip(skip)
         .limit(limit)
         .sort({ createdAt: -1 })
@@ -570,4 +570,19 @@ export const upViews = (req, res) => {
             return response(res, 200, []);
         })
     });
+}
+
+// manager filter
+export const managerFilter = (req,res) => {
+    const { keyword } = req.query;
+    if (!keyword) return response(res, 405, ['ERROR_SYNTAX']);
+    PostModel.find({ isDraft: false,$or: [{ title: { $regex: keyword, $options: 'i' }}]}
+          , '-_id shortId createdAt slug title publishedBy ')
+        .sort({ createdAt: -1 })
+        .select('_id username email status role fullname socialType')
+        .lean()
+        .exec(async (err, docs) => {
+            if (err) return response(res, 500, ['ERROR_SERVER', err.message]);
+            return response(res, 200, [], docs);
+        })
 }

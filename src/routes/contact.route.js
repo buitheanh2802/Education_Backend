@@ -11,7 +11,7 @@ router.get(path.contact.gets, accessToken, gets);
 router.get(path.contact.get, accessToken, get);
 router.delete(path.contact.delete, accessToken, remove);
 // filter contact 
-router.get(path.contact.managerFilter,accessToken,managerFilter)
+router.post(path.contact.managerFilter,accessToken,managerFilter)
 router.post('/:contactId', accessToken, updateFeedback);
 
 export default router;

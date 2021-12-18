@@ -1,5 +1,5 @@
 import express from 'express';
-import { newest,following,create,get,action,trending,update
+import { newest,following,create,get,action,trending,update,managerFilter
     ,remove,publish,publishList,unPublish,edit,myBookmark,upViews } from '../controllers/post.controller';
 import { path } from "constants/routeDefination";
 import { postValidator } from 'middlewares/validate.middleware';
@@ -96,6 +96,11 @@ router.get(
 router.post(
     path.post.upViews,
     upViews
+)
+// filter post
+router.post(
+    path.post.managerFilter,
+    managerFilter
 )
 
 export default router;
