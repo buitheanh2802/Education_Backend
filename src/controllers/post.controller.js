@@ -3,7 +3,7 @@ import FollowModel from 'models/follow.model';
 import TagModel from 'models/tag.model';
 import { response } from 'constants/responseHandler';
 import { toSlug } from 'helpers/slug';
-import shortid from 'shortid';
+import shortid from 'nanoid';
 import jwt from 'jsonwebtoken';
 import { PAGINATION_REGEX } from 'constants/regexDefination';
 import userModel from 'models/user.model';
@@ -396,7 +396,7 @@ export const create = async (req, res) => {
         isDraft: isDraft,
         createBy: req.userId,
         tags: data,
-        shortId: shortid.generate(),
+        shortId: shortid.customAlphabet('1234567890',5),
         slug: toSlug(title, '-')
     });
     createPost.save((err, docs) => {
@@ -559,7 +559,7 @@ export const myBookmark = async (req, res) => {
 }
 
 // up views
- 
+
 export const upViews = (req, res) => {
     const { shortId } = req.body;
     PostModel.findOne({ shortId: shortId }, (err, docs) => {
