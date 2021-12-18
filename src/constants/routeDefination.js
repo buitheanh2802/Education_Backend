@@ -173,7 +173,12 @@ export const path = {
     },
     contact: {
         rootRoute: '/api/contact',
-        create: '/create'
+        create: '/create',
+        managerFilter : '/manager/filter',
+        gets : '/',
+        post : '/',
+        get : '/:contactId',
+        delete : '/:contactId',
     },
     statistic: {
         rootRoute: '/api/statistic',

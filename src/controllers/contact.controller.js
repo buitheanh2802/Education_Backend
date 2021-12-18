@@ -91,3 +91,16 @@ export const updateFeedback = (req, res) => {
             })
         })
 }
+
+// filter contact 
+export const managerFilter = (req, res) => {
+    const { keyword } = req.query;
+    if (!keyword) return response(res, 405, ['ERROR_SYNTAX']);
+    ContactModel.find({ $or : [{title: { $regex: keyword, $options: 'i' }},
+        {phone: { $regex: keyword, $options: 'i' }}] })
+        .lean()
+        .exec((err, docs) => {
+            if (err) return response(res, 500, ['ERROR_SERVER', err.message]);
+            return response(res, 200, [], docs);
+        })
+}
