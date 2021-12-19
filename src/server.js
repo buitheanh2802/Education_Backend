@@ -6,6 +6,7 @@ import { passportConfig } from 'services/passport';
 import cookie from 'cookie-parser';
 import cors from 'cors';
 import http from 'http';
+import path from 'path';
 import socket from 'socket.io';
 import { socketConfig } from 'services/socket';
 
@@ -26,6 +27,7 @@ const serverConfig = async () => {
         origin: ['http://localhost:3000', 'http://172.20.10.2:3000', 'http://127.0.0.1:5500']
     }))
     app.use(express.json());
+    app.use(express.static(path.join(__dirname,'../public')))
     app.use(express.urlencoded({ extended: true }));
     app.use(cookie());
     // passport config
@@ -41,6 +43,10 @@ const serverConfig = async () => {
     });
     // routes
     routes(app);
+    // routes connect frontend
+    app.get('/',(req,res) => {
+        res.sendFile(path.join(__dirname,'../public/index.html'))
+    })
     socketConfig(io)
     // listenning
     server.listen(PORT, () => console.log(`server is running at port : ${PORT}`))
