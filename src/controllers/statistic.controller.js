@@ -6,6 +6,7 @@ import SolutionModel from "models/solution.model";
 import ChallengeModel from "models/challenges.model";
 import UserModel from "models/user.model";
 import TagModel from "models/tag.model";
+import ChallengesModel from "models/challenges.model";
 import moment from "moment";
 
 // tag, cau hoi, bai viet, bai tap , user
@@ -356,12 +357,14 @@ export const totalAll = async (req, res) => {
     const countSolution = await SolutionModel.countDocuments()
     const countUser = await UserModel.countDocuments()
     const countTag = await TagModel.countDocuments()
+    const countChallenge = await ChallengesModel.countDocuments();
     const data = {
         countPost: countPost,
         countQuestion: countQuestion,
         countSolution: countSolution,
         countUser: countUser,
         countTag: countTag,
+        countChallenge: countChallenge,
     }
     return response(res, 200, [], data);
 }
