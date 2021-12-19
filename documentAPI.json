@@ -921,6 +921,9 @@ POST: "https://devstar-api.herokuapp.com/api/statistic/users"
 - Api lấy ra số lượng user, admin, cộng tác viên
 POST: "https://devstar-api.herokuapp.com/api/statistic/total-user"
 
+- Api thong ke tong so cac bang 
+POST: "https://devstar-api.herokuapp.com/api/statistic/total-all"
+
 //////////////////////////////////////////////////////////////
 
 - tăng views cho bài viết 
