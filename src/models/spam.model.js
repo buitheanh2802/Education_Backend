@@ -19,7 +19,7 @@ const SpamSchema = new mongoose.Schema({
     },
     type: {
         type: String,
-        enum: ["comments", "questions"],
+        enum: ["comments", "questions","posts"],
         required: true
     }
 }, {

@@ -464,7 +464,7 @@ export const publishList = async (req, res) => {
     if (PAGINATION_REGEX.test(page)) currentPage = Number(page);
     const limit = postLimit;
     const skip = (currentPage - 1) * limit;
-    const countDocuments = await PostModel.countDocuments({ isAccept: false, isDraft: false });
+    const countDocuments = await PostModel.countDocuments({ isDraft: false });
     const totalPage = Math.ceil(countDocuments / limit);
     PostModel.find({ isDraft: false }, '-_id shortId createdAt slug title publishedBy ')
         .skip(skip)
