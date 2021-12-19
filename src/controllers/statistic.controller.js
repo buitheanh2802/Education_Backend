@@ -356,11 +356,6 @@ export const totalAll = async (req, res) => {
     const countSolution = await SolutionModel.countDocuments()
     const countUser = await UserModel.countDocuments()
     const countTag = await TagModel.countDocuments()
-    console.log(countPost);
-    console.log(countQuestion);
-    console.log(countSolution);
-    console.log(countUser);
-    console.log(countTag);
     const data = {
         countPost: countPost,
         countQuestion: countQuestion,
