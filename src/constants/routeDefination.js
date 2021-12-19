@@ -188,6 +188,7 @@ export const path = {
         solutions: '/solutions',
         users: '/users',
         totalUser: '/total-user',
+        totalAll: '/total-all',
         totalUploadDownloadChallenge: '/total-upload-download-challenge'
     }
 }
