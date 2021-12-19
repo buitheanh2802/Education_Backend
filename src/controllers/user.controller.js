@@ -9,7 +9,7 @@ import TagModel from 'models/tag.model';
 import questionModel from 'models/question.model';
 
 // global data 
-const limited = 5;
+const limited = 12;
 const managerLimited = 10;
 const trendingViews = 100;
 const rewardPoints = 8;
@@ -346,7 +346,7 @@ export const following = async (req, res) => {
                             perPage: limited,
                             totalPage: totalPage,
                             currentPage: currentPage,
-                            countDocuments: docs.length
+                            countDocuments: newData.length
                         }
                     }
                 }
