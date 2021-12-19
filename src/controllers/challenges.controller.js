@@ -14,7 +14,7 @@ export const gets = async (req, res) => {
     if (PAGINATION_REGEX.test(page)) currentPage = Number(page);
     const limit = 10;
     const skip = (currentPage - 1) * limit;
-    const countDocuments = await ChallengeModel.countDocuments();
+    const countDocuments = await ChallengeModel.countDocuments({ challengeCategoryId: cateId });
     const totalPage = Math.ceil(countDocuments / limit);
     if (req.body.level == undefined) {
         ChallengeModel
@@ -39,6 +39,8 @@ export const gets = async (req, res) => {
             })
     } else {
         if (req.body.level == 1) {
+            const countDocuments = await ChallengeModel.countDocuments({ challengeCategoryId: cateId, $or: [{ level: 1 }, { level: 2 }] });
+            const totalPage = Math.ceil(countDocuments / limit);
             ChallengeModel
                 .find({ challengeCategoryId: cateId, $or: [{ level: 1 }, { level: 2 }] }, '-__v -updateAt')
                 .populate({ path: "createBy", select: 'fullname avatar' })
@@ -61,6 +63,8 @@ export const gets = async (req, res) => {
                 })
         }
         if (req.body.level == 2) {
+            const countDocuments = await ChallengeModel.countDocuments({ challengeCategoryId: cateId, $or: [{ level: 3 }, { level: 4 }] });
+            const totalPage = Math.ceil(countDocuments / limit);
             ChallengeModel
                 .find({ challengeCategoryId: cateId, $or: [{ level: 3 }, { level: 4 }] }, '-__v -updateAt')
                 .populate({ path: "createBy", select: 'fullname avatar' })
@@ -83,6 +87,8 @@ export const gets = async (req, res) => {
                 })
         }
         if (req.body.level == 3) {
+            const countDocuments = await ChallengeModel.countDocuments({ challengeCategoryId: cateId, $or: [{ level: 5 }] });
+            const totalPage = Math.ceil(countDocuments / limit);
             ChallengeModel
                 .find({ challengeCategoryId: cateId, $or: [{ level: 5 }] }, '-__v -updateAt')
                 .populate({ path: "createBy", select: 'fullname avatar' })
