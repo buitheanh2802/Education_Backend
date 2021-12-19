@@ -474,79 +474,27 @@ export const featuredAuthorList = (req, res) => {
             break;
         }
         default: {
-            aggregate = [
-                {
-                    $sort: { points: -1 }
-                },
-                {
-                    $lookup: {
-                        from: 'follows',
-                        localField: '_id',
-                        foreignField: 'followingUserId',
-                        as: 'followers'
+            UserModel.find({},'username email fullname points avatar')
+            .populate([
+                { path : 'postCounts'},
+                { path : 'followerCounts'},
+                { path : 'followers'}
+            ])
+            .sort({ points : -1})
+            .lean()
+            .exec((err, docs) => {
+                if (err) return response(res, 500, ['ERROR_SERVER', err.message]);
+                return response(res, 200, [], docs.map(item => {
+                    item.isFollowing = false;
+                    if (item.followers.length > 0 && token) {
+                        item.isFollowing = item.followers.includes(token._id);
                     }
-                },
-                {
-                    $lookup: {
-                        from: 'posts',
-                        localField: '_id',
-                        foreignField: 'createBy',
-                        as: 'postCounts'
-                    }
-                },
-                {
-                    $addFields: {
-                        followerCounts: { $size: '$followers' },
-                        postCounts: { $size: '$postCounts' }
-                    }
-                },
-                {
-                    $unwind: { path: '$followers', preserveNullAndEmptyArrays: true }
-                },
-                {
-                    $group: {
-                        _id: '$_id',
-                        postCounts: { $first: '$postCounts' },
-                        username: { $first: '$username' },
-                        points: { $first: '$points' },
-                        fullname: { $first: '$fullname' },
-                        email: { $first: '$email' },
-                        followers: { $push: '$followers.userId' },
-                        followerCounts: { $first: '$followerCounts' },
-                        avatar: { $first: '$avatar' }
-                    }
-                }
-                ,
-                {
-                    $limit: 60
-                },
-                {
-                    $project: {
-                        followerCounts: 1,
-                        followers: 1,
-                        postCounts: 1,
-                        username: 1,
-                        fullname: 1,
-                        email: 1,
-                        points: 1,
-                        avatar: 1
-                    }
-                }
-            ]
+                    delete item.followers;
+                    return item;
+                }));
+            })
         }
     }
-    UserModel.aggregate(aggregate)
-        .exec((err, docs) => {
-            if (err) return response(res, 500, ['ERROR_SERVER', err.message]);
-            return response(res, 200, [], docs.map(item => {
-                item.isFollowing = false;
-                if (item.followers.length > 0 && token) {
-                    item.isFollowing = item.followers.includes(token._id);
-                }
-                delete item.followers;
-                return item;
-            }));
-        })
 }
 // other post same author
 export const otherPostSameAuthor = (req, res) => {
