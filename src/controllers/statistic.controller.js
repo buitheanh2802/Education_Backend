@@ -5,7 +5,10 @@ import QuestionModel from "models/question.model";
 import SolutionModel from "models/solution.model";
 import ChallengeModel from "models/challenges.model";
 import UserModel from "models/user.model";
+import TagModel from "models/tag.model";
 import moment from "moment";
+
+// tag, cau hoi, bai viet, bai tap , user
 
 export const getsQuestion = async (req, res) => {
     var type = req.body.type;
@@ -345,4 +348,25 @@ export const totalUser = async (req, res) => {
         }
         return response(res, 200, [], data);
     })
+}
+
+export const totalAll = async (req, res) => {
+    const countPost = await PostModel.countDocuments()
+    const countQuestion = await QuestionModel.countDocuments()
+    const countSolution = await SolutionModel.countDocuments()
+    const countUser = await UserModel.countDocuments()
+    const countTag = await TagModel.countDocuments()
+    console.log(countPost);
+    console.log(countQuestion);
+    console.log(countSolution);
+    console.log(countUser);
+    console.log(countTag);
+    const data = {
+        countPost: countPost,
+        countQuestion: countQuestion,
+        countSolution: countSolution,
+        countUser: countUser,
+        countTag: countTag,
+    }
+    return response(res, 200, [], data);
 }
