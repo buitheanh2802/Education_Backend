@@ -7,10 +7,9 @@ import jwt from 'jsonwebtoken';
 import { PAGINATION_REGEX } from 'constants/regexDefination';
 import TagModel from 'models/tag.model';
 import questionModel from 'models/question.model';
-import { shuffle } from 'helpers/shuffle';
 
 // global data 
-const limited = 15;
+const limited = 5;
 const managerLimited = 10;
 const trendingViews = 100;
 const rewardPoints = 8;
