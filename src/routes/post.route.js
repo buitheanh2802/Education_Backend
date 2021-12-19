@@ -1,11 +1,16 @@
 import express from 'express';
-import { newest,following,create,get,action,trending,update,managerFilter
+import { newest,following,create,get,action,trending,update,managerFilter,managerListDetail
     ,remove,publish,publishList,unPublish,edit,myBookmark,upViews } from '../controllers/post.controller';
 import { path } from "constants/routeDefination";
 import { postValidator } from 'middlewares/validate.middleware';
 import { accessToken,accessRole } from 'middlewares/auth.middleware';
 const router = express.Router();
 
+// publish list detail 
+router.get(
+    path.post.publishPostDetail,
+    managerListDetail
+)
 // newest
 router.get(
     path.post.newest,
@@ -102,5 +107,6 @@ router.post(
     path.post.managerFilter,
     managerFilter
 )
+
 
 export default router;

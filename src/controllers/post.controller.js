@@ -588,3 +588,16 @@ export const managerFilter = (req,res) => {
             return response(res, 200, [], docs);
         })
 }
+
+// manager list detail
+export const managerListDetail = (req,res) => {
+    PostModel.findOne({ shortId : req.params.shortId},'-_id shortId views bookmarks title content tags')
+        .populate({ path : 'createBy',select : '-_id username fullname'})
+        .populate({ path : 'tags',select : '-_id name slug'})
+        .populate({ path : 'comments'})
+        .lean()
+        .exec((err,docs) => {
+            if (err) return response(res, 500, ['ERROR_SERVER', err.message]);
+            return response(res, 200, [], {...docs,bookmarks : docs.bookmarks.length});
+        })
+}

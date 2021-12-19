@@ -43,6 +43,7 @@ export const path = {
         publishPost: '/publish/:shortId',
         unPublishPost: '/unpublish/:shortId',
         publishList: '/publish/list',
+        publishPostDetail: '/publish/list/:shortId',
         edit: '/edit/:shortId',
         myBookmark: '/bookmark',
         upViews: '/upviews',
