@@ -7,10 +7,9 @@ import jwt from 'jsonwebtoken';
 import { PAGINATION_REGEX } from 'constants/regexDefination';
 import TagModel from 'models/tag.model';
 import questionModel from 'models/question.model';
-import { shuffle } from 'helpers/shuffle';
 
 // global data 
-const limited = 15;
+const limited = 5;
 const managerLimited = 10;
 const trendingViews = 100;
 const rewardPoints = 8;
@@ -95,7 +94,7 @@ export const myQuestion = async (req, res) => {
     const userData = await UserModel.findOne({ username: req.params.username });
     if (!userData) return response(res, 400, ['EMPTY_DATA']);
     const skip = (currentPage - 1) * limited;
-    const countDocuments = await questionModel.countDocuments({ createBy: userData._id,spam : false });
+    const countDocuments = await questionModel.countDocuments({ createBy: userData._id, spam: false });
     const totalPage = Math.ceil(countDocuments / limited);
     // console.log(countDocuments);
 
@@ -369,14 +368,14 @@ export const featuredAuthor = (req, res) => {
         .exec((err, docs) => {
             if (err) return response(res, 500, ['ERROR_SERVER', err.message]);
             if (docs.length == 0) return response(res, 400, ['EMPTY_DATA']);
-            return response(res, 200, [],docs.map(doc => ({ ...doc, followers: followers?.length || 0 })));
+            return response(res, 200, [], docs.map(doc => ({ ...doc, followers: followers?.length || 0 })));
         })
 }
 
 // up and down point 
 export const points = (req, res) => {
     const { username } = req.params;
-    const { type,points } = req.body;
+    const { type, points } = req.body;
     UserModel.findOne({ username }, (err, docs) => {
         if (err) return response(res, 500, ['ERROR_SERVER', err.message]);
         if (!docs) return response(res, 400, ['EMPTY_DATA']);
@@ -466,7 +465,7 @@ export const featuredAuthorList = (req, res) => {
     }
     switch (currentFilter) {
         case 'followers': {
-         
+
             break;
         }
         case 'posts': {
@@ -474,32 +473,35 @@ export const featuredAuthorList = (req, res) => {
             break;
         }
         default: {
-            UserModel.find({},'username email fullname points avatar')
-            .populate([
-                { path : 'postCounts'},
-                { path : 'followerCounts'},
-                { path : 'followers'}
-            ])
-            .sort({ points : -1})
-            .lean()
-            .exec((err, docs) => {
-                if (err) return response(res, 500, ['ERROR_SERVER', err.message]);
-                return response(res, 200, [], docs.map(item => {
-                    item.isFollowing = false;
-                    if (item.followers.length > 0 && token) {
-                        item.isFollowing = item.followers.includes(token._id);
-                    }
-                    delete item.followers;
-                    return item;
-                }));
-            })
+            UserModel.find({}, 'username email fullname points avatar')
+                .populate([
+                    { path: 'postCounts' },
+                    { path: 'followerCounts' },
+                    { path: 'followers' }
+                ])
+                .sort({ points: -1 })
+                .lean()
+                .exec((err, docs) => {
+                    if (err) return response(res, 500, ['ERROR_SERVER', err.message]);
+                    return response(res, 200, [], docs.map(item => {
+                        item.isFollowing = false;
+                        if (item.followers.length > 0 && token) {
+                            item.isFollowing = item.followers.includes(token._id);
+                            item.followers.forEach(follow => {
+                                if (follow.userId == token._id) item.isFollowing = true;
+                            })
+                        }
+                        delete item.followers;
+                        return item;
+                    }));
+                })
         }
     }
 }
 // other post same author
 export const otherPostSameAuthor = (req, res) => {
     PostModel
-        .find({ createBy: req.params.userId,isDraft : false,isAccept : true }, '-_id title bookmarks createdAt slug views shortId createBy')
+        .find({ createBy: req.params.userId, isDraft: false, isAccept: true }, '-_id title bookmarks createdAt slug views shortId createBy')
         .populate({ path: 'comments' })
         .populate({ path: 'createBy', select: '-_id email username fullname avatar' })
         .lean()
