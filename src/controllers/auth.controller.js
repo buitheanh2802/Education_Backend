@@ -97,8 +97,9 @@ export const signin = (req, res) => {
 
 
 export const profile = (req, res) => {
+    console.log(req.userId);
     UserModel
-        .findOne({ _id: req.userId }, `-hobbies -skills -address -phoneNumber -birthday -descriptions -createdAt -updatedAt -driveId -password -status -__v `)
+        .findOne({ _id: req.userId }, `-hobbies -skills -address -phoneNumber -birthday -descriptions -createdAt -updatedAt -driveId -password -__v `)
         .lean()
         .exec((err, docs) => {
             if (err) return response(res, 500, ['ERROR_SERVER', err.message]);
